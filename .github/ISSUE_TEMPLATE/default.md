@@ -1,9 +1,9 @@
 ---
-name:
-about:
-title:
-labels:
-assigness:
+name: 기본 템플릿
+about: 기본 템플릿
+title: ""
+labels: ""
+assigness: ""
 ---
 
 <!-- 작업 리스트 -->
