@@ -1,39 +1,39 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const isProduction = process.env.NODE_ENV == "production";
+const isProduction = process.env.NODE_ENV == 'production';
 
 const config = {
-  entry: "./src/index.js",
+  entry: './client/src/index.js',
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, 'client/dist'),
   },
   devServer: {
     open: true,
-    host: "localhost",
+    host: 'localhost',
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "index.html",
+      template: '/client/index.html',
     }),
 
-    new MiniCssExtractPlugin({ filename: "index.css" }),
+    new MiniCssExtractPlugin({ filename: 'index.css' }),
   ],
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/i,
-        loader: "babel-loader",
+        loader: 'babel-loader',
         exclude: /node_modules/,
       },
       {
         test: /\.(c|sa|sc)ss$/i,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-        type: "asset",
+        type: 'asset',
       },
     ],
   },
@@ -41,9 +41,9 @@ const config = {
 
 module.exports = () => {
   if (isProduction) {
-    config.mode = "production";
+    config.mode = 'production';
   } else {
-    config.mode = "development";
+    config.mode = 'development';
   }
   return config;
 };
