@@ -19,12 +19,16 @@ export class History {
         <div class=count>전체 내역 13건</div>
         <ul class=filter>
           <li>
-            <input type='checkbox' checked>
-            <div>수입 1,822,480</div>
+            <label>
+              <input type='checkbox' checked>
+              수입 1,822,480
+            </label>
           </li>
           <li>
-            <input type='checkbox' checked>
-            <div>지출 798,180</div>
+            <label>
+              <input type='checkbox' checked>
+              지출 798,180
+            </label>
           </li>
         </ul>
       </div>
