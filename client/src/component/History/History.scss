@@ -37,7 +37,7 @@ main {
 
   .list {
     .subtitle {
-      @include bold-medium-text();
+      @include bold-medium-text;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -57,7 +57,7 @@ main {
     }
 
     table {
-      @include body-regular-text();
+      @include body-regular-text;
       width: 100%;
       margin-top: 15px;
 
