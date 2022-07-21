@@ -1,0 +1,34 @@
+@import '../../style/common.scss';
+
+main {
+  margin: 40px 0;
+  accent-color: $color-primary;
+
+  .title {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: $color-primary;
+
+    .count {
+      @include body-large-text;
+    }
+
+    .filter {
+      @include body-medium-text;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+
+      li {
+        display: flex;
+        gap: 2px;
+      }
+
+      input[type='checkbox'] {
+        width: 16px;
+      }
+    }
+  }
+}
