@@ -1,3 +1,4 @@
+import { doc } from 'prettier';
 import './InputForm.scss';
 
 export class InputForm {
@@ -7,10 +8,103 @@ export class InputForm {
     this.$inpufForm.className = 'inputForm';
 
     this.$target.appendChild(this.$inpufForm);
+    this.category = [
+      {
+        id: 1,
+        content: '월급',
+        isIncome: true,
+      },
+      {
+        id: 2,
+        content: '용돈',
+        isIncome: true,
+      },
+      {
+        id: 3,
+        content: '식비',
+        isIncome: false,
+      },
+      {
+        id: 4,
+        content: '생활',
+        isIncome: false,
+      },
+      {
+        id: 5,
+        content: '교통',
+        isIncome: false,
+      },
+      {
+        id: 6,
+        content: '여가',
+        isIncome: false,
+      },
+    ];
     this.render();
+    this.init();
   }
 
-  init() {}
+  init() {
+    const $isIncome = document.querySelector('#isIncome');
+    $isIncome.addEventListener('change', () => {
+      const $dropdown = document.querySelector('.dropdown');
+
+      const $inputType = document.querySelector('input[name="type"]');
+      $inputType.value = '';
+      $inputType.dataset.id = '';
+
+      $dropdown.innerHTML = this.category
+        .filter(({ isIncome }) => isIncome === $isIncome.checked)
+        .map(
+          ({ id, content }) => `
+              <li data-id=${id}>${content}</li>
+              <div class="border"></div>`,
+        )
+        .join('');
+    });
+
+    this.$inpufForm.addEventListener('click', (event) => {
+      const $field = event.target.closest('.field');
+      if (!$field) return;
+
+      const $dropdown = $field.nextElementSibling;
+      if (!$dropdown || !$dropdown.className.includes('dropdown')) return;
+
+      $dropdown.style.display =
+        ($dropdown.style.display === 'none') | ($dropdown.style.display === '')
+          ? 'block'
+          : 'none';
+    });
+
+    const $category = document.querySelector('.inputForm .category');
+    $category.addEventListener('click', (event) => {
+      const $li = event.target.closest('li');
+      if (!$li) return;
+
+      const $inputType = document.querySelector('input[name="type"]');
+      $inputType.value = $li.innerHTML;
+      $inputType.dataset.id = $li.dataset.id;
+
+      $category.style.display = 'none';
+    });
+
+    const $payment = document.querySelector('.inputForm .payment');
+    $payment.addEventListener('click', (event) => {
+      const $li = event.target.closest('li');
+      if (!$li) return;
+
+      const $inputType = document.querySelector('input[name="payment"]');
+
+      if (!$li.dataset.name) {
+        // 추가하기 버튼
+        return;
+      }
+      $inputType.value = $li.dataset.name;
+      $inputType.dataset.id = $li.dataset.id;
+
+      $payment.style.display = 'none';
+    });
+  }
 
   initDate() {
     const today = new Date();
@@ -40,12 +134,16 @@ export class InputForm {
                 </svg>
             </div>
 
-            <ul class="dropdown">
-                <li>menu</li>
-                <div class="border"></div>
-                <li>menu</li>
+            <ul class="category dropdown">
+            ${this.category
+              .filter(({ isIncome }) => isIncome === true)
+              .map(
+                ({ id, content }) => `
+                    <li data-id=${id}>${content}</li>
+                    <div class="border"></div>`,
+              )
+              .join('')}
             </ul>
-
         </div>
         
 
@@ -62,10 +160,10 @@ export class InputForm {
                     <path d="M4 6.5L8 10.5L12 6.5" stroke="#8D9393" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-            <ul class="dropdown">
-                <li>menu <button>X</button></li>
+            <ul class="payment dropdown">
+                <li data-name="menu1">menu <button>X</button></li>
                 <div class="border"></div>
-                <li>menu <button>X</button></li>
+                <li data-name="menu2">menu <button>X</button></li>
                 <div class="border"></div>
                 <li><button>추가하기</button></li>
             </ul>
