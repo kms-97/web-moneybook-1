@@ -1,15 +1,52 @@
 import './Header.scss';
+import store from '../../store/store.js';
 
 export class Header {
   constructor($target) {
     this.$target = $target;
     this.$header = document.createElement('header');
+    [this.getDate, this.setDate] = store.date.subscribe(this);
 
     this.$target.appendChild(this.$header);
+    this.init();
     this.render();
   }
 
-  init() {}
+  init() {
+    this.$header.addEventListener('click', (e) => {
+      const $leftArrow = e.target.closest('.left-arrow');
+      if (!$leftArrow) return;
+
+      if (this.getDate().month === 1) {
+        this.setDate({
+          ...this.getDate(),
+          year: this.getDate().year - 1,
+          month: 12,
+        });
+      } else {
+        this.setDate({ ...this.getDate(), month: this.getDate().month - 1 });
+      }
+    });
+
+    this.$header.addEventListener('click', (e) => {
+      const $rightArrow = e.target.closest('.right-arrow');
+      if (!$rightArrow) return;
+
+      if (this.getDate().month === 12) {
+        this.setDate({
+          ...this.getDate(),
+          year: this.getDate().year + 1,
+          month: 1,
+        });
+      } else {
+        this.setDate({ ...this.getDate(), month: this.getDate().month + 1 });
+      }
+    });
+  }
+
+  sendNotify() {
+    this.render();
+  }
 
   render() {
     this.$header.innerHTML = `
@@ -21,8 +58,8 @@ export class Header {
               </svg>
             </button>
             <div class="date">
-                <div class="month">7월</div>
-                <div class="year">2022</div>
+                <div class="month">${this.getDate().month}월</div>
+                <div class="year">${this.getDate().year}</div>
             </div>
             <button class="right-arrow">
               <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -58,6 +95,4 @@ export class Header {
         </nav>
     `;
   }
-
-  sendNotify() {}
 }
