@@ -1,36 +1,11 @@
 import useState from '../utils/Observable';
 
 export default {
-  date: useState({
-    month: 5,
-    year: 2022,
+  historyInfo: useState({
+    month: '',
+    year: '',
+    history: [],
   }),
-  history: useState([
-    {
-      id: 1,
-      date: '2022-07-21',
-      categoryId: 1,
-      paymentId: 2,
-      amount: 30000,
-      isIncome: true,
-    },
-    {
-      id: 2,
-      date: '2022-07-24',
-      categoryId: 3,
-      paymentId: 2,
-      amount: 15000,
-      isIncome: false,
-    },
-    {
-      id: 3,
-      date: '2022-07-26',
-      categoryId: 6,
-      paymentId: 1,
-      amount: 1324000,
-      isIncome: false,
-    },
-  ]),
   category: useState([
     {
       id: 1,
