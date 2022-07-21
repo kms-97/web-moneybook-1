@@ -1,11 +1,13 @@
 import './Header.scss';
 import store from '../../store/store.js';
+import { getMockHistory } from '../../utils/generateMockData';
 
 export class Header {
   constructor($target) {
     this.$target = $target;
     this.$header = document.createElement('header');
-    [this.getDate, this.setDate] = store.date.subscribe(this);
+    [this.getHistoryInfo, this.setHistoryInfo] =
+      store.historyInfo.subscribe(this);
 
     this.$target.appendChild(this.$header);
     this.init();
@@ -17,14 +19,23 @@ export class Header {
       const $leftArrow = e.target.closest('.left-arrow');
       if (!$leftArrow) return;
 
-      if (this.getDate().month === 1) {
-        this.setDate({
-          ...this.getDate(),
-          year: this.getDate().year - 1,
-          month: 12,
+      const { month, year } = this.getHistoryInfo();
+      if (month === 1) {
+        getMockHistory(12).then((result) => {
+          this.setHistoryInfo({
+            month: 12,
+            year: year - 1,
+            history: [...result],
+          });
         });
       } else {
-        this.setDate({ ...this.getDate(), month: this.getDate().month - 1 });
+        getMockHistory(month - 1).then((result) => {
+          this.setHistoryInfo({
+            ...this.getHistoryInfo(),
+            month: month - 1,
+            history: [...result],
+          });
+        });
       }
     });
 
@@ -32,14 +43,23 @@ export class Header {
       const $rightArrow = e.target.closest('.right-arrow');
       if (!$rightArrow) return;
 
-      if (this.getDate().month === 12) {
-        this.setDate({
-          ...this.getDate(),
-          year: this.getDate().year + 1,
-          month: 1,
+      const { month, year } = this.getHistoryInfo();
+      if (month === 12) {
+        getMockHistory(1).then((result) => {
+          this.setHistoryInfo({
+            month: 1,
+            year: year + 1,
+            history: [...result],
+          });
         });
       } else {
-        this.setDate({ ...this.getDate(), month: this.getDate().month + 1 });
+        getMockHistory(month + 1).then((result) => {
+          this.setHistoryInfo({
+            ...this.getHistoryInfo(),
+            month: month + 1,
+            history: [...result],
+          });
+        });
       }
     });
   }
@@ -58,8 +78,8 @@ export class Header {
               </svg>
             </button>
             <div class="date">
-                <div class="month">${this.getDate().month}월</div>
-                <div class="year">${this.getDate().year}</div>
+                <div class="month">${this.getHistoryInfo().month}월</div>
+                <div class="year">${this.getHistoryInfo().year}</div>
             </div>
             <button class="right-arrow">
               <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
