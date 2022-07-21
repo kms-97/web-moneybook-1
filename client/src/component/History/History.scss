@@ -25,10 +25,14 @@ main {
       li {
         display: flex;
         gap: 2px;
-      }
 
-      input[type='checkbox'] {
-        width: 16px;
+        input[type='checkbox'] {
+          width: 16px;
+
+          &:not(:checked) + label {
+            color: grey;
+          }
+        }
       }
     }
   }
