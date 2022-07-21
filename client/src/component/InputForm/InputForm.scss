@@ -1,0 +1,128 @@
+@import '../../style/common.scss';
+
+.inputForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  left: calc(50vw - 500px);
+  width: 1000px;
+  height: 100px;
+  top: -50px;
+  z-index: 1;
+  background-color: $color-off-white;
+
+  border: 1px solid $color-line;
+  border-radius: 10px;
+  box-shadow: 1px 4px 3px 1px gainsboro;
+
+  .inputs-wrapper {
+    display: flex;
+    gap: 20px;
+
+    justify-content: center;
+    align-items: center;
+
+    .input-wrapper {
+      padding-right: 10px;
+      display: flex;
+      gap: 5px;
+      flex-direction: column;
+      border-right: 1px solid $color-line;
+
+      &:last-child {
+        border: none;
+      }
+
+      label {
+        color: $color-primary;
+        @include bold-small-text();
+      }
+
+      .field {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      position: relative;
+
+      .dropdown {
+        // display: none;
+        width: 185px;
+        background-color: $color-off-white;
+        left: -15px;
+        top: 80px;
+        position: absolute;
+        border-radius: 10px;
+        border: 1px solid $color-line;
+        box-shadow: 1px 4px 3px 1px gainsboro;
+        overflow: hidden;
+
+        & > li {
+          display: flex;
+          padding: 15px 20px;
+          cursor: pointer;
+          justify-content: space-between;
+          //   border-top: 1px solid gray;
+          &:first-child {
+            border: none;
+          }
+
+          &:hover {
+            background-color: $color-background;
+          }
+        }
+
+        .border {
+          background-color: $color-line;
+          height: 1px;
+          width: 80%;
+          margin: 0 auto;
+        }
+      }
+    }
+
+    input {
+      border: none;
+      padding: 0;
+
+      &:focus {
+        outline: none;
+      }
+
+      &[name='amount'] {
+        text-align: right;
+      }
+
+      &[name='isIncome'] {
+        font-size: large;
+        width: 10px;
+      }
+    }
+  }
+
+  .check-button {
+    stroke: white;
+    fill: $color-primary;
+
+    &.default {
+      path {
+        fill: white;
+        stroke: $color-primary;
+        stroke-width: 3;
+      }
+    }
+  }
+
+  //   input[type='checkbox'] {
+  //     width: 30px;
+  //     height: 30px;
+  //     accent-color: $color-primary;
+  //   }
+}
+
+div {
+  input[type='checked']:checked {
+  }
+}
