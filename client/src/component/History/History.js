@@ -1,4 +1,5 @@
 import './History.scss';
+import store from '../../store/store.js';
 
 export class History {
   constructor($target) {
@@ -6,15 +7,31 @@ export class History {
     this.$history = document.createElement('main');
     this.$history.className = 'history-view';
 
+    [this.getHistoryInfo, this.setHistoryInfo] =
+      store.historyInfo.subscribe(this);
+
     this.$target.appendChild(this.$history);
     this.render();
   }
 
   init() {}
 
-  sendNotify() {}
+  sendNotify() {
+    this.render();
+  }
 
   render() {
+    const history = this.getHistoryInfo().history.sort((a, b) => {
+      if (a.date > b.date) return -1;
+      else if (a.date < b.date) return 1;
+      return 0;
+    });
+
+    const map = new Map();
+    history.forEach((h) => {
+      map.get(h.date) ?? map.set(h.date, []);
+      map.get(h.date).push(h);
+    });
     this.$history.innerHTML = `
       <div class="title">
         <div class=count>전체 내역 13건</div>
@@ -30,46 +47,45 @@ export class History {
         </ul>
       </div>
       <ul class="list">
+        ${Array.from(map.values())
+          .map(
+            (val) => `
         <li>
           <div class='subtitle'>
-            <div class='date'>7월 15일 <span class='week'>목</span></div>
+            <div class='date'>${val[0].date} <span class='week'>수</span></div>
             <div class='sum'>
-                <div class='income'>수입 12,324</div>
-                <div class='cost'>지출 583,495</div>
+                <div class='income'>수입 ${val.reduce(
+                  (p, { amount, isIncome }) =>
+                    isIncome ? p + parseInt(amount) : p,
+                  0,
+                )}</div>
+                <div class='cost'>지출 ${val.reduce(
+                  (p, { amount, isIncome }) =>
+                    !isIncome ? p + parseInt(amount) : p,
+                  0,
+                )}</div>
             </div>
           </div>
           <table class='item'>
-            <tr class='active'>
-                <td class='category'><span class='culture'>문화/여가</span></td>
-                <td class='content'>세미나 신청</td>
-                <td class='payment'>현대카드</td>
-                <td class='amount'>50,000</td>
-            </tr>
-            <tr>
-                <td class='category'><span class='traffic'>교통</span></td>
-                <td class='content'>세미나 신청</td>
-                <td class='payment'>현대카드</td>
-                <td class='amount income'>1,250,000</td>
-            </tr>
+          ${val
+            .map(
+              (value) => `<tr>
+              <td class='category'><span class='food'>${
+                value.categoryId
+              }</span></td>
+              <td class='content'>${value.content}</td>
+              <td class='payment'>${value.paymentId}</td>
+              <td class='amount ${value.isIncome ? 'income' : 'cost'}'>${
+                value.amount
+              }</td>
+              </tr>`,
+            )
+            .join('')}
           </table>
         </li>
-        <li>
-            <div class='subtitle'>
-            <div class='date'>7월 14일 <span class='week'>수</span></div>
-            <div class='sum'>
-                <div class='income'>수입 12,324</div>
-                <div class='cost'>지출 583,495</div>
-            </div>
-            </div>
-            <table class='item'>
-            <tr>
-                <td class='category'><span class='food'>식비</span></td>
-                <td class='content'>세미나 신청</td>
-                <td class='payment'>현대카드</td>
-                <td class='amount cost'>50,000</td>
-            </tr>
-            </table>
-        </li>
+        `,
+          )
+          .join('')}
       </ul>
     `;
   }
