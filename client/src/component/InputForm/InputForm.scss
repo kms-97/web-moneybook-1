@@ -43,6 +43,23 @@
         display: flex;
         align-items: center;
         gap: 5px;
+
+        label {
+          font-size: 20px;
+          width: 25px;
+        }
+
+        input[type='checkbox'] {
+          display: none;
+
+          &:checked + label::after {
+            content: '+';
+          }
+
+          &:not(:checked) + label::after {
+            content: '⎻';
+          }
+        }
       }
 
       position: relative;

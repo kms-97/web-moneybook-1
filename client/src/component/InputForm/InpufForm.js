@@ -74,7 +74,8 @@ export class InputForm {
         <div class="input-wrapper">
             <label for="type">금액</label>
             <div class="field">
-                <input type="text" name="isIncome" value="+" readonly></input>
+                <input type="checkbox" name="isIncome" id='isIncome' checked></input>
+                <label for='isIncome'></label>
                 <input type="text" name="amount" placeholder="입력하세요" autocomplete="off"/>원
             </div>
         </div>
