@@ -1,0 +1,57 @@
+@import '../../style/common.scss';
+
+header {
+  width: 100%;
+  height: 200px;
+  background-color: $color-primary;
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: 40px;
+
+  .logo {
+    @include display-small-text();
+  }
+
+  .month {
+    @include display-large-text();
+  }
+
+  .year {
+    @include display-small-text();
+    line-height: 22px;
+  }
+
+  .day-selector {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .nav {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    svg path {
+      stroke: $color-off-white;
+      opacity: 0.4;
+    }
+
+    :hover {
+      svg path {
+        opacity: 1;
+      }
+    }
+  }
+
+  .date {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: xx-large;
+  }
+}
