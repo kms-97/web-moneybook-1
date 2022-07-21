@@ -1,0 +1,153 @@
+@import '../../style/common.scss';
+
+.history-view {
+  margin-top: 40px;
+
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: $color-primary;
+
+    .count {
+      @include body-large-text;
+    }
+
+    .filter {
+      @include body-medium-text;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+
+      li {
+        display: flex;
+        gap: 2px;
+
+        input[type='checkbox'] {
+          width: 16px;
+
+          &:not(:checked) + label {
+            color: $color-body;
+          }
+        }
+      }
+    }
+  }
+
+  .list {
+    .subtitle {
+      @include bold-medium-text;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 30px;
+
+      .date {
+        .week {
+          color: $color-body;
+        }
+      }
+
+      .sum {
+        display: flex;
+        gap: 10px;
+        color: $color-body;
+      }
+    }
+
+    table {
+      @include body-regular-text;
+      width: 100%;
+      margin-top: 15px;
+
+      tr {
+        height: 60px;
+        border: {
+          top: 1px solid $color-label;
+          bottom: 1px solid $color-label;
+        }
+        &.active {
+          border: {
+            top: 2px solid $color-primary;
+            bottom: 2px solid $color-primary;
+          }
+        }
+
+        td {
+          vertical-align: middle;
+          text-align: center;
+          padding: 0 5px;
+        }
+
+        .category {
+          font-size: 14px;
+          color: $color-background;
+          width: 15%;
+
+          span {
+            display: inline-block;
+            width: 80px;
+            padding: 4px 0;
+            border-radius: 999px;
+
+            &.salary {
+              background-color: $color-category-1;
+            }
+            &.pocket {
+              background-color: $color-category-2;
+            }
+            &.etc-income {
+              background-color: $color-category-3;
+            }
+            &.food {
+              background-color: $color-category-4;
+            }
+            &.life {
+              background-color: $color-category-5;
+            }
+            &.shopping {
+              background-color: $color-category-6;
+            }
+            &.traffic {
+              background-color: $color-category-7;
+            }
+            &.medical {
+              background-color: $color-category-8;
+            }
+            &.culture {
+              background-color: $color-category-9;
+            }
+            &.etc-cost {
+              background-color: $color-category-10;
+            }
+          }
+        }
+
+        .content {
+          width: 40%;
+          text-align: left;
+        }
+
+        .payment {
+          width: 20%;
+          color: $color-body;
+        }
+
+        .amount {
+          text-align: right;
+
+          &.income::before {
+            content: '+';
+            margin-right: 5px;
+          }
+
+          &.cost::before {
+            content: '-';
+            margin-right: 5px;
+          }
+        }
+      }
+    }
+  }
+}

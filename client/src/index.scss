@@ -6,3 +6,9 @@ body {
   height: 100%;
   background-color: $color-background;
 }
+
+main {
+  width: 850px;
+  margin: 40px auto;
+  accent-color: $color-primary;
+}
