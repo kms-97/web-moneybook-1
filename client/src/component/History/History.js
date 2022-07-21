@@ -4,6 +4,7 @@ export class History {
   constructor($target) {
     this.$target = $target;
     this.$history = document.createElement('main');
+    this.$history.className = 'history-view';
 
     this.$target.appendChild(this.$history);
     this.render();
