@@ -2,18 +2,20 @@ export default function (state) {
   const observers = new Set();
   let myState = state;
 
-  function subscribe(observer) {
-    observers.add(observer);
+  function subscribe(fn) {
+    observers.add(fn);
 
-    return [getState, setState];
+    function unsubscribe() {
+      observers.remove(fn);
+    }
+
+    return unsubscribe;
   }
   function unsubscribe(observer) {
     observers.delete(observer);
   }
   function notify() {
-    observers.forEach((observer) => {
-      observer.sendNotify();
-    });
+    observers.forEach((fn) => fn());
   }
 
   function setState(state) {
@@ -26,7 +28,8 @@ export default function (state) {
   }
 
   return {
+    get: getState,
+    set: setState,
     subscribe,
-    unsubscribe,
   };
 }
