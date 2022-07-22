@@ -1,4 +1,8 @@
-import { doc } from 'prettier';
+import {
+  categoryStore,
+  selectedHistoryStore,
+  paymentStore,
+} from '../../store/store';
 import './InputForm.scss';
 
 export class InputForm {
@@ -7,53 +11,26 @@ export class InputForm {
     this.$inpufForm = document.createElement('form');
     this.$inpufForm.className = 'inputForm';
 
+    selectedHistoryStore.subscribe(() => this.render());
+    paymentStore.subscribe(() => this.render());
+
     this.$target.appendChild(this.$inpufForm);
-    this.category = [
-      {
-        id: 1,
-        content: '월급',
-        isIncome: true,
-      },
-      {
-        id: 2,
-        content: '용돈',
-        isIncome: true,
-      },
-      {
-        id: 3,
-        content: '식비',
-        isIncome: false,
-      },
-      {
-        id: 4,
-        content: '생활',
-        isIncome: false,
-      },
-      {
-        id: 5,
-        content: '교통',
-        isIncome: false,
-      },
-      {
-        id: 6,
-        content: '여가',
-        isIncome: false,
-      },
-    ];
     this.render();
     this.init();
   }
 
   init() {
-    const $isIncome = document.querySelector('#isIncome');
-    $isIncome.addEventListener('change', () => {
-      const $dropdown = document.querySelector('.dropdown');
+    this.$inpufForm.addEventListener('change', (event) => {
+      const $isIncome = event.target.closest('#isIncome');
+      if (!$isIncome) return;
 
       const $inputType = document.querySelector('input[name="type"]');
       $inputType.value = '';
       $inputType.dataset.id = '';
 
-      $dropdown.innerHTML = this.category
+      const $dropdown = document.querySelector('.dropdown');
+      $dropdown.innerHTML = categoryStore
+        .get()
         .filter(({ isIncome }) => isIncome === $isIncome.checked)
         .map(
           ({ id, content }) => `
@@ -76,21 +53,40 @@ export class InputForm {
           : 'none';
     });
 
-    const $category = document.querySelector('.inputForm .category');
-    $category.addEventListener('click', (event) => {
-      const $li = event.target.closest('li');
+    this.$inpufForm.addEventListener('click', (event) => {
+      const $field = event.target.closest('.field');
+      if (!$field) return;
+      const $dropdown = $field.nextElementSibling.className.includes('category')
+        ? $field.nextElementSibling
+        : null;
+      if (!$dropdown) return;
+
+      const $isIncome = document.querySelector('#isIncome');
+      $dropdown.innerHTML = categoryStore
+        .get()
+        .filter(({ isIncome }) => isIncome === $isIncome.checked)
+        .map(
+          ({ id, content }) => `
+              <li data-id=${id}>${content}</li>
+              <div class="border"></div>`,
+        )
+        .join('');
+    });
+
+    this.$inpufForm.addEventListener('click', (event) => {
+      const $li = event.target.closest('.inputForm .category>li');
       if (!$li) return;
 
       const $inputType = document.querySelector('input[name="type"]');
       $inputType.value = $li.innerHTML;
       $inputType.dataset.id = $li.dataset.id;
 
+      const $category = document.querySelector('.inputForm .category');
       $category.style.display = 'none';
     });
 
-    const $payment = document.querySelector('.inputForm .payment');
-    $payment.addEventListener('click', (event) => {
-      const $li = event.target.closest('li');
+    this.$inpufForm.addEventListener('click', (event) => {
+      const $li = event.target.closest('.inputForm .payment>li');
       if (!$li) return;
 
       const $inputType = document.querySelector('input[name="payment"]');
@@ -102,6 +98,7 @@ export class InputForm {
       $inputType.value = $li.dataset.name;
       $inputType.dataset.id = $li.dataset.id;
 
+      const $payment = document.querySelector('.inputForm .payment');
       $payment.style.display = 'none';
     });
   }
@@ -117,25 +114,36 @@ export class InputForm {
   }
 
   render() {
+    const history = selectedHistoryStore.get();
+    const payment = paymentStore.get();
+    const category = categoryStore.get();
+
+    console.log(history);
+
     this.$inpufForm.innerHTML = `
-    
     <div class="inputs-wrapper">
         <div class="input-wrapper">
             <label for="date">일자</label>
-            <input type="date" name="일자" value="${this.initDate()}"/>
+            <input type="date" name="일자" value="${
+              history.date ?? this.initDate()
+            }"/>
         </div>
 
         <div class="input-wrapper">
             <label for="type">분류</label>
             <div class="field">
-                <input type="text" name="type" placeholder="선택하세요" readonly/>
+                <input type="text" name="type" placeholder="선택하세요" value="${
+                  category.filter(({ id }) => id === history.categoryId)[0]
+                    ?.content ?? ''
+                }" date-id="${history.categoryId ?? ''}" readonly/>
                 <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M4 6.5L8 10.5L12 6.5" stroke="#8D9393" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
 
             <ul class="category dropdown">
-            ${this.category
+            ${categoryStore
+              .get()
               .filter(({ isIncome }) => isIncome === true)
               .map(
                 ({ id, content }) => `
@@ -145,36 +153,50 @@ export class InputForm {
               .join('')}
             </ul>
         </div>
-        
-
         <div class="input-wrapper">
             <label for="type">내용</label>
-            <input type="text" name="title" placeholder="입력하세요" maxlength="20"/>
+            <input type="text" name="title" placeholder="입력하세요" value="${
+              history?.content ?? ''
+            }"maxlength="20"/>
         </div>
 
         <div class="input-wrapper">
             <label for="type">결제수단</label>
             <div class="field">
-                <input type="text" name="payment" placeholder="선택하세요" readonly/>
+                <input type="text" name="payment" placeholder="선택하세요" value="${
+                  payment.filter(({ id }) => id === history.paymentId)[0]
+                    ?.content ?? ''
+                }" data-id="${history.paymentId ?? ''}" readonly />
                 <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M4 6.5L8 10.5L12 6.5" stroke="#8D9393" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
             <ul class="payment dropdown">
-                <li data-name="menu1">menu <button>X</button></li>
-                <div class="border"></div>
-                <li data-name="menu2">menu <button>X</button></li>
-                <div class="border"></div>
-                <li><button>추가하기</button></li>
+            ${paymentStore
+              .get()
+              .map(
+                ({ id, content }) => `
+                    <li data-id=${id} data-name="${content}">
+                      ${content}
+                      <button>X</button>
+                    </li>
+                    <div class="border"></div>`,
+              )
+              .join('')}
+                <li>추가하기</li>
             </ul>
         </div>
 
         <div class="input-wrapper">
             <label for="type">금액</label>
             <div class="field">
-                <input type="checkbox" name="isIncome" id='isIncome' checked></input>
+                <input type="checkbox" name="isIncome" id='isIncome' ${
+                  history.isIncome ? 'checked' : ''
+                }></input>
                 <label for='isIncome'></label>
-                <input type="text" name="amount" placeholder="입력하세요" autocomplete="off"/>원
+                <input type="text" name="amount" placeholder="입력하세요" autocomplete="off" value="${
+                  history.amount ?? ''
+                }"/>원
             </div>
         </div>
     </div>
@@ -187,6 +209,4 @@ export class InputForm {
     </div>
     `;
   }
-
-  sendNotify() {}
 }
