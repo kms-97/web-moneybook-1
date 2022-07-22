@@ -1,5 +1,11 @@
 import './History.scss';
-import store from '../../store/store.js';
+import {
+  historyStore,
+  selectedHistoryStore,
+  categoryStore,
+  paymentStore,
+} from '../../store/store.js';
+import { parseDateString, getDay } from '../../utils/date';
 
 export class History {
   constructor($target) {
@@ -7,59 +13,89 @@ export class History {
     this.$history = document.createElement('main');
     this.$history.className = 'history-view';
 
-    [this.getHistoryInfo, this.setHistoryInfo] =
-      store.historyInfo.subscribe(this);
+    this.unsubscribeHistoryStore = historyStore.subscribe(() => this.render());
 
     this.$target.appendChild(this.$history);
     this.render();
+    this.init();
   }
 
-  init() {}
+  init() {
+    this.$history.addEventListener('click', (e) => {
+      const $tr = e.target.closest('tr');
+      if (!$tr) return;
 
-  sendNotify() {
-    this.render();
+      // .active 클래스 붙이기
+
+      // set selected history
+      const trId = Number($tr.dataset.id);
+      const history = historyStore.get();
+      for (let { datas } of history) {
+        for (let data of datas) {
+          if (data.id === trId) {
+            return selectedHistoryStore.set(data);
+          }
+        }
+      }
+    });
   }
 
   render() {
-    const history = this.getHistoryInfo().history.sort((a, b) => {
-      if (a.date > b.date) return -1;
-      else if (a.date < b.date) return 1;
-      return 0;
-    });
+    const history = historyStore.get();
+    const category = categoryStore.get();
+    const payment = paymentStore.get();
 
-    const map = new Map();
-    history.forEach((h) => {
-      map.get(h.date) ?? map.set(h.date, []);
-      map.get(h.date).push(h);
-    });
     this.$history.innerHTML = `
       <div class="title">
-        <div class=count>전체 내역 13건</div>
+        <div class=count>전체 내역 ${history.reduce(
+          (p, { datas }) => p + datas.length,
+          0,
+        )}건</div>
         <ul class=filter>
           <li>
             <input id='filter-income' type='checkbox' checked>
-            <label for='filter-income'>수입 1,822,480</label>
+            <label for='filter-income'>수입 ${history.reduce(
+              (p, { datas }) =>
+                p +
+                datas.reduce(
+                  (p, { isIncome, amount }) =>
+                    isIncome ? p + parseInt(amount) : p,
+                  0,
+                ),
+              0,
+            )}</label>
           </li>
           <li>
             <input id='filter-cost' type='checkbox' checked>
-            <label for='filter-cost'>지출 798,180</label>
+            <label for='filter-cost'>지출 ${history.reduce(
+              (p, { datas }) =>
+                p +
+                datas.reduce(
+                  (p, { isIncome, amount }) =>
+                    !isIncome ? p + parseInt(amount) : p,
+                  0,
+                ),
+              0,
+            )}</label>
           </li>
         </ul>
       </div>
       <ul class="list">
-        ${Array.from(map.values())
+        ${history
           .map(
-            (val) => `
+            ({ date, datas }) => `
         <li>
           <div class='subtitle'>
-            <div class='date'>${val[0].date} <span class='week'>수</span></div>
+            <div class='date'>${date} <span class='week'>${getDay(
+              date,
+            )}</span></div>
             <div class='sum'>
-                <div class='income'>수입 ${val.reduce(
+                <div class='income'>수입 ${datas.reduce(
                   (p, { amount, isIncome }) =>
                     isIncome ? p + parseInt(amount) : p,
                   0,
                 )}</div>
-                <div class='cost'>지출 ${val.reduce(
+                <div class='cost'>지출 ${datas.reduce(
                   (p, { amount, isIncome }) =>
                     !isIncome ? p + parseInt(amount) : p,
                   0,
@@ -67,14 +103,18 @@ export class History {
             </div>
           </div>
           <table class='item'>
-          ${val
+          ${datas
             .map(
-              (value) => `<tr>
+              (value) => `<tr data-id=${value.id}>
               <td class='category'><span class='food'>${
-                value.categoryId
+                category.filter((c) => c.id === value.categoryId)[0]?.content ??
+                ''
               }</span></td>
               <td class='content'>${value.content}</td>
-              <td class='payment'>${value.paymentId}</td>
+              <td class='payment'>${
+                payment.filter(({ id }) => id === value.paymentId)[0]
+                  ?.content ?? ''
+              }</td>
               <td class='amount ${value.isIncome ? 'income' : 'cost'}'>${
                 value.amount
               }</td>
