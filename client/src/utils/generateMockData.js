@@ -3,7 +3,7 @@ export function getMockHistory(month) {
     setTimeout(() => {
       const data = [];
 
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < Math.random() * 15; i++) {
         data.push({
           id: i + 1,
           content: '목업 데이터',
@@ -13,13 +13,29 @@ export function getMockHistory(month) {
             ''
           ).padStart(2, 0)}`,
           categoryId: Math.floor(Math.random() * 5) + 1,
-          paymentId: Math.floor(Math.random() + 1),
+          paymentId: Math.floor(Math.random() + 1.5),
           amount: 30000,
           isIncome: Boolean(Math.floor(Math.random() + 0.5)),
         });
       }
-      console.log(data);
-      resolve(data);
+
+      data.sort((a, b) => {
+        if (a.date > b.date) return -1;
+        else if (a.date < b.date) return 1;
+        return 0;
+      });
+
+      const map = new Map();
+      data.forEach((h) => {
+        map.get(h.date) ?? map.set(h.date, []);
+        map.get(h.date).push(h);
+      });
+
+      resolve(
+        Array.from(map.entries()).map((v) => {
+          return { date: v[0], datas: v[1] };
+        }),
+      );
     }, 0);
   });
 }
