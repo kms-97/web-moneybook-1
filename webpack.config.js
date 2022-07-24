@@ -15,7 +15,7 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: '/client/index.html',
+      template: path.resolve(__dirname, 'client/index.html'),
     }),
 
     new MiniCssExtractPlugin({ filename: 'index.css' }),
