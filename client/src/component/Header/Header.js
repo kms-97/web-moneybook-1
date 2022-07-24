@@ -1,13 +1,23 @@
 import './Header.scss';
-import { dateStore, historyStore } from '../../store/store.js';
-import { getMockHistory } from '../../utils/generateMockData';
+import { storeKeys } from '../../utils/constant';
+import {
+  subscribeState,
+  getState,
+  increaseMonth,
+  decreaseMonth,
+} from '../../controller';
 
 export class Header {
   constructor($target) {
     this.$target = $target;
     this.$header = document.createElement('header');
 
-    this.unsubscribeDateStore = dateStore.subscribe(() => this.render());
+    this.unsubscribeDate = subscribeState({
+      key: storeKeys.CURRENT_DATE,
+      callback: () => {
+        this.render();
+      },
+    });
 
     this.$target.appendChild(this.$header);
     this.init();
@@ -19,53 +29,19 @@ export class Header {
       const $leftArrow = e.target.closest('.left-arrow');
       if (!$leftArrow) return;
 
-      const { month, year } = dateStore.get();
-      if (month === 1) {
-        getMockHistory(12).then((result) => {
-          dateStore.set({
-            month: 12,
-            year: year - 1,
-          });
-          historyStore.set([...result]);
-        });
-      } else {
-        getMockHistory(month - 1).then((result) => {
-          dateStore.set({
-            year,
-            month: month - 1,
-          });
-          historyStore.set([...result]);
-        });
-      }
+      decreaseMonth();
     });
 
     this.$header.addEventListener('click', (e) => {
       const $rightArrow = e.target.closest('.right-arrow');
       if (!$rightArrow) return;
 
-      const { month, year } = dateStore.get();
-      if (month === 12) {
-        getMockHistory(1).then((result) => {
-          dateStore.set({
-            month: 1,
-            year: year + 1,
-          });
-          historyStore.set([...result]);
-        });
-      } else {
-        getMockHistory(month + 1).then((result) => {
-          dateStore.set({
-            year,
-            month: month + 1,
-          });
-          historyStore.set([...result]);
-        });
-      }
+      increaseMonth();
     });
   }
 
   render() {
-    const { month, year } = dateStore.get();
+    const { month, year } = getState({ key: storeKeys.CURRENT_DATE });
 
     this.$header.innerHTML = `
         <div class="logo"><h1>우아한 가계부</h1></div>
