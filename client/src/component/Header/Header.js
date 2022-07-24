@@ -1,17 +1,72 @@
 import './Header.scss';
+import { dateStore, historyStore } from '../../store/store.js';
+import { getMockHistory } from '../../utils/generateMockData';
 
 export class Header {
   constructor($target) {
     this.$target = $target;
     this.$header = document.createElement('header');
 
+    this.unsubscribeDateStore = dateStore.subscribe(() => this.render());
+
     this.$target.appendChild(this.$header);
+    this.init();
     this.render();
   }
 
-  init() {}
+  init() {
+    this.$header.addEventListener('click', (e) => {
+      const $leftArrow = e.target.closest('.left-arrow');
+      if (!$leftArrow) return;
+
+      const { month, year } = dateStore.get();
+      if (month === 1) {
+        getMockHistory(12).then((result) => {
+          dateStore.set({
+            month: 12,
+            year: year - 1,
+          });
+          historyStore.set([...result]);
+        });
+      } else {
+        getMockHistory(month - 1).then((result) => {
+          dateStore.set({
+            year,
+            month: month - 1,
+          });
+          historyStore.set([...result]);
+        });
+      }
+    });
+
+    this.$header.addEventListener('click', (e) => {
+      const $rightArrow = e.target.closest('.right-arrow');
+      if (!$rightArrow) return;
+
+      const { month, year } = dateStore.get();
+      if (month === 12) {
+        getMockHistory(1).then((result) => {
+          dateStore.set({
+            month: 1,
+            year: year + 1,
+          });
+          historyStore.set([...result]);
+        });
+      } else {
+        getMockHistory(month + 1).then((result) => {
+          dateStore.set({
+            year,
+            month: month + 1,
+          });
+          historyStore.set([...result]);
+        });
+      }
+    });
+  }
 
   render() {
+    const { month, year } = dateStore.get();
+
     this.$header.innerHTML = `
         <div class="logo"><h1>우아한 가계부</h1></div>
         <div class="day-selector">
@@ -21,8 +76,8 @@ export class Header {
               </svg>
             </button>
             <div class="date">
-                <div class="month">7월</div>
-                <div class="year">2022</div>
+                <div class="month">${month}월</div>
+                <div class="year">${year}</div>
             </div>
             <button class="right-arrow">
               <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -58,6 +113,4 @@ export class Header {
         </nav>
     `;
   }
-
-  sendNotify() {}
 }
