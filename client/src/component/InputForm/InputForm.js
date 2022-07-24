@@ -1,9 +1,7 @@
-import {
-  categoryStore,
-  selectedHistoryStore,
-  paymentStore,
-} from '../../store/store';
 import './InputForm.scss';
+import { getState, subscribeState } from '../../controller';
+import { storeKeys } from '../../utils/constant';
+import { makeDateString } from '../../utils/date';
 
 export class InputForm {
   constructor($target) {
@@ -11,8 +9,18 @@ export class InputForm {
     this.$inpufForm = document.createElement('form');
     this.$inpufForm.className = 'inputForm';
 
-    selectedHistoryStore.subscribe(() => this.render());
-    paymentStore.subscribe(() => this.render());
+    this.unsubscribeSelectedHistory = subscribeState({
+      key: storeKeys.SELECTED_HISTORY,
+      callback: () => {
+        this.render();
+      },
+    });
+    this.unsubscribePayment = subscribeState({
+      key: storeKeys.PAYMENT,
+      callback: () => {
+        this.render();
+      },
+    });
 
     this.$target.appendChild(this.$inpufForm);
     this.render();
@@ -29,8 +37,7 @@ export class InputForm {
       $inputType.dataset.id = '';
 
       const $dropdown = document.querySelector('.dropdown');
-      $dropdown.innerHTML = categoryStore
-        .get()
+      $dropdown.innerHTML = getState({ key: storeKeys.CATEGORY })
         .filter(({ isIncome }) => isIncome === $isIncome.checked)
         .map(
           ({ id, content }) => `
@@ -62,8 +69,7 @@ export class InputForm {
       if (!$dropdown) return;
 
       const $isIncome = document.querySelector('#isIncome');
-      $dropdown.innerHTML = categoryStore
-        .get()
+      $dropdown.innerHTML = getState({ key: storeKeys.CATEGORY })
         .filter(({ isIncome }) => isIncome === $isIncome.checked)
         .map(
           ({ id, content }) => `
@@ -114,18 +120,18 @@ export class InputForm {
   }
 
   render() {
-    const history = selectedHistoryStore.get();
-    const payment = paymentStore.get();
-    const category = categoryStore.get();
-
-    console.log(history);
+    const history = getState({ key: storeKeys.SELECTED_HISTORY });
+    const payment = getState({ key: storeKeys.PAYMENT });
+    const category = getState({ key: storeKeys.CATEGORY });
 
     this.$inpufForm.innerHTML = `
     <div class="inputs-wrapper">
         <div class="input-wrapper">
             <label for="date">일자</label>
             <input type="date" name="일자" value="${
-              history.date ?? this.initDate()
+              history.year
+                ? makeDateString(history.year, history.month, history.date)
+                : this.initDate()
             }"/>
         </div>
 
@@ -142,8 +148,7 @@ export class InputForm {
             </div>
 
             <ul class="category dropdown">
-            ${categoryStore
-              .get()
+            ${getState({ key: storeKeys.CATEGORY })
               .filter(({ isIncome }) => isIncome === true)
               .map(
                 ({ id, content }) => `
@@ -172,8 +177,7 @@ export class InputForm {
                 </svg>
             </div>
             <ul class="payment dropdown">
-            ${paymentStore
-              .get()
+            ${getState({ key: storeKeys.PAYMENT })
               .map(
                 ({ id, content }) => `
                     <li data-id=${id} data-name="${content}">
