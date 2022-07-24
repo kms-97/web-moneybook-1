@@ -107,7 +107,9 @@ export class History {
           ${datas
             .map(
               (value) => `<tr data-id=${value.id}>
-              <td class='category'><span class='food'>${
+              <td class='category'><span style='background-color: ${
+                category.filter((c) => c.id === value.categoryId)[0]?.color
+              }'>${
                 category.filter((c) => c.id === value.categoryId)[0]?.content ??
                 ''
               }</span></td>

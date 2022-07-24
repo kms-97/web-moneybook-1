@@ -38,46 +38,60 @@ export function getMockHistory() {
 
 export function getMockPayment() {
   return new Promise((resolve, reject) => {
-    setTimeout(() => resolve([
-      {id: 1, content:'국민카드'},
-      {id: 2, content:'신한카드'}
-    ]), 1000);
-  })
+    setTimeout(
+      () =>
+        resolve([
+          { id: 1, content: '국민카드' },
+          { id: 2, content: '신한카드' },
+        ]),
+      1000,
+    );
+  });
 }
 
 export function getMockCategory() {
   return new Promise((resolve, reject) => {
-    setTimeout(() => resolve([
-      {
-        id: 1,
-        content: '월급',
-        isIncome: true,
-      },
-      {
-        id: 2,
-        content: '용돈',
-        isIncome: true,
-      },
-      {
-        id: 3,
-        content: '식비',
-        isIncome: false,
-      },
-      {
-        id: 4,
-        content: '생활',
-        isIncome: false,
-      },
-      {
-        id: 5,
-        content: '교통',
-        isIncome: false,
-      },
-      {
-        id: 6,
-        content: '여가',
-        isIncome: false,
-      },
-    ]), 1000);
-  })
+    setTimeout(
+      () =>
+        resolve([
+          {
+            id: 1,
+            content: '월급',
+            isIncome: true,
+            color: '#B9D58C',
+          },
+          {
+            id: 2,
+            content: '용돈',
+            isIncome: true,
+            color: '#E6D267',
+          },
+          {
+            id: 3,
+            content: '식비',
+            isIncome: false,
+            color: '#4CA1DE',
+          },
+          {
+            id: 4,
+            content: '생활',
+            isIncome: false,
+            color: '#4A6CC3',
+          },
+          {
+            id: 5,
+            content: '교통',
+            isIncome: false,
+            color: '#94D3CC',
+          },
+          {
+            id: 6,
+            content: '문화/여가',
+            isIncome: false,
+            color: '#D092E2',
+          },
+        ]),
+      1000,
+    );
+  });
 }
