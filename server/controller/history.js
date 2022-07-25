@@ -11,6 +11,36 @@ async function getAllHistoryOfMonth(req, res) {
   }
 }
 
+async function postHistory(req, res) {
+  const {
+    year,
+    month,
+    date,
+    categoryId,
+    content,
+    paymentId,
+    amount,
+    isIncome,
+  } = req.body;
+
+  try {
+    const data = await service.postHistory({
+      year,
+      month,
+      date,
+      categoryId,
+      content,
+      paymentId,
+      amount,
+      isIncome,
+    });
+    res.status(200).json(data);
+  } catch (e) {
+    res.status(500).json(e.message);
+  }
+}
+
 module.exports = {
   getAllHistoryOfMonth,
+  postHistory,
 };
