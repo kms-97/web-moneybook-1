@@ -40,7 +40,39 @@ async function postHistory(req, res) {
   }
 }
 
+async function putHistory(req, res) {
+  const {
+    id,
+    year,
+    month,
+    date,
+    categoryId,
+    content,
+    paymentId,
+    amount,
+    isIncome,
+  } = req.body;
+
+  try {
+    const data = await service.putHistory({
+      id,
+      year,
+      month,
+      date,
+      categoryId,
+      content,
+      paymentId,
+      amount,
+      isIncome,
+    });
+    res.status(200).json(data);
+  } catch (e) {
+    res.status(500).json(e.message);
+  }
+}
+
 module.exports = {
   getAllHistoryOfMonth,
   postHistory,
+  putHistory,
 };
