@@ -5,8 +5,6 @@ const paymentRouter = express.Router();
 
 paymentRouter.get('/', controller.getAllPayment);
 paymentRouter.post('/', controller.postPayment);
-paymentRouter.delete('/', (req, res) => {
-  res.json('delete /payment');
-});
+paymentRouter.delete('/', controller.deletePayment);
 
 module.exports = { paymentRouter };
