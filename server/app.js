@@ -4,6 +4,7 @@ const path = require('path');
 const { indexRouter } = require('./router/index');
 const { historyRouter } = require('./router/history');
 const { paymentRouter } = require('./router/payment');
+const { categoryRouter } = require('./router/category');
 
 const app = express();
 const port = 3000;
@@ -14,6 +15,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 app.use('/history', historyRouter);
 app.use('/payment', paymentRouter);
+app.use('/category', categoryRouter);
 app.use('/*', indexRouter);
 
 app.listen(port, () => {
