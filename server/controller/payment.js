@@ -9,6 +9,17 @@ async function getAllPayment(req, res) {
   }
 }
 
+async function postPayment(req, res) {
+  const { content } = req.body;
+  try {
+    const data = await service.postPayment({ content });
+    res.status(200).json(data);
+  } catch (e) {
+    res.status(500).json(e.message);
+  }
+}
+
 module.exports = {
   getAllPayment,
+  postPayment,
 };
