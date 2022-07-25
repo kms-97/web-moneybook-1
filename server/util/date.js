@@ -8,6 +8,12 @@ function getStartAndEndDateString({ year, month }) {
   };
 }
 
+function makeDateString({ year, month, date }) {
+  if (!year || !month || !date) return;
+  return `${year}-${(month + '').padStart(2, 0)}-${(date + '').padStart(2, 0)}`;
+}
+
 module.exports = {
   getStartAndEndDateString,
+  makeDateString,
 };
