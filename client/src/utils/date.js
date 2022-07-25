@@ -11,8 +11,7 @@ export function makeDateString(year, month, date) {
   return `${year}-${(month + '').padStart(2, 0)}-${(date + '').padStart(2, 0)}`;
 }
 
-export function getDay(dateString) {
-  const date = new Date(dateString);
+export function getDay(year, month, date) {
   const day = {
     1: '월',
     2: '화',
@@ -22,5 +21,5 @@ export function getDay(dateString) {
     6: '토',
     0: '일',
   };
-  return day[date.getDay()];
+  return day[new Date(year, month - 1, date).getDay()];
 }
