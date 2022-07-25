@@ -6,7 +6,8 @@ async function getAllCategory() {
 
   try {
     connection = await getConnection();
-    const [rows] = connection.execute(query);
+    const [rows] = await connection.execute(query);
+
     return rows;
   } catch (e) {
     throw e;
