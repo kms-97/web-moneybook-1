@@ -1,11 +1,11 @@
 import './History.scss';
-import {
-  historyStore,
-  selectedHistoryStore,
-  categoryStore,
-  paymentStore,
-} from '../../store/store.js';
 import { parseDateString, getDay } from '../../utils/date';
+import {
+  subscribeState,
+  getState,
+  changeSelectedHistory,
+} from '../../controller';
+import { storeKeys } from '../../utils/constant';
 
 export class History {
   constructor($target) {
@@ -13,7 +13,12 @@ export class History {
     this.$history = document.createElement('main');
     this.$history.className = 'history-view';
 
-    this.unsubscribeHistoryStore = historyStore.subscribe(() => this.render());
+    this.unsubscribeHistory = subscribeState({
+      key: storeKeys.CURRENT_HISTORY,
+      callback: () => {
+        this.render();
+      },
+    });
 
     this.$target.appendChild(this.$history);
     this.render();
@@ -29,21 +34,15 @@ export class History {
 
       // set selected history
       const trId = Number($tr.dataset.id);
-      const history = historyStore.get();
-      for (let { datas } of history) {
-        for (let data of datas) {
-          if (data.id === trId) {
-            return selectedHistoryStore.set(data);
-          }
-        }
-      }
+      changeSelectedHistory({ id: trId });
     });
   }
 
   render() {
-    const history = historyStore.get();
-    const category = categoryStore.get();
-    const payment = paymentStore.get();
+    const { year, month } = getState({ key: storeKeys.CURRENT_DATE });
+    const history = getState({ key: storeKeys.CURRENT_HISTORY });
+    const category = getState({ key: storeKeys.CATEGORY });
+    const payment = getState({ key: storeKeys.PAYMENT });
 
     this.$history.innerHTML = `
       <div class="title">
@@ -86,7 +85,9 @@ export class History {
             ({ date, datas }) => `
         <li>
           <div class='subtitle'>
-            <div class='date'>${date} <span class='week'>${getDay(
+            <div class='date'>${date}일 <span class='week'>${getDay(
+              year,
+              month,
               date,
             )}</span></div>
             <div class='sum'>
@@ -106,7 +107,9 @@ export class History {
           ${datas
             .map(
               (value) => `<tr data-id=${value.id}>
-              <td class='category'><span class='food'>${
+              <td class='category'><span style='background-color: ${
+                category.filter((c) => c.id === value.categoryId)[0]?.color
+              }'>${
                 category.filter((c) => c.id === value.categoryId)[0]?.content ??
                 ''
               }</span></td>

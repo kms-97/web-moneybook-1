@@ -1,4 +1,4 @@
-export function getMockHistory(month) {
+export function getMockHistory() {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const data = [];
@@ -7,11 +7,7 @@ export function getMockHistory(month) {
         data.push({
           id: i + 1,
           content: '목업 데이터',
-          date: `2022-${(month + '').padStart(2, 0)}-${(
-            Math.floor(Math.random() * 30) +
-            1 +
-            ''
-          ).padStart(2, 0)}`,
+          date: Math.floor(Math.random() * 30) + 1,
           categoryId: Math.floor(Math.random() * 5) + 1,
           paymentId: Math.floor(Math.random() + 1.5),
           amount: 30000,
@@ -36,6 +32,66 @@ export function getMockHistory(month) {
           return { date: v[0], datas: v[1] };
         }),
       );
-    }, 0);
+    }, 1000);
+  });
+}
+
+export function getMockPayment() {
+  return new Promise((resolve, reject) => {
+    setTimeout(
+      () =>
+        resolve([
+          { id: 1, content: '국민카드' },
+          { id: 2, content: '신한카드' },
+        ]),
+      1000,
+    );
+  });
+}
+
+export function getMockCategory() {
+  return new Promise((resolve, reject) => {
+    setTimeout(
+      () =>
+        resolve([
+          {
+            id: 1,
+            content: '월급',
+            isIncome: true,
+            color: '#B9D58C',
+          },
+          {
+            id: 2,
+            content: '용돈',
+            isIncome: true,
+            color: '#E6D267',
+          },
+          {
+            id: 3,
+            content: '식비',
+            isIncome: false,
+            color: '#4CA1DE',
+          },
+          {
+            id: 4,
+            content: '생활',
+            isIncome: false,
+            color: '#4A6CC3',
+          },
+          {
+            id: 5,
+            content: '교통',
+            isIncome: false,
+            color: '#94D3CC',
+          },
+          {
+            id: 6,
+            content: '문화/여가',
+            isIncome: false,
+            color: '#D092E2',
+          },
+        ]),
+      1000,
+    );
   });
 }
