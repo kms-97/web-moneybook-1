@@ -13,6 +13,7 @@ const port = 3000;
 
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.json());
 
 app.use('/history', historyRouter);
 app.use('/payment', paymentRouter);
