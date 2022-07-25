@@ -20,6 +20,11 @@ function findAll(connection) {
   return connection.execute(query);
 }
 
+function insert(connection, { content }) {
+  const query = `insert into payment (content) values (?)`;
+  return connection.execute(query, [content]);
+}
+
 module.exports = {
   getAllPayment,
 };
