@@ -52,6 +52,45 @@ async function postHistory({
   }
 }
 
+async function putHistory({
+  id,
+  year,
+  month,
+  date,
+  categoryId,
+  content,
+  paymentId,
+  amount,
+  isIncome,
+}) {
+  const createdDate = makeDateString({ year, month, date });
+  let connection;
+
+  try {
+    connection = await getConnection();
+    await connection.beginTransaction();
+
+    const [{ affectedRows }] = await update(connection, {
+      id,
+      createdDate,
+      categoryId,
+      content,
+      paymentId,
+      amount,
+      isIncome,
+    });
+    const [rows] = await findAllOfMonth(connection, { year, month });
+
+    await connection.commit();
+    return rows;
+  } catch (e) {
+    await connection.rollback();
+    throw e;
+  } finally {
+    connection?.release();
+  }
+}
+
 function findAllOfMonth(connection, { year, month }) {
   const { startDate, endDate } = getStartAndEndDateString({ year, month });
   const query = `select * from hist where create_date between ? and ?`;
@@ -73,7 +112,24 @@ function insert(
   ]);
 }
 
+function update(
+  connection,
+  { id, createdDate, categoryId, content, paymentId, amount, isIncome },
+) {
+  const query = `update hist set create_date = ?, category_id = ?, content = ?, payment_id = ?, amount = ?, is_income = ? where id = ?`;
+  return connection.execute(query, [
+    createdDate,
+    categoryId,
+    content,
+    paymentId,
+    amount,
+    isIncome,
+    id,
+  ]);
+}
+
 module.exports = {
   getAllHistoryOfMonth,
   postHistory,
+  putHistory,
 };
