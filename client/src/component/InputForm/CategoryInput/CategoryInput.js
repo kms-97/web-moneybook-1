@@ -8,14 +8,56 @@ export default class CategoryInput {
   constructor($target) {
     this.$target = $target; // $inputForm
     this.$categoryInput = document.createElement('div');
-    // selectedHistoryStore.subscribe(() => this.render());
+    selectedHistoryStore.subscribe(() => this.render());
 
     this.$target.appendChild(this.$categoryInput);
     this.render();
     this.init();
   }
 
-  init() {}
+  init() {
+    this.$categoryInput.addEventListener(
+      'click',
+      this.onClickCategoryItem.bind(this),
+    );
+    this.$categoryInput.addEventListener(
+      'click',
+      this.onClickDropdownField.bind(this),
+    );
+  }
+
+  onClickCategoryItem(event) {
+    const $li = event.target.closest('.inputForm .category>li');
+    if (!$li) return;
+
+    const $inputType = document.querySelector('input[name="type"]');
+    $inputType.value = $li.innerHTML;
+    $inputType.dataset.id = $li.dataset.id;
+
+    const $category = document.querySelector('.inputForm .category');
+    $category.style.display = 'none';
+  }
+
+  onClickDropdownField(event) {
+    const $field = event.target.closest('.field');
+    if (!$field) return;
+
+    const $dropdown = $field.nextElementSibling;
+    if (!$dropdown || !$dropdown.className.includes('dropdown')) return;
+
+    $dropdown.style.display =
+      ($dropdown.style.display === 'none') | ($dropdown.style.display === '')
+        ? 'block'
+        : 'none';
+
+    if (!$field) return;
+    const $categoryDropdown = $field.nextElementSibling.className.includes(
+      'category',
+    )
+      ? $field.nextElementSibling
+      : null;
+    if (!$categoryDropdown) return;
+  }
 
   render() {
     const history = selectedHistoryStore.get();
@@ -36,7 +78,12 @@ export default class CategoryInput {
     <ul class="category dropdown">
     ${categoryStore
       .get()
-      .filter(({ isIncome }) => isIncome === true)
+      .filter(
+        ({ isIncome }) =>
+          history.isIncome !== undefined
+            ? history.isIncome === isIncome
+            : isIncome === true, // category 초기값은 수입(+)에 대한 것
+      )
       .map(
         ({ id, content }) => `
             <li data-id=${id}>${content}</li>
