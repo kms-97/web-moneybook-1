@@ -12,4 +12,6 @@ function getConnection() {
   return connectionPool.getConnection();
 }
 
-module.exports = getConnection;
+module.exports = {
+  getConnection,
+};
