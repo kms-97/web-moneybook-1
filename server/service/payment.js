@@ -1,12 +1,11 @@
 const { getConnection } = require('../db/db');
 
 async function getAllPayment() {
-  const query = 'select * from Payment';
   let connection;
 
   try {
     connection = await getConnection();
-    const [rows] = await connection.execute(query);
+    const [rows] = await findAll(connection);
 
     return rows;
   } catch (e) {
@@ -14,6 +13,11 @@ async function getAllPayment() {
   } finally {
     connection?.release();
   }
+}
+
+function findAll(connection) {
+  const query = 'select * from Payment';
+  return connection.execute(query);
 }
 
 module.exports = {
