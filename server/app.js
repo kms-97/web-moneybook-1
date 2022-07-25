@@ -2,6 +2,7 @@ const express = require('express');
 const logger = require('morgan');
 const path = require('path');
 const { indexRouter } = require('./router/index');
+const { historyRouter } = require('./router/history');
 
 const app = express();
 const port = 3000;
@@ -10,6 +11,7 @@ require('dotenv').config();
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'dist')));
 
+app.use('/history', historyRouter);
 app.use('/*', indexRouter);
 
 app.listen(port, () => {
