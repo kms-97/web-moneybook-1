@@ -1,10 +1,9 @@
 const express = require('express');
+const controller = require('../controller/payment');
 
 const paymentRouter = express.Router();
 
-paymentRouter.get('/', (req, res) => {
-  res.json('get /payment');
-});
+paymentRouter.get('/', controller.getAllPayment);
 paymentRouter.post('/', (req, res) => {
   res.json('post /payment');
 });
