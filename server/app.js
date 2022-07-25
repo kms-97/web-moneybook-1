@@ -8,9 +8,7 @@ require('dotenv').config();
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'dist')));
 
-app.get('/', (req, res) => {
-  res.send('index.html');
-});
+app.use('/', () => require('./router/index'));
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
