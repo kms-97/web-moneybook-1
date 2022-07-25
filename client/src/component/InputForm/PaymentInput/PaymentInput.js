@@ -1,12 +1,19 @@
-import { paymentStore, selectedHistoryStore } from '../../../store/store';
+import { getState, subscribeState } from '../../../controller';
+import { storeKeys } from '../../../utils/constant';
 
 export default class PaymentInput {
   constructor($target) {
     this.$target = $target; // $inputForm
     this.$paymentInput = document.createElement('div');
 
-    selectedHistoryStore.subscribe(() => this.render());
-    paymentStore.subscribe(() => this.render());
+    this.unsubscribeSelectedHistory = subscribeState({
+      key: storeKeys.SELECTED_HISTORY,
+      callback: () => this.render(),
+    });
+    this.unsubscribePayment = subscribeState({
+      key: storeKeys.PAYMENT,
+      callback: () => this.render(),
+    });
 
     this.$target.appendChild(this.$paymentInput);
     this.render();
@@ -57,8 +64,8 @@ export default class PaymentInput {
   }
 
   render() {
-    const history = selectedHistoryStore.get();
-    const payment = paymentStore.get();
+    const history = getState({ key: storeKeys.SELECTED_HISTORY });
+    const payment = getState({ key: storeKeys.PAYMENT });
 
     this.$paymentInput.innerHTML = `
       <label for="type">결제수단</label>
@@ -72,8 +79,7 @@ export default class PaymentInput {
           </svg>
       </div>
       <ul class="payment dropdown">
-      ${paymentStore
-        .get()
+      ${payment
         .map(
           ({ id, content }) => `
               <li data-id=${id} data-name="${content}">

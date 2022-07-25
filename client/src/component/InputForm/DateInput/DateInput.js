@@ -1,4 +1,7 @@
-import { selectedHistoryStore } from '../../../store/store';
+import { subscribeState } from '../../../controller';
+import { getState } from '../../../store';
+import { storeKeys } from '../../../utils/constant';
+import { makeDateString, getTodayString } from '../../../utils/date';
 
 export class DateInput {
   constructor($target) {
@@ -6,7 +9,10 @@ export class DateInput {
     this.$dateInput = document.createElement('div');
     this.$target.appendChild(this.$dateInput);
 
-    selectedHistoryStore.subscribe(() => this.render());
+    this.unsubscribeSelectedHistory = subscribeState({
+      key: storeKeys.SELECTED_HISTORY,
+      callback: () => this.render(),
+    });
 
     this.init();
     this.render();
@@ -14,22 +20,14 @@ export class DateInput {
 
   init() {}
 
-  /** 부가 기능 */
-  initDate() {
-    const today = new Date();
-
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, 0);
-    const day = today.getDate().toString().padStart(2, 0);
-
-    return `${year}-${month}-${day}`;
-  }
-
   render() {
-    const history = selectedHistoryStore.get();
+    const { year, month, date } = getState({ key: storeKeys.SELECTED_HISTORY });
+
     this.$dateInput.innerHTML = `
     <label for="date">일자</label>
-    <input type="date" name="일자" value="${history.date ?? this.initDate()}"/>
+    <input type="date" name="일자" value="${
+      year ? makeDateString(year, month, date) : getTodayString()
+    }"/>
     `;
   }
 }

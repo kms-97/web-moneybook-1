@@ -1,5 +1,10 @@
-import { dateStore, historyStore } from '../../../store/store';
-import { getMockHistory } from '../../../utils/generateMockData';
+import {
+  decreaseMonth,
+  getState,
+  increaseMonth,
+  subscribeState,
+} from '../../../controller';
+import { storeKeys } from '../../../utils/constant';
 
 export default class DaySelector {
   constructor($target) {
@@ -8,7 +13,10 @@ export default class DaySelector {
     this.$daySelector = document.createElement('div');
     this.$daySelector.className = 'day-selector';
 
-    this.unsubscribeDateStore = dateStore.subscribe(() => this.render());
+    this.unsubscribeDate = subscribeState({
+      key: storeKeys.CURRENT_DATE,
+      callback: () => this.render(),
+    });
 
     this.$target.appendChild(this.$daySelector);
     this.init();
@@ -19,48 +27,11 @@ export default class DaySelector {
     const $rightArrow = e.target.closest('.right-arrow');
     if (!$rightArrow) return;
 
-    const { month, year } = dateStore.get();
-    if (month === 12) {
-      getMockHistory(1).then((result) => {
-        dateStore.set({
-          month: 1,
-          year: year + 1,
-        });
-        historyStore.set([...result]);
-      });
-    } else {
-      getMockHistory(month + 1).then((result) => {
-        dateStore.set({
-          year,
-          month: month + 1,
-        });
-        historyStore.set([...result]);
-      });
-    }
+    increaseMonth();
   }
 
   onClickLeftArrow(e) {
-    const $leftArrow = e.target.closest('.left-arrow');
-    if (!$leftArrow) return;
-
-    const { month, year } = dateStore.get();
-    if (month === 1) {
-      getMockHistory(12).then((result) => {
-        dateStore.set({
-          month: 12,
-          year: year - 1,
-        });
-        historyStore.set([...result]);
-      });
-    } else {
-      getMockHistory(month - 1).then((result) => {
-        dateStore.set({
-          year,
-          month: month - 1,
-        });
-        historyStore.set([...result]);
-      });
-    }
+    decreaseMonth();
   }
 
   init() {
@@ -69,7 +40,7 @@ export default class DaySelector {
   }
 
   render() {
-    const { month, year } = dateStore.get();
+    const { month, year } = getState({ key: storeKeys.CURRENT_DATE });
 
     this.$daySelector.innerHTML = `
       <button class="left-arrow">
