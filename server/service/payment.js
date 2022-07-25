@@ -35,6 +35,26 @@ async function postPayment({ content }) {
   }
 }
 
+async function deletePayment({ id }) {
+  let connection;
+
+  try {
+    connection = await getConnection();
+    await connection.beginTransaction();
+
+    const [{ affectedRows }] = await remove(connection, { id });
+    const [rows] = await findAll(connection);
+
+    await connection.commit();
+    return rows;
+  } catch (e) {
+    await connection.rollback();
+    throw e;
+  } finally {
+    connection?.release();
+  }
+}
+
 function findAll(connection) {
   const query = 'select * from payment';
   return connection.execute(query);
@@ -53,4 +73,5 @@ function remove(connection, { id }) {
 module.exports = {
   getAllPayment,
   postPayment,
+  deletePayment,
 };
