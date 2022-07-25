@@ -1,9 +1,7 @@
-import {
-  categoryStore,
-  selectedHistoryStore,
-  paymentStore,
-} from '../../store/store';
+import { categoryStore, selectedHistoryStore } from '../../store/store';
+import CategoryInput from './CategoryInput/CategoryInput';
 import './InputForm.scss';
+import PaymentInput from './PaymentInput/PaymentInput';
 
 export class InputForm {
   constructor($target) {
@@ -12,97 +10,109 @@ export class InputForm {
     this.$inpufForm.className = 'inputForm';
 
     selectedHistoryStore.subscribe(() => this.render());
-    paymentStore.subscribe(() => this.render());
 
     this.$target.appendChild(this.$inpufForm);
     this.render();
     this.init();
   }
 
+  /** 이벤트 바인딩 */
   init() {
-    this.$inpufForm.addEventListener('change', (event) => {
-      const $isIncome = event.target.closest('#isIncome');
-      if (!$isIncome) return;
-
-      const $inputType = document.querySelector('input[name="type"]');
-      $inputType.value = '';
-      $inputType.dataset.id = '';
-
-      const $dropdown = document.querySelector('.dropdown');
-      $dropdown.innerHTML = categoryStore
-        .get()
-        .filter(({ isIncome }) => isIncome === $isIncome.checked)
-        .map(
-          ({ id, content }) => `
-              <li data-id=${id}>${content}</li>
-              <div class="border"></div>`,
-        )
-        .join('');
-    });
-
-    this.$inpufForm.addEventListener('click', (event) => {
-      const $field = event.target.closest('.field');
-      if (!$field) return;
-
-      const $dropdown = $field.nextElementSibling;
-      if (!$dropdown || !$dropdown.className.includes('dropdown')) return;
-
-      $dropdown.style.display =
-        ($dropdown.style.display === 'none') | ($dropdown.style.display === '')
-          ? 'block'
-          : 'none';
-    });
-
-    this.$inpufForm.addEventListener('click', (event) => {
-      const $field = event.target.closest('.field');
-      if (!$field) return;
-      const $dropdown = $field.nextElementSibling.className.includes('category')
-        ? $field.nextElementSibling
-        : null;
-      if (!$dropdown) return;
-
-      const $isIncome = document.querySelector('#isIncome');
-      $dropdown.innerHTML = categoryStore
-        .get()
-        .filter(({ isIncome }) => isIncome === $isIncome.checked)
-        .map(
-          ({ id, content }) => `
-              <li data-id=${id}>${content}</li>
-              <div class="border"></div>`,
-        )
-        .join('');
-    });
-
-    this.$inpufForm.addEventListener('click', (event) => {
-      const $li = event.target.closest('.inputForm .category>li');
-      if (!$li) return;
-
-      const $inputType = document.querySelector('input[name="type"]');
-      $inputType.value = $li.innerHTML;
-      $inputType.dataset.id = $li.dataset.id;
-
-      const $category = document.querySelector('.inputForm .category');
-      $category.style.display = 'none';
-    });
-
-    this.$inpufForm.addEventListener('click', (event) => {
-      const $li = event.target.closest('.inputForm .payment>li');
-      if (!$li) return;
-
-      const $inputType = document.querySelector('input[name="payment"]');
-
-      if (!$li.dataset.name) {
-        // 추가하기 버튼
-        return;
-      }
-      $inputType.value = $li.dataset.name;
-      $inputType.dataset.id = $li.dataset.id;
-
-      const $payment = document.querySelector('.inputForm .payment');
-      $payment.style.display = 'none';
-    });
+    // this.$inpufForm.addEventListener('change', this.onClickIsIncome);
+    this.$inpufForm.addEventListener('click', this.onClickIsIncome.bind(this));
+    this.$inpufForm.addEventListener(
+      'click',
+      this.onClickDropdownField.bind(this),
+    );
+    this.$inpufForm.addEventListener(
+      'click',
+      this.onClickCategoryItem.bind(this),
+    );
+    this.$inpufForm.addEventListener(
+      'click',
+      this.onClickPaymentItem.bind(this),
+    );
   }
 
+  /** 이벤트 핸들러 */
+  onChangeIsIncome() {
+    const $isIncome = document.querySelector('#isIncome');
+
+    console.log($isIncome, $isIncome.checked);
+    const $inputType = document.querySelector('input[name="type"]');
+    $inputType.value = '';
+    $inputType.dataset.id = '';
+
+    const $dropdown = document.querySelector('.dropdown');
+    $dropdown.innerHTML = categoryStore
+      .get()
+      .filter(({ isIncome }) => isIncome === $isIncome.checked)
+      .map(
+        ({ id, content }) => `
+            <li data-id=${id}>${content}</li>
+            <div class="border"></div>`,
+      )
+      .join('');
+  }
+
+  onClickIsIncome(event) {
+    const $isIncome = event.target.closest('#isIncome');
+    if (!$isIncome) return;
+    this.onChangeIsIncome();
+  }
+
+  onClickDropdownField(event) {
+    const $field = event.target.closest('.field');
+    if (!$field) return;
+
+    const $dropdown = $field.nextElementSibling;
+    if (!$dropdown || !$dropdown.className.includes('dropdown')) return;
+
+    $dropdown.style.display =
+      ($dropdown.style.display === 'none') | ($dropdown.style.display === '')
+        ? 'block'
+        : 'none';
+
+    if (!$field) return;
+    const $categoryDropdown = $field.nextElementSibling.className.includes(
+      'category',
+    )
+      ? $field.nextElementSibling
+      : null;
+    if (!$categoryDropdown) return;
+    this.onChangeIsIncome();
+  }
+
+  onClickCategoryItem(event) {
+    const $li = event.target.closest('.inputForm .category>li');
+    if (!$li) return;
+
+    const $inputType = document.querySelector('input[name="type"]');
+    $inputType.value = $li.innerHTML;
+    $inputType.dataset.id = $li.dataset.id;
+
+    const $category = document.querySelector('.inputForm .category');
+    $category.style.display = 'none';
+  }
+
+  onClickPaymentItem(event) {
+    const $li = event.target.closest('.inputForm .payment>li');
+    if (!$li) return;
+
+    const $inputType = document.querySelector('input[name="payment"]');
+
+    if (!$li.dataset.name) {
+      // 추가하기 버튼
+      return;
+    }
+    $inputType.value = $li.dataset.name;
+    $inputType.dataset.id = $li.dataset.id;
+
+    const $payment = document.querySelector('.inputForm .payment');
+    $payment.style.display = 'none';
+  }
+
+  /** 부가 기능 */
   initDate() {
     const today = new Date();
 
@@ -115,10 +125,6 @@ export class InputForm {
 
   render() {
     const history = selectedHistoryStore.get();
-    const payment = paymentStore.get();
-    const category = categoryStore.get();
-
-    console.log(history);
 
     this.$inpufForm.innerHTML = `
     <div class="inputs-wrapper">
@@ -129,30 +135,8 @@ export class InputForm {
             }"/>
         </div>
 
-        <div class="input-wrapper">
-            <label for="type">분류</label>
-            <div class="field">
-                <input type="text" name="type" placeholder="선택하세요" value="${
-                  category.filter(({ id }) => id === history.categoryId)[0]
-                    ?.content ?? ''
-                }" date-id="${history.categoryId ?? ''}" readonly/>
-                <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 6.5L8 10.5L12 6.5" stroke="#8D9393" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
+        <div class="input-wrapper category-input-wrapper"></div>
 
-            <ul class="category dropdown">
-            ${categoryStore
-              .get()
-              .filter(({ isIncome }) => isIncome === true)
-              .map(
-                ({ id, content }) => `
-                    <li data-id=${id}>${content}</li>
-                    <div class="border"></div>`,
-              )
-              .join('')}
-            </ul>
-        </div>
         <div class="input-wrapper">
             <label for="type">내용</label>
             <input type="text" name="title" placeholder="입력하세요" value="${
@@ -160,38 +144,13 @@ export class InputForm {
             }"maxlength="20"/>
         </div>
 
-        <div class="input-wrapper">
-            <label for="type">결제수단</label>
-            <div class="field">
-                <input type="text" name="payment" placeholder="선택하세요" value="${
-                  payment.filter(({ id }) => id === history.paymentId)[0]
-                    ?.content ?? ''
-                }" data-id="${history.paymentId ?? ''}" readonly />
-                <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 6.5L8 10.5L12 6.5" stroke="#8D9393" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-            <ul class="payment dropdown">
-            ${paymentStore
-              .get()
-              .map(
-                ({ id, content }) => `
-                    <li data-id=${id} data-name="${content}">
-                      ${content}
-                      <button>X</button>
-                    </li>
-                    <div class="border"></div>`,
-              )
-              .join('')}
-                <li>추가하기</li>
-            </ul>
-        </div>
+        <div class="input-wrapper payment-input-wrapper"></div>
 
         <div class="input-wrapper">
             <label for="type">금액</label>
             <div class="field">
                 <input type="checkbox" name="isIncome" id='isIncome' ${
-                  history.isIncome ? 'checked' : ''
+                  history.isIncome !== false ? 'checked' : ''
                 }></input>
                 <label for='isIncome'></label>
                 <input type="text" name="amount" placeholder="입력하세요" autocomplete="off" value="${
@@ -208,5 +167,8 @@ export class InputForm {
     </button>    
     </div>
     `;
+
+    new CategoryInput(document.querySelector('.category-input-wrapper'));
+    new PaymentInput(document.querySelector('.payment-input-wrapper'));
   }
 }
