@@ -1,6 +1,4 @@
 import './Header.scss';
-import { dateStore, historyStore } from '../../store/store.js';
-import { getMockHistory } from '../../utils/generateMockData';
 import DaySelector from './DaySelector/DaySelector';
 
 export class Header {

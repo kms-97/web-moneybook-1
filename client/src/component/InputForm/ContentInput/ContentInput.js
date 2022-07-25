@@ -1,4 +1,6 @@
-import { selectedHistoryStore } from '../../../store/store';
+import { subscribeState } from '../../../controller';
+import { getState } from '../../../store';
+import { storeKeys } from '../../../utils/constant';
 
 export class ContentInput {
   constructor($target) {
@@ -6,7 +8,10 @@ export class ContentInput {
     this.$contentInput = document.createElement('div');
     this.$target.appendChild(this.$contentInput);
 
-    selectedHistoryStore.subscribe(() => this.render());
+    this.unsubscribeSelectedHistory = subscribeState({
+      key: storeKeys.SELECTED_HISTORY,
+      callback: () => this.render(),
+    });
 
     this.init();
     this.render();
@@ -15,7 +20,7 @@ export class ContentInput {
   init() {}
 
   render() {
-    const history = selectedHistoryStore.get();
+    const history = getState({ key: storeKeys.SELECTED_HISTORY });
 
     this.$contentInput.innerHTML = `<label for="type">내용</label>
     <input type="text" name="title" placeholder="입력하세요" value="${

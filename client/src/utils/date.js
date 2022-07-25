@@ -11,6 +11,16 @@ export function makeDateString(year, month, date) {
   return `${year}-${(month + '').padStart(2, 0)}-${(date + '').padStart(2, 0)}`;
 }
 
+export function getTodayString() {
+  const today = new Date();
+
+  const year = today.getFullYear();
+  const month = (today.getMonth() + 1).toString().padStart(2, 0);
+  const day = today.getDate().toString().padStart(2, 0);
+
+  return `${year}-${month}-${day}`;
+}
+
 export function getDay(year, month, date) {
   const day = {
     1: '월',

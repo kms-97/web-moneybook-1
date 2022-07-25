@@ -1,14 +1,19 @@
-import {
-  categoryStore,
-  paymentStore,
-  selectedHistoryStore,
-} from '../../../store/store';
+import { getState, subscribeState } from '../../../controller';
+import { storeKeys } from '../../../utils/constant';
 
 export default class CategoryInput {
   constructor($target) {
     this.$target = $target; // $inputForm
     this.$categoryInput = document.createElement('div');
-    selectedHistoryStore.subscribe(() => this.render());
+
+    this.unsubscribeSelectedHistory = subscribeState({
+      key: storeKeys.SELECTED_HISTORY,
+      callback: () => this.render(),
+    });
+    this.unsubscribeCategory = subscribeState({
+      key: storeKeys.CATEGORY,
+      callback: () => this.render(),
+    });
 
     this.$target.appendChild(this.$categoryInput);
     this.render();
@@ -60,8 +65,8 @@ export default class CategoryInput {
   }
 
   render() {
-    const history = selectedHistoryStore.get();
-    const category = categoryStore.get();
+    const history = getState({ key: storeKeys.SELECTED_HISTORY });
+    const category = getState({ key: storeKeys.CATEGORY });
 
     this.$categoryInput.innerHTML = `
     <label for="type">분류</label>
@@ -76,8 +81,7 @@ export default class CategoryInput {
     </div>
 
     <ul class="category dropdown">
-    ${categoryStore
-      .get()
+    ${category
       .filter(
         ({ isIncome }) =>
           history.isIncome !== undefined

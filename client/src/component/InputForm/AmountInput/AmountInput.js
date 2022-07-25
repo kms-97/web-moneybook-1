@@ -1,4 +1,6 @@
-import { categoryStore, selectedHistoryStore } from '../../../store/store';
+import { getState } from '../../../controller';
+import { subscribeState } from '../../../store';
+import { storeKeys } from '../../../utils/constant';
 
 export class AmountInput {
   constructor($target) {
@@ -6,7 +8,10 @@ export class AmountInput {
     this.$amountInput = document.createElement('div');
     this.$target.appendChild(this.$amountInput);
 
-    selectedHistoryStore.subscribe(() => this.render());
+    this.unsubcribeState = subscribeState({
+      key: storeKeys.SELECTED_HISTORY,
+      callback: () => this.render(),
+    });
 
     this.init();
     this.render();
@@ -46,8 +51,7 @@ export class AmountInput {
   }
 
   render() {
-    const history = selectedHistoryStore.get();
-
+    const history = getState({ key: storeKeys.SELECTED_HISTORY });
     this.$amountInput.innerHTML = `
     <label for="type">금액</label>
     <div class="field">
