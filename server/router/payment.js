@@ -4,9 +4,7 @@ const controller = require('../controller/payment');
 const paymentRouter = express.Router();
 
 paymentRouter.get('/', controller.getAllPayment);
-paymentRouter.post('/', (req, res) => {
-  res.json('post /payment');
-});
+paymentRouter.post('/', controller.postPayment);
 paymentRouter.delete('/', (req, res) => {
   res.json('delete /payment');
 });
