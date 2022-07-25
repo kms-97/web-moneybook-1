@@ -15,6 +15,26 @@ async function getAllPayment() {
   }
 }
 
+async function postPayment({ content }) {
+  let connection;
+
+  try {
+    connection = await getConnection();
+    await connection.beginTransaction();
+
+    const [{ affectedRows }] = await insert(connection, { content });
+    const [rows] = await findAll(connection);
+
+    await connection.commit();
+    return rows;
+  } catch (e) {
+    await connection.rollback();
+    throw e;
+  } finally {
+    connection?.release();
+  }
+}
+
 function findAll(connection) {
   const query = 'select * from payment';
   return connection.execute(query);
@@ -27,4 +47,5 @@ function insert(connection, { content }) {
 
 module.exports = {
   getAllPayment,
+  postPayment,
 };
