@@ -16,7 +16,7 @@ async function getAllPayment() {
 }
 
 function findAll(connection) {
-  const query = 'select * from Payment';
+  const query = 'select * from payment';
   return connection.execute(query);
 }
 
