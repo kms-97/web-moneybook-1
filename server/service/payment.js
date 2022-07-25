@@ -45,6 +45,11 @@ function insert(connection, { content }) {
   return connection.execute(query, [content]);
 }
 
+function remove(connection, { id }) {
+  const query = 'delete from payment where id = ?';
+  return connection.execute(query, [id]);
+}
+
 module.exports = {
   getAllPayment,
   postPayment,
