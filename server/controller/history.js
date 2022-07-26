@@ -30,6 +30,8 @@ async function getAmountGroupByCategory(req, res) {
 
 async function postHistory(req, res) {
   const {
+    currentYear,
+    currentMonth,
     year,
     month,
     date,
@@ -42,6 +44,8 @@ async function postHistory(req, res) {
 
   try {
     const data = await historyService.postHistory({
+      currentYear,
+      currentMonth,
       year,
       month,
       date,
@@ -59,6 +63,8 @@ async function postHistory(req, res) {
 
 async function putHistory(req, res) {
   const {
+    currentYear,
+    currentMonth,
     id,
     year,
     month,
@@ -72,6 +78,8 @@ async function putHistory(req, res) {
 
   try {
     const data = await historyService.putHistory({
+      currentYear,
+      currentMonth,
       id,
       year,
       month,

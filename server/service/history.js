@@ -43,6 +43,8 @@ async function getAmountGroupByCategory({
 }
 
 async function postHistory({
+  currentYear,
+  currentMonth,
   year,
   month,
   date,
@@ -67,7 +69,10 @@ async function postHistory({
       amount,
       isIncome,
     });
-    const [rows] = await findAllOfMonth(connection, { year, month });
+    const [rows] = await findAllOfMonth(connection, {
+      year: currentYear,
+      month: currentMonth,
+    });
 
     await connection.commit();
     return rows;
@@ -80,6 +85,8 @@ async function postHistory({
 }
 
 async function putHistory({
+  currentYear,
+  currentMonth,
   id,
   year,
   month,
@@ -106,7 +113,10 @@ async function putHistory({
       amount,
       isIncome,
     });
-    const [rows] = await findAllOfMonth(connection, { year, month });
+    const [rows] = await findAllOfMonth(connection, {
+      year: currentYear,
+      month: currentMonth,
+    });
 
     await connection.commit();
     return rows;
