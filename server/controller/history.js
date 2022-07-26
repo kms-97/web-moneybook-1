@@ -1,7 +1,13 @@
 const service = require('../service/history');
+const { parameterValidator } = require('../util/parameterValidator');
 
 async function getAllHistoryOfMonth(req, res, next) {
   const { year, month } = req.body;
+
+  parameterValidator([
+    [year, 'number'],
+    [month, 'number'],
+  ]);
 
   const data = await service.getAllHistoryOfMonth({ year, month });
   res.status(200).json(data);
@@ -9,6 +15,14 @@ async function getAllHistoryOfMonth(req, res, next) {
 
 async function getAmountGroupByCategory(req, res, next) {
   const { startYear, startMonth, endYear, endMonth, categoryId } = req.body;
+
+  parameterValidator([
+    [startYear, 'number'],
+    [startMonth, 'number'],
+    [endYear, 'number'],
+    [endMonth, 'number'],
+    [categoryId, 'number'],
+  ]);
 
   const data = await service.getAmountGroupByCategory({
     startYear,
@@ -31,6 +45,17 @@ async function postHistory(req, res, next) {
     amount,
     isIncome,
   } = req.body;
+
+  parameterValidator([
+    [year, 'number'],
+    [month, 'number'],
+    [date, 'number'],
+    [categoryId, 'number'],
+    [content, 'string'],
+    [paymentId, 'number'],
+    [amount, 'number'],
+    //[isIncome, 'boolean']
+  ]);
 
   const data = await service.postHistory({
     year,
