@@ -1,0 +1,65 @@
+@import '../../style/common.scss';
+
+.payment-modal {
+  // display: flex;
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  font-size: 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  z-index: 1;
+  background-color: #00000000;
+  backdrop-filter: blur(10px);
+
+  justify-content: center;
+  align-items: center;
+
+  .payment-input-wrapper {
+    padding: 50px 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 10px;
+
+    background-color: $color-off-white;
+  }
+
+  .discription {
+    @include display-small-text();
+  }
+
+  input[name='payment'] {
+    background-color: $color-background;
+    width: 300px;
+    padding: 5px;
+    border: none;
+    outline: 1px solid $color-line;
+    border-radius: 5px;
+    &::placeholder {
+      color: $color-placeholder;
+    }
+
+    &:focus {
+      border: none;
+      outline: 1px solid $color-primary;
+    }
+  }
+
+  .button-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .cancel-button {
+    font-size: inherit;
+    color: $color-label;
+  }
+
+  .create-button {
+    font-size: inherit;
+    color: $color-primary;
+  }
+}
