@@ -1,9 +1,9 @@
 const express = require('express');
-const controller = require('../controller/category');
+const categoryController = require('../controller/category');
 const { asyncErrorCatcher } = require('../middleware/asyncErrorCatcher');
 
 const categoryRouter = express.Router();
 
-categoryRouter.get('/', asyncErrorCatcher(controller.getAllCategory));
+categoryRouter.get('/', asyncErrorCatcher(categoryController.getAllCategory));
 
 module.exports = { categoryRouter };

@@ -6,7 +6,7 @@ function validateRequired(value) {
 }
 
 function validateType(value, type) {
-  if (!(typeof value === type))
+  if (!(typeof value === type) || (type === 'number' && isNaN(value)))
     throw new CustomError(ERROR_INFO.INVALID_PARAMETER);
 }
 
