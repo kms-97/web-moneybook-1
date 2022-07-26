@@ -1,8 +1,4 @@
-import {
-  getPaymentLength,
-  getState,
-  subscribeState,
-} from '../../../controller';
+import { getPaymentLength, subscribeState } from '../../../controller';
 import { storeKeys } from '../../../utils/constant';
 
 export class Count {
@@ -23,7 +19,6 @@ export class Count {
   }
 
   render() {
-    const history = getState({ key: storeKeys.CURRENT_HISTORY });
     this.$count.innerHTML = `전체 내역 ${getPaymentLength()}건`;
   }
 }

@@ -176,8 +176,7 @@ export const updateCategory = async () => {
   setState({ key: storeKeys.CATEGORY, newState: category });
 };
 
-/* 카테고리 관련 */
-export const getCategoryById = async (categoryId) => {
+export const getCategoryById = (categoryId) => {
   const category = getState({ key: storeKeys.CATEGORY });
   return category.filter(({ id }) => id === categoryId)[0];
 };
