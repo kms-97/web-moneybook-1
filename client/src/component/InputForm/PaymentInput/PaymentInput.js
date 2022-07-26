@@ -23,6 +23,10 @@ export default class PaymentInput {
   init() {
     this.$paymentInput.addEventListener('click', this.onClickPaymentItem);
     this.$paymentInput.addEventListener('click', this.onClickDropdownField);
+    this.$paymentInput.addEventListener(
+      'click',
+      this.onClickPaymentItemDeleteButton,
+    );
   }
 
   onClickPaymentItem(event) {
@@ -31,8 +35,10 @@ export default class PaymentInput {
 
     const $inputType = document.querySelector('input[name="payment"]');
 
-    if (!$li.dataset.name) {
+    if ($li.dataset.name === '추가') {
       // 추가하기 버튼
+      const $paymentModal = document.querySelector('.payment-modal');
+      $paymentModal.style.display = 'flex';
       return;
     }
     $inputType.value = $li.dataset.name;
@@ -63,6 +69,23 @@ export default class PaymentInput {
     if (!$categoryDropdown) return;
   }
 
+  onClickPaymentItemDeleteButton(event) {
+    event.preventDefault();
+    const $deleteButton = event.target.closest('.delete-button');
+    if (!$deleteButton) return;
+
+    const $li = event.target.closest('li');
+    if (!$li) return;
+
+    const $deletePaymentModal = document.querySelector('.delete-payment-modal');
+    $deletePaymentModal.style.display = 'flex';
+
+    const $input = $deletePaymentModal.querySelector('input[name="payment"]');
+
+    $input.value = $li.dataset.name;
+    $input.dataset.id = $li.dataset.id;
+  }
+
   render() {
     const history = getState({ key: storeKeys.SELECTED_HISTORY });
     const payment = getState({ key: storeKeys.PAYMENT });
@@ -84,12 +107,12 @@ export default class PaymentInput {
           ({ id, content }) => `
               <li data-id=${id} data-name="${content}">
                 ${content}
-                <button>X</button>
+                <button class="delete-button">X</button>
               </li>
               <div class="border"></div>`,
         )
         .join('')}
-          <li>추가하기</li>
+          <li data-name="추가">추가하기</li>
       </ul>
   `;
   }

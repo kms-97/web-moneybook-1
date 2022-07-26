@@ -118,6 +118,37 @@ export const updatePayment = async () => {
   setState({ key: storeKeys.PAYMENT, newState: payment });
 };
 
+// 결제 수단 추가
+export const createPayment = (payment, callback) => {
+  if (!payment) return;
+  // + payment를 추가하는 api를 요청합니다.
+
+  // newPayment의 id인 13은 임시데이터입니다.
+  const newPayment = [
+    ...getState({ key: storeKeys.PAYMENT }),
+    { id: 13, content: payment },
+  ];
+  setState({ key: storeKeys.PAYMENT, newState: newPayment });
+  callback();
+};
+
+// 결제 수단 삭제
+export const deletePayment = (paymentId, callback) => {
+  console.log(getState({ key: storeKeys.PAYMENT }));
+  // + payment를 삭제하는 api를 요청합니다.
+
+  // 성공적으로 삭제 시, store를 변경합니다.
+  const newPayment = [
+    ...getState({ key: storeKeys.PAYMENT }).filter(
+      ({ id }) => id !== paymentId,
+    ),
+  ];
+
+  console.log(paymentId, newPayment);
+  setState({ key: storeKeys.PAYMENT, newState: newPayment });
+  callback();
+};
+
 /* 카테고리 관련 */
 export const updateCategory = async () => {
   const category = await getMockCategory();
