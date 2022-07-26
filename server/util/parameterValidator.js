@@ -2,13 +2,12 @@ const CustomError = require('../error/CustomError');
 const { ERROR_INFO } = require('./constant');
 
 function validateRequired(value) {
-  if (value === undefined)
-    throw new CustomError({ ...ERROR_INFO.MISSING_PARAMETER });
+  if (value === undefined) throw new CustomError(ERROR_INFO.MISSING_PARAMETER);
 }
 
 function validateType(value, type) {
   if (!(typeof value === type))
-    throw new CustomError({ ...ERROR_INFO.INVALID_PARAMETER });
+    throw new CustomError(ERROR_INFO.INVALID_PARAMETER);
 }
 
 function parameterValidator(parameters) {

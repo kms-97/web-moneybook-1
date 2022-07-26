@@ -70,8 +70,7 @@ async function postHistory({
       amount,
       isIncome,
     });
-    if (affectedRows === 0)
-      new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
+    if (affectedRows === 0) new CustomError(ERROR_INFO.APPLICATION_ERROR);
 
     const [rows] = await findAllOfMonth(connection, { year, month });
 
@@ -112,7 +111,7 @@ async function putHistory({
       amount,
       isIncome,
     });
-    if (affectedRows === 0) throw new CustomError({ ...ERROR_INFO.NOT_FOUND });
+    if (affectedRows === 0) throw new CustomError(ERROR_INFO.NOT_FOUND);
 
     const [rows] = await findAllOfMonth(connection, { year, month });
 
