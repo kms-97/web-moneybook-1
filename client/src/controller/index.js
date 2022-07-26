@@ -1,10 +1,16 @@
+import {
+  getAllHistory as getAllHistoryAPI,
+  postHistory as postHistoryAPI,
+  putHistory as putHistoryAPI,
+} from '../api/history';
+import { getAllCategory as getAllCategoryAPI } from '../api/category';
+import {
+  getAllPayment as getAllPaymentAPI,
+  postPayment as postPaymentAPI,
+  deletePayment as deletePaymentAPI,
+} from '../api/payment';
 import * as store from '../store';
 import { storeKeys } from '../utils/constant';
-import {
-  getMockCategory,
-  getMockHistory,
-  getMockPayment,
-} from '../utils/generateMockData';
 
 export const subscribeState = ({ key, callback }) => {
   return store.subscribeState({ key, callback });
@@ -61,7 +67,20 @@ export const updateHistories = async () => {
 
   // 서버에서 해당 년 월에 해당하는 최근 6개월의 기록을 받아와 state를 업데이트
   // 현재는 최근 1개월 기록만 예시 데이터로 관리.
-  const histories = await getMockHistory();
+  const response = await getAllHistoryAPI(year, month);
+  const histories = response;
+  setState({ key: storeKeys.CURRENT_HISTORY, newState: [...histories] });
+};
+
+export const postHistory = async (history) => {
+  const response = await postHistoryAPI(history);
+  const histories = response;
+  setState({ key: storeKeys.CURRENT_HISTORY, newState: [...histories] });
+};
+
+export const putHistory = async (history) => {
+  const response = await putHistoryAPI(history);
+  const histories = response;
   setState({ key: storeKeys.CURRENT_HISTORY, newState: [...histories] });
 };
 
@@ -135,44 +154,30 @@ export const getPaymentLength = () => {
 
 /* 결제 방법 관련 */
 export const updatePayment = async () => {
-  const payment = await getMockPayment();
+  const payment = await getAllPaymentAPI();
   setState({ key: storeKeys.PAYMENT, newState: payment });
 };
 
 // 결제 수단 추가
-export const createPayment = (payment, callback) => {
-  if (!payment) return;
-  // + payment를 추가하는 api를 요청합니다.
-
-  // newPayment의 id인 13은 임시데이터입니다.
-  const newPayment = [
-    ...getState({ key: storeKeys.PAYMENT }),
-    { id: 13, content: payment },
-  ];
+export const createPayment = async (content, callback) => {
+  if (!content) return;
+  const response = await postPaymentAPI(content);
+  const newPayment = response;
   setState({ key: storeKeys.PAYMENT, newState: newPayment });
   callback();
 };
 
 // 결제 수단 삭제
-export const deletePayment = (paymentId, callback) => {
-  console.log(getState({ key: storeKeys.PAYMENT }));
-  // + payment를 삭제하는 api를 요청합니다.
-
-  // 성공적으로 삭제 시, store를 변경합니다.
-  const newPayment = [
-    ...getState({ key: storeKeys.PAYMENT }).filter(
-      ({ id }) => id !== paymentId,
-    ),
-  ];
-
-  console.log(paymentId, newPayment);
+export const deletePayment = async (paymentId, callback) => {
+  const response = await deletePaymentAPI(paymentId);
+  const newPayment = response;
   setState({ key: storeKeys.PAYMENT, newState: newPayment });
   callback();
 };
 
 /* 카테고리 관련 */
 export const updateCategory = async () => {
-  const category = await getMockCategory();
+  const category = await getAllCategoryAPI();
   setState({ key: storeKeys.CATEGORY, newState: category });
 };
 
