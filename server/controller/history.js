@@ -90,6 +90,7 @@ async function putHistory(req, res) {
 
 module.exports = {
   getAllHistoryOfMonth,
+  getAmountGroupByCategory,
   postHistory,
   putHistory,
 };
