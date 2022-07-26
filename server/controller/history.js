@@ -6,8 +6,8 @@ async function getAllHistoryOfMonth(req, res) {
   const { year, month } = req.query;
 
   parameterValidator([
-    [year, 'number'],
-    [month, 'number'],
+    [Number(year), 'number'],
+    [Number(month), 'number'],
   ]);
 
   const data = await historyService.getAllHistoryOfMonth({ year, month });
@@ -18,11 +18,11 @@ async function getAmountGroupByCategory(req, res) {
   const { startYear, startMonth, endYear, endMonth, categoryId } = req.query;
 
   parameterValidator([
-    [startYear, 'number'],
-    [startMonth, 'number'],
-    [endYear, 'number'],
-    [endMonth, 'number'],
-    [categoryId, 'number'],
+    [Number(startYear), 'number'],
+    [Number(startMonth), 'number'],
+    [Number(endYear), 'number'],
+    [Number(endMonth), 'number'],
+    [Number(categoryId), 'number'],
   ]);
 
   const data = await historyService.getAmountGroupByCategory({
