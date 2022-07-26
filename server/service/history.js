@@ -98,7 +98,6 @@ async function putHistory({
   content,
   paymentId,
   amount,
-  isIncome,
 }) {
   const createdDate = makeDateString({ year, month, date });
   let connection;
@@ -114,7 +113,6 @@ async function putHistory({
       content,
       paymentId,
       amount,
-      isIncome,
     });
     if (affectedRows === 0) throw new CustomError(ERROR_INFO.NOT_FOUND);
 
@@ -159,16 +157,18 @@ function insert(
 
 function update(
   connection,
-  { id, createdDate, categoryId, content, paymentId, amount, isIncome },
+  { id, createdDate, categoryId, content, paymentId, amount },
 ) {
-  const query = `update hist set create_date = ?, category_id = ?, content = ?, payment_id = ?, amount = ?, is_income = ? where id = ?`;
+  const query = `update hist set create_date = ?, category_id = ?, content = ?, payment_id = ?, amount = ?, is_income = (
+    select is_income from category where id = ?
+  ) where id = ?`;
   return connection.execute(query, [
     createdDate,
     categoryId,
     content,
     paymentId,
     amount,
-    isIncome,
+    categoryId,
     id,
   ]);
 }
