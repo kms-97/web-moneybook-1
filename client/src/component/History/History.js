@@ -1,6 +1,4 @@
 import './History.scss';
-import { changeSelectedHistory } from '../../controller';
-import { storeKeys } from '../../utils/constant';
 import { List } from './List/List';
 import { Filter } from './Filter/Filter';
 import { Count } from './Count/Count';
@@ -13,20 +11,6 @@ export class History {
 
     this.$target.appendChild(this.$history);
     this.render();
-    this.init();
-  }
-
-  init() {
-    this.$history.addEventListener('click', (e) => {
-      const $tr = e.target.closest('tr');
-      if (!$tr) return;
-
-      // .active 클래스 붙이기
-
-      // set selected history
-      const trId = Number($tr.dataset.id);
-      changeSelectedHistory({ id: trId });
-    });
   }
 
   render() {

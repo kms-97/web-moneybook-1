@@ -1,4 +1,9 @@
-import { getState, subscribeState } from '../../../controller';
+import {
+  getCostSumCurrentMonth,
+  getIncomeSumCurrentMonth,
+  getState,
+  subscribeState,
+} from '../../../controller';
 import { storeKeys } from '../../../utils/constant';
 
 export class Filter {
@@ -19,31 +24,14 @@ export class Filter {
   }
 
   render() {
-    const history = getState({ key: storeKeys.CURRENT_HISTORY });
-    this.$filter = `
+    this.$filter.innerHTML = `
     <li>
       <input id='filter-income' type='checkbox' checked>
-      <label for='filter-income'>수입 ${history.reduce(
-        (p, { datas }) =>
-          p +
-          datas.reduce(
-            (p, { isIncome, amount }) => (isIncome ? p + parseInt(amount) : p),
-            0,
-          ),
-        0,
-      )}</label>
+      <label for='filter-income'>수입 ${getIncomeSumCurrentMonth()}</label>
     </li>
     <li>
       <input id='filter-cost' type='checkbox' checked>
-      <label for='filter-cost'>지출 ${history.reduce(
-        (p, { datas }) =>
-          p +
-          datas.reduce(
-            (p, { isIncome, amount }) => (!isIncome ? p + parseInt(amount) : p),
-            0,
-          ),
-        0,
-      )}</label>
+      <label for='filter-cost'>지출 ${getCostSumCurrentMonth()}</label>
     </li>`;
   }
 }

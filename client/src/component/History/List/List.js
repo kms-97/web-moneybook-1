@@ -1,4 +1,9 @@
-import { getState } from '../../../controller';
+import {
+  changeSelectedHistory,
+  getState,
+  getIncomeSum,
+  getCostSum,
+} from '../../../controller';
 import { subscribeState } from '../../../controller';
 import { storeKeys } from '../../../utils/constant';
 import { getDay } from '../../../utils/date';
@@ -17,7 +22,21 @@ export class List {
     });
 
     this.$target.appendChild(this.$list);
+    this.init();
     this.render();
+  }
+
+  init() {
+    this.$list.addEventListener('click', (e) => {
+      const $tr = e.target.closest('tr');
+      if (!$tr) return;
+
+      // .active 클래스 붙이기
+
+      // set selected history
+      const trId = Number($tr.dataset.id);
+      changeSelectedHistory({ id: trId });
+    });
   }
 
   render() {
@@ -26,7 +45,7 @@ export class List {
     const category = getState({ key: storeKeys.CATEGORY });
     const payment = getState({ key: storeKeys.PAYMENT });
 
-    this.$list.innertHTML = `
+    this.$list.innerHTML = `
     ${history
       .map(
         ({ date, datas }) => `
@@ -38,16 +57,8 @@ export class List {
           date,
         )}</span></div>
         <div class='sum'>
-            <div class='income'>수입 ${datas.reduce(
-              (p, { amount, isIncome }) =>
-                isIncome ? p + parseInt(amount) : p,
-              0,
-            )}</div>
-            <div class='cost'>지출 ${datas.reduce(
-              (p, { amount, isIncome }) =>
-                !isIncome ? p + parseInt(amount) : p,
-              0,
-            )}</div>
+            <div class='income'>수입 ${getIncomeSum(datas)}</div>
+            <div class='cost'>지출 ${getCostSum(datas)}</div>
         </div>
       </div>
       <table class='item'>
