@@ -177,6 +177,7 @@ function findAmontSumByCategory(
 
 module.exports = {
   getAllHistoryOfMonth,
+  getAmountGroupByCategory,
   postHistory,
   putHistory,
 };
