@@ -1,14 +1,14 @@
 function groupByDate(data) {
   const result = [];
-  const group = {};
+  const group = new Map();
 
   data.forEach((d) => {
-    if (group.hasOwnProperty(d.date)) group[d.date].push({ ...d });
-    else group[d.date] = [{ ...d }];
+    if (group.has(d.date)) group.get(d.date).push({ ...d });
+    else group.set(d.date, [{ ...d }]);
   });
 
-  for (let key of Object.keys(group).sort((a, b) => b - a)) {
-    result.push({ date: key, data: group[key] });
+  for (let key of Array.from(group.keys()).sort((a, b) => b - a)) {
+    result.push({ date: key, data: group.get(key) });
   }
 
   return result;
