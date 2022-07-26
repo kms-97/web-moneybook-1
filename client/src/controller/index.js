@@ -87,29 +87,50 @@ export const changeSelectedHistory = ({ id = null }) => {
 
 /* 금액 관련 */
 export const getCostSumCurrentMonth = () => {
-  const currentHistory = getState({ key: storeKeys.CURRENT_HISTORY });
-  let costSum = 0;
+  const history = getState({ key: storeKeys.CURRENT_HISTORY });
 
-  for (const { data } of currentHistory) {
-    for (const { amount, isIncome } of data) {
-      if (!isIncome) costSum += amount;
-    }
-  }
-
-  return costSum;
+  return history.reduce(
+    (p, { datas }) =>
+      p +
+      datas.reduce(
+        (p, { isIncome, amount }) => (!isIncome ? p + parseInt(amount) : p),
+        0,
+      ),
+    0,
+  );
 };
 
 export const getIncomeSumCurrentMonth = () => {
-  const currentHistory = getState({ key: storeKeys.CURRENT_HISTORY });
-  let incomeSum = 0;
+  const history = getState({ key: storeKeys.CURRENT_HISTORY });
 
-  for (const { data } of currentHistory) {
-    for (const { amount, isIncome } of data) {
-      if (isIncome) incomeSum += amount;
-    }
-  }
+  return history.reduce(
+    (p, { datas }) =>
+      p +
+      datas.reduce(
+        (p, { isIncome, amount }) => (isIncome ? p + parseInt(amount) : p),
+        0,
+      ),
+    0,
+  );
+};
 
-  return incomeSum;
+export const getIncomeSum = (datas) => {
+  return datas.reduce(
+    (p, { amount, isIncome }) => (isIncome ? p + parseInt(amount) : p),
+    0,
+  );
+};
+
+export const getCostSum = (datas) => {
+  return datas.reduce(
+    (p, { amount, isIncome }) => (!isIncome ? p + parseInt(amount) : p),
+    0,
+  );
+};
+
+export const getPaymentLength = () => {
+  const history = getState({ key: storeKeys.CURRENT_HISTORY });
+  return history.reduce((p, { datas }) => p + datas.length, 0);
 };
 
 /* 결제 방법 관련 */
@@ -118,8 +139,44 @@ export const updatePayment = async () => {
   setState({ key: storeKeys.PAYMENT, newState: payment });
 };
 
+// 결제 수단 추가
+export const createPayment = (payment, callback) => {
+  if (!payment) return;
+  // + payment를 추가하는 api를 요청합니다.
+
+  // newPayment의 id인 13은 임시데이터입니다.
+  const newPayment = [
+    ...getState({ key: storeKeys.PAYMENT }),
+    { id: 13, content: payment },
+  ];
+  setState({ key: storeKeys.PAYMENT, newState: newPayment });
+  callback();
+};
+
+// 결제 수단 삭제
+export const deletePayment = (paymentId, callback) => {
+  console.log(getState({ key: storeKeys.PAYMENT }));
+  // + payment를 삭제하는 api를 요청합니다.
+
+  // 성공적으로 삭제 시, store를 변경합니다.
+  const newPayment = [
+    ...getState({ key: storeKeys.PAYMENT }).filter(
+      ({ id }) => id !== paymentId,
+    ),
+  ];
+
+  console.log(paymentId, newPayment);
+  setState({ key: storeKeys.PAYMENT, newState: newPayment });
+  callback();
+};
+
 /* 카테고리 관련 */
 export const updateCategory = async () => {
   const category = await getMockCategory();
   setState({ key: storeKeys.CATEGORY, newState: category });
+};
+
+export const getCategoryById = (categoryId) => {
+  const category = getState({ key: storeKeys.CATEGORY });
+  return category.filter(({ id }) => id === categoryId)[0];
 };

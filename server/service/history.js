@@ -1,6 +1,7 @@
 const { getConnection } = require('../db/db');
 const CustomError = require('../error/CustomError');
 const { ERROR_INFO } = require('../util/constant');
+
 const { getStartAndEndDateString, makeDateString } = require('../util/date');
 
 async function getAllHistoryOfMonth({ year, month }) {

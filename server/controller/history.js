@@ -45,7 +45,7 @@ async function postHistory(req, res, next) {
     amount,
     isIncome,
   } = req.body;
-
+  
   parameterValidator([
     [year, 'number'],
     [month, 'number'],

@@ -1,65 +1,20 @@
 import './Header.scss';
-import { storeKeys } from '../../utils/constant';
-import {
-  subscribeState,
-  getState,
-  increaseMonth,
-  decreaseMonth,
-} from '../../controller';
+import DaySelector from './DaySelector/DaySelector';
 
 export class Header {
   constructor($target) {
     this.$target = $target;
     this.$header = document.createElement('header');
-
-    this.unsubscribeDate = subscribeState({
-      key: storeKeys.CURRENT_DATE,
-      callback: () => {
-        this.render();
-      },
-    });
-
+    
     this.$target.appendChild(this.$header);
     this.init();
     this.render();
   }
 
-  init() {
-    this.$header.addEventListener('click', (e) => {
-      const $leftArrow = e.target.closest('.left-arrow');
-      if (!$leftArrow) return;
-
-      decreaseMonth();
-    });
-
-    this.$header.addEventListener('click', (e) => {
-      const $rightArrow = e.target.closest('.right-arrow');
-      if (!$rightArrow) return;
-
-      increaseMonth();
-    });
-  }
-
   render() {
-    const { month, year } = getState({ key: storeKeys.CURRENT_DATE });
-
     this.$header.innerHTML = `
         <div class="logo"><h1>우아한 가계부</h1></div>
-        <div class="day-selector">
-            <button class="left-arrow">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 17L1 9L9 1" stroke="#FCFCFC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div class="date">
-                <div class="month">${month}월</div>
-                <div class="year">${year}</div>
-            </div>
-            <button class="right-arrow">
-              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 17L9 9L1 1" stroke="#FCFCFC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
+        <div class="day-selector-wrapper">
         </div>
         <nav class="nav">
             <button class="history-button">
@@ -88,5 +43,7 @@ export class Header {
             </button>
         </nav>
     `;
+
+    new DaySelector(document.querySelector('.day-selector-wrapper'));
   }
 }

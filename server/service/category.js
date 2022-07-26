@@ -1,6 +1,4 @@
 const { getConnection } = require('../db/db');
-const CustomError = require('../error/CustomError');
-const { ERROR_INFO } = require('../util/constant');
 
 async function getAllCategory() {
   let connection;
@@ -18,7 +16,7 @@ async function getAllCategory() {
 }
 
 function findAll(connection) {
-  const query = 'select * from category';
+  const query = 'select id, content, is_income as isIncome from category';
   return connection.execute(query);
 }
 
