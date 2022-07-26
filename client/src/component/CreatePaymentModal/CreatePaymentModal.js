@@ -32,19 +32,19 @@ export class CreatePaymentModal {
       'input[name=payment]',
     ).value;
 
-    createPayment(payment, () => {
-      this.$paymentModal.style.display = 'none';
-      const $payment = this.$paymentModal.querySelector('input[name=payment]');
-      $payment.value = '';
-    });
+    createPayment(payment, () => this.closeModal());
   }
 
   onClickCancelButton(event) {
     const $cancelButton = event.target.closest('.cancel-button');
     if (!$cancelButton) return;
+    this.closeModal();
+  }
+
+  closeModal() {
+    this.$paymentModal.style.display = 'none';
     const $payment = this.$paymentModal.querySelector('input[name=payment]');
     $payment.value = '';
-    this.$paymentModal.style.display = 'none';
   }
 
   render() {
