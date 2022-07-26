@@ -88,21 +88,6 @@ async function putHistory(req, res, next) {
   }
 }
 
-function groupByDate({ year, month }, data) {
-  const result = { year, month, data: [] };
-  const group = {};
-
-  data.forEach((d) => {
-    if (group[d.date]) group[d.date].push({ ...d });
-    else group[d.date] = [{ ...d }];
-  });
-
-  for (let key of Object.keys(group).sort((a, b) => b - a)) {
-    result.data.push({ date: key, data: group[key] });
-  }
-
-  return result;
-}
 
 module.exports = {
   getAllHistoryOfMonth,
