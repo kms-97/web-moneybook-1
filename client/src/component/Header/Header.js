@@ -5,13 +5,11 @@ export class Header {
   constructor($target) {
     this.$target = $target;
     this.$header = document.createElement('header');
-
+    
     this.$target.appendChild(this.$header);
     this.init();
     this.render();
   }
-
-  init() {}
 
   render() {
     this.$header.innerHTML = `

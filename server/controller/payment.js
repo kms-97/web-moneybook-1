@@ -1,32 +1,22 @@
 const service = require('../service/payment');
 
-async function getAllPayment(req, res) {
-  try {
-    const data = await service.getAllPayment();
-    res.status(200).json(data);
-  } catch (e) {
-    res.status(500).json(e.message);
-  }
+async function getAllPayment(req, res, next) {
+  const data = await service.getAllPayment();
+  res.status(200).json(data);
 }
 
-async function postPayment(req, res) {
+async function postPayment(req, res, next) {
   const { content } = req.body;
-  try {
-    const data = await service.postPayment({ content });
-    res.status(200).json(data);
-  } catch (e) {
-    res.status(500).json(e.message);
-  }
+
+  const data = await service.postPayment({ content });
+  res.status(200).json(data);
 }
 
-async function deletePayment(req, res) {
+async function deletePayment(req, res, next) {
   const { id } = req.body;
-  try {
-    const data = await service.deletePayment({ id });
-    res.status(200).json(data);
-  } catch (e) {
-    res.status(500).json(e.message);
-  }
+
+  const data = await service.deletePayment({ id });
+  res.status(200).json(data);
 }
 
 module.exports = {

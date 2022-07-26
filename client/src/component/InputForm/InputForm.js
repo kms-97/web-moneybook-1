@@ -1,8 +1,8 @@
+import './InputForm.scss';
 import { AmountInput } from './AmountInput/AmountInput';
 import CategoryInput from './CategoryInput/CategoryInput';
 import { ContentInput } from './ContentInput/ContentInput';
 import { DateInput } from './DateInput/DateInput';
-import './InputForm.scss';
 import PaymentInput from './PaymentInput/PaymentInput';
 
 export class InputForm {
