@@ -1,8 +1,8 @@
-const service = require('../service/payment');
+const paymentService = require('../service/payment');
 
 async function getAllPayment(req, res) {
   try {
-    const data = await service.getAllPayment();
+    const data = await paymentService.getAllPayment();
     res.status(200).json(data);
   } catch (e) {
     res.status(500).json(e.message);
@@ -12,7 +12,7 @@ async function getAllPayment(req, res) {
 async function postPayment(req, res) {
   const { content } = req.body;
   try {
-    const data = await service.postPayment({ content });
+    const data = await paymentService.postPayment({ content });
     res.status(200).json(data);
   } catch (e) {
     res.status(500).json(e.message);
@@ -22,7 +22,7 @@ async function postPayment(req, res) {
 async function deletePayment(req, res) {
   const { id } = req.body;
   try {
-    const data = await service.deletePayment({ id });
+    const data = await paymentService.deletePayment({ id });
     res.status(200).json(data);
   } catch (e) {
     res.status(500).json(e.message);

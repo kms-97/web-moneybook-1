@@ -1,10 +1,10 @@
-const service = require('../service/history');
+const historyService = require('../service/history');
 
 async function getAllHistoryOfMonth(req, res) {
   const { year, month } = req.query;
 
   try {
-    const data = await service.getAllHistoryOfMonth({ year, month });
+    const data = await historyService.getAllHistoryOfMonth({ year, month });
     res.status(200).json(data);
   } catch (e) {
     res.status(500).json(e.message);
@@ -15,7 +15,7 @@ async function getAmountGroupByCategory(req, res) {
   const { startYear, startMonth, endYear, endMonth, categoryId } = req.query;
 
   try {
-    const data = await service.getAmountGroupByCategory({
+    const data = await historyService.getAmountGroupByCategory({
       startYear,
       startMonth,
       endYear,
@@ -41,7 +41,7 @@ async function postHistory(req, res) {
   } = req.body;
 
   try {
-    const data = await service.postHistory({
+    const data = await historyService.postHistory({
       year,
       month,
       date,
@@ -71,7 +71,7 @@ async function putHistory(req, res) {
   } = req.body;
 
   try {
-    const data = await service.putHistory({
+    const data = await historyService.putHistory({
       id,
       year,
       month,
