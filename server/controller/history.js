@@ -1,11 +1,12 @@
 const historyService = require('../service/history');
+const { groupByDate } = require('../util/history');
 
 async function getAllHistoryOfMonth(req, res) {
   const { year, month } = req.query;
 
   try {
     const data = await historyService.getAllHistoryOfMonth({ year, month });
-    res.status(200).json(data);
+    res.status(200).json(groupByDate(data));
   } catch (e) {
     res.status(500).json(e.message);
   }
@@ -22,7 +23,7 @@ async function getAmountGroupByCategory(req, res) {
       endMonth,
       categoryId,
     });
-    res.status(200).json(data);
+    res.status(200).json(groupByDate(data));
   } catch (e) {
     res.status(500).json(e.message);
   }
@@ -55,7 +56,7 @@ async function postHistory(req, res) {
       amount,
       isIncome,
     });
-    res.status(200).json(data);
+    res.status(200).json(groupByDate(data));
   } catch (e) {
     res.status(500).json(e.message);
   }
@@ -90,7 +91,7 @@ async function putHistory(req, res) {
       amount,
       isIncome,
     });
-    res.status(200).json(data);
+    res.status(200).json(groupByDate(data));
   } catch (e) {
     res.status(500).json(e.message);
   }
