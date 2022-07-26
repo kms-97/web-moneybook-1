@@ -7,6 +7,7 @@ const { indexRouter } = require('./router/index');
 const { historyRouter } = require('./router/history');
 const { paymentRouter } = require('./router/payment');
 const { categoryRouter } = require('./router/category');
+const { generalErrorHandler } = require('./middleware/generalErrorHandler');
 
 const app = express();
 const port = 3000;
@@ -20,9 +21,7 @@ app.use('/payment', paymentRouter);
 app.use('/category', categoryRouter);
 app.use('/*', indexRouter);
 
-app.use((err, req, res, next) => {
-  res.status(err.statusCode).json({ type: err.name, message: err.message });
-});
+app.use(generalErrorHandler);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
