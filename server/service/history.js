@@ -1,4 +1,6 @@
 const { getConnection } = require('../db/db');
+const CustomError = require('../error/CustomError');
+const { ERROR_INFO } = require('../util/constant');
 const { getStartAndEndDateString, makeDateString } = require('../util/date');
 
 async function getAllHistoryOfMonth({ year, month }) {
@@ -10,6 +12,7 @@ async function getAllHistoryOfMonth({ year, month }) {
 
     return rows;
   } catch (e) {
+    throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
   } finally {
     connection?.release();
   }
@@ -36,7 +39,7 @@ async function getAmountGroupByCategory({
 
     return rows;
   } catch (e) {
-    throw e;
+    throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
   } finally {
     connection?.release();
   }
@@ -67,13 +70,17 @@ async function postHistory({
       amount,
       isIncome,
     });
+    if (affectedRows === 0)
+      new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
+
     const [rows] = await findAllOfMonth(connection, { year, month });
 
     await connection.commit();
     return rows;
   } catch (e) {
     await connection.rollback();
-    throw e;
+    if (e instanceof CustomError) throw e;
+    throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
   } finally {
     connection?.release();
   }
@@ -106,13 +113,16 @@ async function putHistory({
       amount,
       isIncome,
     });
+    if (affectedRows === 0) throw new CustomError({ ...ERROR_INFO.NOT_FOUND });
+
     const [rows] = await findAllOfMonth(connection, { year, month });
 
     await connection.commit();
     return rows;
   } catch (e) {
     await connection.rollback();
-    throw e;
+    if (e instanceof CustomError) throw e;
+    throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
   } finally {
     connection?.release();
   }

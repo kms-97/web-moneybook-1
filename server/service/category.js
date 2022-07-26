@@ -1,4 +1,6 @@
 const { getConnection } = require('../db/db');
+const CustomError = require('../error/CustomError');
+const { ERROR_INFO } = require('../util/constant');
 
 async function getAllCategory() {
   let connection;
@@ -9,7 +11,7 @@ async function getAllCategory() {
 
     return rows;
   } catch (e) {
-    throw e;
+    throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
   } finally {
     connection?.release();
   }
