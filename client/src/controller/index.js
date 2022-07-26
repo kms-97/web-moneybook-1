@@ -87,29 +87,50 @@ export const changeSelectedHistory = ({ id = null }) => {
 
 /* 금액 관련 */
 export const getCostSumCurrentMonth = () => {
-  const currentHistory = getState({ key: storeKeys.CURRENT_HISTORY });
-  let costSum = 0;
+  const history = getState({ key: storeKeys.CURRENT_HISTORY });
 
-  for (const { data } of currentHistory) {
-    for (const { amount, isIncome } of data) {
-      if (!isIncome) costSum += amount;
-    }
-  }
-
-  return costSum;
+  return history.reduce(
+    (p, { datas }) =>
+      p +
+      datas.reduce(
+        (p, { isIncome, amount }) => (!isIncome ? p + parseInt(amount) : p),
+        0,
+      ),
+    0,
+  );
 };
 
 export const getIncomeSumCurrentMonth = () => {
-  const currentHistory = getState({ key: storeKeys.CURRENT_HISTORY });
-  let incomeSum = 0;
+  const history = getState({ key: storeKeys.CURRENT_HISTORY });
 
-  for (const { data } of currentHistory) {
-    for (const { amount, isIncome } of data) {
-      if (isIncome) incomeSum += amount;
-    }
-  }
+  return history.reduce(
+    (p, { datas }) =>
+      p +
+      datas.reduce(
+        (p, { isIncome, amount }) => (isIncome ? p + parseInt(amount) : p),
+        0,
+      ),
+    0,
+  );
+};
 
-  return incomeSum;
+export const getIncomeSum = (datas) => {
+  return datas.reduce(
+    (p, { amount, isIncome }) => (isIncome ? p + parseInt(amount) : p),
+    0,
+  );
+};
+
+export const getCostSum = (datas) => {
+  return datas.reduce(
+    (p, { amount, isIncome }) => (!isIncome ? p + parseInt(amount) : p),
+    0,
+  );
+};
+
+export const getPaymentLength = () => {
+  const history = getState({ key: storeKeys.CURRENT_HISTORY });
+  return history.reduce((p, { datas }) => p + datas.length, 0);
 };
 
 /* 결제 방법 관련 */
@@ -153,4 +174,10 @@ export const deletePayment = (paymentId, callback) => {
 export const updateCategory = async () => {
   const category = await getMockCategory();
   setState({ key: storeKeys.CATEGORY, newState: category });
+};
+
+/* 카테고리 관련 */
+export const getCategoryById = async (categoryId) => {
+  const category = getState({ key: storeKeys.CATEGORY });
+  return category.filter(({ id }) => id === categoryId)[0];
 };
