@@ -11,7 +11,7 @@ async function getAllCategory() {
 
     return rows;
   } catch (e) {
-    throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
+    throw e;
   } finally {
     connection?.release();
   }

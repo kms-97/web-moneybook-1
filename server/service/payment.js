@@ -11,8 +11,7 @@ async function getAllPayment() {
 
     return rows;
   } catch (e) {
-    if (e instanceof CustomError) throw e;
-    throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
+    throw e;
   } finally {
     connection?.release();
   }
@@ -35,8 +34,7 @@ async function postPayment({ content }) {
     return rows;
   } catch (e) {
     await connection.rollback();
-    if (e instanceof CustomError) throw e;
-    throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
+    throw e;
   } finally {
     connection?.release();
   }
@@ -58,8 +56,7 @@ async function deletePayment({ id }) {
     return rows;
   } catch (e) {
     await connection.rollback();
-    if (e instanceof CustomError) throw e;
-    throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
+    throw e;
   } finally {
     connection?.release();
   }

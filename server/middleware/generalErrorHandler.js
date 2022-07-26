@@ -1,7 +1,10 @@
+const CustomError = require('../error/CustomError');
+const { ERROR_INFO } = require('../util/constant');
+
 function generalErrorHandler(err, req, res, next) {
   res
-    .status(err.statusCode)
-    .json({ errorCode: 'E0001', type: err.name, message: err.message });
+    .status(500)
+    .json(new CustomError({ ...ERROR_INFO.APPLICATION_ERROR }).toObject());
 }
 
 module.exports = {
