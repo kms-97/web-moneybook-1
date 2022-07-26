@@ -55,7 +55,6 @@ async function postHistory({
   content,
   paymentId,
   amount,
-  isIncome,
 }) {
   const createdDate = makeDateString({ year, month, date });
   let connection;
@@ -70,7 +69,6 @@ async function postHistory({
       content,
       paymentId,
       amount,
-      isIncome,
     });
     if (affectedRows === 0)
       new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
@@ -145,16 +143,18 @@ function findAllOfMonth(connection, { year, month }) {
 
 function insert(
   connection,
-  { createdDate, categoryId, content, paymentId, amount, isIncome },
+  { createdDate, categoryId, content, paymentId, amount },
 ) {
-  const query = `insert into hist (create_date, category_id, content, payment_id, amount, is_income) values (?, ?, ?, ?, ?, ?)`;
+  const query = `insert into hist (create_date, category_id, content, payment_id, amount, is_income) values (?, ?, ?, ?, ?, (
+    select is_income from category where id = ?
+  ))`;
   return connection.execute(query, [
     createdDate,
     categoryId,
     content,
     paymentId,
     amount,
-    isIncome,
+    categoryId,
   ]);
 }
 

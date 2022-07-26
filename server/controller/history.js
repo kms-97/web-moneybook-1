@@ -46,7 +46,6 @@ async function postHistory(req, res, next) {
     content,
     paymentId,
     amount,
-    isIncome,
   } = req.body;
 
   parameterValidator([
@@ -59,7 +58,6 @@ async function postHistory(req, res, next) {
     [content, 'string'],
     [paymentId, 'number'],
     [amount, 'number'],
-    [isIncome, 'number'],
   ]);
 
   const data = await historyService.postHistory({
@@ -72,7 +70,6 @@ async function postHistory(req, res, next) {
     content,
     paymentId,
     amount,
-    isIncome,
   });
   res.status(200).json(groupByDate(data));
 }
