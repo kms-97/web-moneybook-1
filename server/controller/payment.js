@@ -8,7 +8,7 @@ async function getAllPayment(req, res, next) {
 
 async function postPayment(req, res, next) {
   const { content } = req.body;
-
+  
   parameterValidator([[content, 'string']]);
 
   const data = await paymentService.postPayment({ content });
@@ -17,7 +17,7 @@ async function postPayment(req, res, next) {
 
 async function deletePayment(req, res, next) {
   const { id } = req.body;
-
+  
   parameterValidator([[id, 'number']]);
 
   const data = await paymentService.deletePayment({ id });

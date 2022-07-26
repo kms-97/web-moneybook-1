@@ -25,8 +25,7 @@ async function postPayment({ content }) {
     await connection.beginTransaction();
 
     const [{ affectedRows }] = await insert(connection, { content });
-    if (affectedRows === 0)
-      throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
+    if (affectedRows === 0) throw new CustomError(ERROR_INFO.APPLICATION_ERROR);
 
     const [rows] = await findAll(connection);
 
@@ -48,7 +47,7 @@ async function deletePayment({ id }) {
     await connection.beginTransaction();
 
     const [{ affectedRows }] = await remove(connection, { id });
-    if (affectedRows === 0) throw new CustomError({ ...ERROR_INFO.NOT_FOUND });
+    if (affectedRows === 0) throw new CustomError(ERROR_INFO.NOT_FOUND);
 
     const [rows] = await findAll(connection);
 

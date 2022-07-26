@@ -2,8 +2,8 @@ const historyService = require('../service/history');
 const { groupByDate } = require('../util/history');
 const { parameterValidator } = require('../util/parameterValidator');
 
-async function getAllHistoryOfMonth(req, res) {
-  const { year, month } = req.query;
+async function getAllHistoryOfMonth(req, res, next) {
+  const { year, month } = req.body;
 
   parameterValidator([
     [Number(year), 'number'],
@@ -14,8 +14,16 @@ async function getAllHistoryOfMonth(req, res) {
   res.status(200).json(groupByDate(data));
 }
 
-async function getAmountGroupByCategory(req, res) {
-  const { startYear, startMonth, endYear, endMonth, categoryId } = req.query;
+async function getAmountGroupByCategory(req, res, next) {
+  const { startYear, startMonth, endYear, endMonth, categoryId } = req.body;
+
+  parameterValidator([
+    [startYear, 'number'],
+    [startMonth, 'number'],
+    [endYear, 'number'],
+    [endMonth, 'number'],
+    [categoryId, 'number'],
+  ]);
 
   parameterValidator([
     [Number(startYear), 'number'],
@@ -32,6 +40,7 @@ async function getAmountGroupByCategory(req, res) {
     endMonth,
     categoryId,
   });
+
   res.status(200).json(groupByDate(data));
 }
 
@@ -47,6 +56,17 @@ async function postHistory(req, res, next) {
     paymentId,
     amount,
   } = req.body;
+  
+  parameterValidator([
+    [year, 'number'],
+    [month, 'number'],
+    [date, 'number'],
+    [categoryId, 'number'],
+    [content, 'string'],
+    [paymentId, 'number'],
+    [amount, 'number'],
+    //[isIncome, 'boolean']
+  ]);
 
   parameterValidator([
     [currentYear, 'number'],
