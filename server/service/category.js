@@ -16,7 +16,7 @@ async function getAllCategory() {
 }
 
 function findAll(connection) {
-  const query = 'select * from category';
+  const query = 'select id, content, is_income as isIncome from category';
   return connection.execute(query);
 }
 
