@@ -20,6 +20,10 @@ app.use('/payment', paymentRouter);
 app.use('/category', categoryRouter);
 app.use('/*', indexRouter);
 
+app.use((err, req, res, next) => {
+  res.status(err.statusCode).json({ type: err.name, message: err.message });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
