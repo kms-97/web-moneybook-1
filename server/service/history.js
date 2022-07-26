@@ -93,7 +93,8 @@ async function putHistory({
 
 function findAllOfMonth(connection, { year, month }) {
   const { startDate, endDate } = getStartAndEndDateString({ year, month });
-  const query = `select * from hist where create_date between ? and ?`;
+  const query = `select id, date_format(create_date, '%d') as date, category_id as categoryId, content, payment_id as paymentId, amount, is_income as isIncome
+                from hist where create_date between ? and ? order by date desc, id asc`;
   return connection.execute(query, [startDate, endDate]);
 }
 
