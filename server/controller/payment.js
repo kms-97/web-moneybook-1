@@ -1,32 +1,27 @@
 const paymentService = require('../service/payment');
+const { parameterValidator } = require('../util/parameterValidator');
 
-async function getAllPayment(req, res) {
-  try {
-    const data = await paymentService.getAllPayment();
-    res.status(200).json(data);
-  } catch (e) {
-    res.status(500).json(e.message);
-  }
+async function getAllPayment(req, res, next) {
+  const data = await paymentService.getAllPayment();
+  res.status(200).json(data);
 }
 
-async function postPayment(req, res) {
+async function postPayment(req, res, next) {
   const { content } = req.body;
-  try {
-    const data = await paymentService.postPayment({ content });
-    res.status(200).json(data);
-  } catch (e) {
-    res.status(500).json(e.message);
-  }
+
+  parameterValidator([[content, 'string']]);
+
+  const data = await paymentService.postPayment({ content });
+  res.status(200).json(data);
 }
 
-async function deletePayment(req, res) {
+async function deletePayment(req, res, next) {
   const { id } = req.body;
-  try {
-    const data = await paymentService.deletePayment({ id });
-    res.status(200).json(data);
-  } catch (e) {
-    res.status(500).json(e.message);
-  }
+
+  parameterValidator([[id, 'number']]);
+
+  const data = await paymentService.deletePayment({ id });
+  res.status(200).json(data);
 }
 
 module.exports = {

@@ -1,4 +1,6 @@
 const { getConnection } = require('../db/db');
+const CustomError = require('../error/CustomError');
+const { ERROR_INFO } = require('../util/constant');
 
 async function getAllPayment() {
   let connection;
@@ -23,6 +25,9 @@ async function postPayment({ content }) {
     await connection.beginTransaction();
 
     const [{ affectedRows }] = await insert(connection, { content });
+    if (affectedRows === 0)
+      throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
+
     const [rows] = await findAll(connection);
 
     await connection.commit();
@@ -43,6 +48,8 @@ async function deletePayment({ id }) {
     await connection.beginTransaction();
 
     const [{ affectedRows }] = await remove(connection, { id });
+    if (affectedRows === 0) throw new CustomError({ ...ERROR_INFO.NOT_FOUND });
+
     const [rows] = await findAll(connection);
 
     await connection.commit();

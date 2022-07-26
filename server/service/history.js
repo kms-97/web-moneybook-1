@@ -1,4 +1,6 @@
 const { getConnection } = require('../db/db');
+const CustomError = require('../error/CustomError');
+const { ERROR_INFO } = require('../util/constant');
 const { getStartAndEndDateString, makeDateString } = require('../util/date');
 
 async function getAllHistoryOfMonth({ year, month }) {
@@ -10,6 +12,7 @@ async function getAllHistoryOfMonth({ year, month }) {
 
     return rows;
   } catch (e) {
+    throw e;
   } finally {
     connection?.release();
   }
@@ -69,6 +72,9 @@ async function postHistory({
       amount,
       isIncome,
     });
+    if (affectedRows === 0)
+      new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
+
     const [rows] = await findAllOfMonth(connection, {
       year: currentYear,
       month: currentMonth,
@@ -113,6 +119,8 @@ async function putHistory({
       amount,
       isIncome,
     });
+    if (affectedRows === 0) throw new CustomError({ ...ERROR_INFO.NOT_FOUND });
+
     const [rows] = await findAllOfMonth(connection, {
       year: currentYear,
       month: currentMonth,
@@ -130,7 +138,7 @@ async function putHistory({
 
 function findAllOfMonth(connection, { year, month }) {
   const { startDate, endDate } = getStartAndEndDateString({ year, month });
-  const query = `select id, date_format(create_date, '%d') as date, category_id as categoryId, content, payment_id as paymentId, amount, is_income as isIncome
+  const query = `select id, cast(date_format(create_date, '%d') as signed) as date, category_id as categoryId, content, payment_id as paymentId, amount, is_income as isIncome
                 from hist where create_date between ? and ? order by date desc, id asc`;
   return connection.execute(query, [startDate, endDate]);
 }
