@@ -1,7 +1,7 @@
 const service = require('../service/history');
 
 async function getAllHistoryOfMonth(req, res) {
-  const { year, month } = req.body;
+  const { year, month } = req.query;
 
   try {
     const data = await service.getAllHistoryOfMonth({ year, month });
@@ -12,7 +12,7 @@ async function getAllHistoryOfMonth(req, res) {
 }
 
 async function getAmountGroupByCategory(req, res) {
-  const { startYear, startMonth, endYear, endMonth, categoryId } = req.body;
+  const { startYear, startMonth, endYear, endMonth, categoryId } = req.query;
 
   try {
     const data = await service.getAmountGroupByCategory({
