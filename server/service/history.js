@@ -12,7 +12,7 @@ async function getAllHistoryOfMonth({ year, month }) {
 
     return rows;
   } catch (e) {
-    throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
+    throw e;
   } finally {
     connection?.release();
   }
@@ -39,7 +39,7 @@ async function getAmountGroupByCategory({
 
     return rows;
   } catch (e) {
-    throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
+    throw e;
   } finally {
     connection?.release();
   }
@@ -79,8 +79,7 @@ async function postHistory({
     return rows;
   } catch (e) {
     await connection.rollback();
-    if (e instanceof CustomError) throw e;
-    throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
+    throw e;
   } finally {
     connection?.release();
   }
@@ -121,8 +120,7 @@ async function putHistory({
     return rows;
   } catch (e) {
     await connection.rollback();
-    if (e instanceof CustomError) throw e;
-    throw new CustomError({ ...ERROR_INFO.APPLICATION_ERROR });
+    throw e;
   } finally {
     connection?.release();
   }
