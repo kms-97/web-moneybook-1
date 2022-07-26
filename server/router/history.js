@@ -4,9 +4,7 @@ const controller = require('../controller/history');
 const historyRouter = express.Router();
 
 historyRouter.get('/', controller.getAllHistoryOfMonth);
-historyRouter.get('/SixMonthPerCategory', (req, res) => {
-  res.json('get /history/SixMonth');
-});
+historyRouter.get('/perCategory', controller.getAmountGroupByCategory);
 historyRouter.post('/', controller.postHistory);
 historyRouter.put('/', controller.putHistory);
 
