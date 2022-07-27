@@ -43,8 +43,6 @@ export class InputForm {
     const paymentId = Number($payment.dataset.id);
     const amount = Number($amount.value);
 
-    // const currentYear = getState({ key: storeKeys.CURRENT_YEAR });
-    // const currentMonth = getState({ key: storeKeys.CURRENT_MONTH });
     const history = {
       currentYear: 2022,
       currentMonth: 5,
