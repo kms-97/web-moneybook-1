@@ -109,7 +109,7 @@ export class List {
             .map(
               (value) => `
                 <tr data-id=${value.id} class=${
-                this.isSelectedRow(value.id) ? 'active' : ''
+                this.isSelectedRow(value.id, selectedHistory) ? 'active' : ''
               }>
                 <td class='category'><span class=${
                   categoryClassName[value.categoryId]
