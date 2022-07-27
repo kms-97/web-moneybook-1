@@ -72,6 +72,26 @@ export const updateHistories = async () => {
   setState({ key: storeKeys.CURRENT_HISTORY, newState: [...histories] });
 };
 
+export const getFilteredHistories = () => {
+  const history = getState({ key: storeKeys.CURRENT_HISTORY });
+  const isCheckedFilter = getState({ key: storeKeys.ISCHECKED_FILTER });
+
+  if (history.length === 0) return [{ date: 0, data: [] }];
+
+  const filteredHistory = history[0].data.filter(({ isIncome }) => {
+    if (isCheckedFilter.income && isIncome === 1) return true;
+    if (isCheckedFilter.cost && isIncome === 0) return true;
+    return false;
+  });
+
+  return [
+    {
+      date: history[0].date,
+      data: filteredHistory,
+    },
+  ];
+};
+
 export const postHistory = async (history) => {
   const response = await postHistoryAPI(history);
   const histories = response;
@@ -149,7 +169,17 @@ export const getCostSum = (data) => {
 
 export const getPaymentLength = () => {
   const history = getState({ key: storeKeys.CURRENT_HISTORY });
-  return history.reduce((p, { data }) => p + data.length, 0);
+  const filter = getState({ key: storeKeys.ISCHECKED_FILTER });
+  return history.reduce(
+    (p, { data }) =>
+      p +
+      data.filter(({ isIncome }) => {
+        if (filter.income && isIncome === 1) return true;
+        if (filter.cost && isIncome === 0) return true;
+        return false;
+      }).length,
+    0,
+  );
 };
 
 export const getIncomeAndCostSumOfDate = (date) => {
