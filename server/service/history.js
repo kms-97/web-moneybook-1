@@ -1,4 +1,6 @@
 const { getConnection } = require('../db/db');
+const CustomError = require('../error/CustomError');
+const { ERROR_INFO } = require('../util/constant');
 const { getStartAndEndDateString, makeDateString } = require('../util/date');
 
 async function getAllHistoryOfMonth({ year, month }) {
@@ -10,6 +12,7 @@ async function getAllHistoryOfMonth({ year, month }) {
 
     return rows;
   } catch (e) {
+    throw e;
   } finally {
     connection?.release();
   }
@@ -43,6 +46,8 @@ async function getAmountGroupByCategory({
 }
 
 async function postHistory({
+  currentYear,
+  currentMonth,
   year,
   month,
   date,
@@ -50,7 +55,6 @@ async function postHistory({
   content,
   paymentId,
   amount,
-  isIncome,
 }) {
   const createdDate = makeDateString({ year, month, date });
   let connection;
@@ -65,9 +69,13 @@ async function postHistory({
       content,
       paymentId,
       amount,
-      isIncome,
     });
-    const [rows] = await findAllOfMonth(connection, { year, month });
+    if (affectedRows === 0) new CustomError(ERROR_INFO.APPLICATION_ERROR);
+
+    const [rows] = await findAllOfMonth(connection, {
+      year: currentYear,
+      month: currentMonth,
+    });
 
     await connection.commit();
     return rows;
@@ -80,6 +88,8 @@ async function postHistory({
 }
 
 async function putHistory({
+  currentYear,
+  currentMonth,
   id,
   year,
   month,
@@ -88,7 +98,6 @@ async function putHistory({
   content,
   paymentId,
   amount,
-  isIncome,
 }) {
   const createdDate = makeDateString({ year, month, date });
   let connection;
@@ -104,9 +113,13 @@ async function putHistory({
       content,
       paymentId,
       amount,
-      isIncome,
     });
-    const [rows] = await findAllOfMonth(connection, { year, month });
+    if (affectedRows === 0) throw new CustomError(ERROR_INFO.NOT_FOUND);
+
+    const [rows] = await findAllOfMonth(connection, {
+      year: currentYear,
+      month: currentMonth,
+    });
 
     await connection.commit();
     return rows;
@@ -120,38 +133,42 @@ async function putHistory({
 
 function findAllOfMonth(connection, { year, month }) {
   const { startDate, endDate } = getStartAndEndDateString({ year, month });
-  const query = `select id, date_format(create_date, '%d') as date, category_id as categoryId, content, payment_id as paymentId, amount, is_income as isIncome
+  const query = `select id, cast(date_format(create_date, '%d') as signed) as date, category_id as categoryId, content, payment_id as paymentId, amount, is_income as isIncome
                 from hist where create_date between ? and ? order by date desc, id asc`;
   return connection.execute(query, [startDate, endDate]);
 }
 
 function insert(
   connection,
-  { createdDate, categoryId, content, paymentId, amount, isIncome },
+  { createdDate, categoryId, content, paymentId, amount },
 ) {
-  const query = `insert into hist (create_date, category_id, content, payment_id, amount, is_income) values (?, ?, ?, ?, ?, ?)`;
+  const query = `insert into hist (create_date, category_id, content, payment_id, amount, is_income) values (?, ?, ?, ?, ?, (
+    select is_income from category where id = ?
+  ))`;
   return connection.execute(query, [
     createdDate,
     categoryId,
     content,
     paymentId,
     amount,
-    isIncome,
+    categoryId,
   ]);
 }
 
 function update(
   connection,
-  { id, createdDate, categoryId, content, paymentId, amount, isIncome },
+  { id, createdDate, categoryId, content, paymentId, amount },
 ) {
-  const query = `update hist set create_date = ?, category_id = ?, content = ?, payment_id = ?, amount = ?, is_income = ? where id = ?`;
+  const query = `update hist set create_date = ?, category_id = ?, content = ?, payment_id = ?, amount = ?, is_income = (
+    select is_income from category where id = ?
+  ) where id = ?`;
   return connection.execute(query, [
     createdDate,
     categoryId,
     content,
     paymentId,
     amount,
-    isIncome,
+    categoryId,
     id,
   ]);
 }

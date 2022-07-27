@@ -1,10 +1,11 @@
 const express = require('express');
-const controller = require('../controller/payment');
+const paymentController = require('../controller/payment');
+const { asyncErrorCatcher } = require('../middleware/asyncErrorCatcher');
 
 const paymentRouter = express.Router();
 
-paymentRouter.get('/', controller.getAllPayment);
-paymentRouter.post('/', controller.postPayment);
-paymentRouter.delete('/', controller.deletePayment);
+paymentRouter.get('/', asyncErrorCatcher(paymentController.getAllPayment));
+paymentRouter.post('/', asyncErrorCatcher(paymentController.postPayment));
+paymentRouter.delete('/', asyncErrorCatcher(paymentController.deletePayment));
 
 module.exports = { paymentRouter };

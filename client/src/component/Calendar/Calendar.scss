@@ -1,0 +1,93 @@
+@import '../../style/common.scss';
+
+.calendar-view {
+  .calendar-header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+    height: 50px;
+    top: -70px;
+    background-color: $color-off-white;
+
+    border: 1px solid $color-line;
+    border-radius: 10px;
+    box-shadow: 1px 4px 3px 1px gainsboro;
+
+    .calendar-header-day {
+      @include body-regular-text;
+      color: $color-label;
+    }
+  }
+
+  .calendar-body {
+    position: relative;
+    width: 100%;
+    top: -50px;
+    background-color: $color-off-white;
+
+    border-collapse: separate;
+    border-radius: 10px;
+    box-shadow: 1px 4px 3px 1px gainsboro;
+
+    tr {
+      height: 120px;
+
+      &:first-child {
+        td {
+          border-top-style: solid;
+          &:first-child {
+            border-top-left-radius: 10px;
+          }
+        }
+      }
+      &:first-child td:last-child {
+        border-top-right-radius: 10px;
+      }
+      &:last-child td:first-child {
+        border-bottom-left-radius: 10px;
+      }
+      &:last-child td:last-child {
+        border-bottom-right-radius: 10px;
+      }
+
+      td {
+        position: relative;
+        padding: 10px;
+        border: 1px solid $color-line;
+        border-style: none solid solid none;
+        width: calc(100% / 7);
+
+        &.today {
+          background-color: $color-background;
+        }
+
+        &:first-child {
+          border-left-style: solid;
+        }
+
+        .calendar-amount {
+          @include body-regular-text;
+          font-size: 14px;
+          line-height: 20px;
+
+          .calendar-amount-income {
+            color: $color-primary;
+          }
+
+          .calendar-amount-cost {
+            color: $color-error;
+          }
+        }
+
+        .calendar-date {
+          @include bold-small-text;
+          color: $color-label;
+          position: absolute;
+          right: 10px;
+          bottom: 10px;
+        }
+      }
+    }
+  }
+}
