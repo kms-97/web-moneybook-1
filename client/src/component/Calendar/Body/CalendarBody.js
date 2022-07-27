@@ -87,7 +87,7 @@ export class CalendarBody {
                       ${
                         column.total
                           ? `<div class='calendar-amount-total'>${getFormattedAmount(
-                              column.cost,
+                              column.total,
                             )}</div>`
                           : ''
                       }
