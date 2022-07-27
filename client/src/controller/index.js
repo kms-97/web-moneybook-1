@@ -204,6 +204,32 @@ export const getIncomeAndCostSumOfDate = (date) => {
   };
 };
 
+export const getCostSumGroupByCategory = () => {
+  const AllHistory = getState({
+    key: storeKeys.CURRENT_HISTORY,
+  })
+    .map(({ data }) => data)
+    .flat();
+  const costCategory = getState({ key: storeKeys.CATEGORY })
+    .filter(({ isIncome }) => !isIncome)
+    .map(({ id, content }) => {
+      return { id, content, sum: 0 };
+    });
+
+  AllHistory.forEach(({ categoryId, isIncome, amount }) => {
+    if (!isIncome) {
+      for (let item of costCategory) {
+        if (item.id === categoryId) {
+          item.sum += amount;
+          break;
+        }
+      }
+    }
+  });
+
+  return costCategory.sort((a, b) => b.sum - a.sum);
+};
+
 /* 결제 방법 관련 */
 export const updatePayment = async () => {
   const payment = await getAllPaymentAPI();
