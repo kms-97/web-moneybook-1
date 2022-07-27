@@ -229,7 +229,6 @@ export const createPayment = async (content, callback) => {
   const response = await postPaymentAPI(content);
   const newPayment = response;
   setState({ key: storeKeys.PAYMENT, newState: newPayment });
-  callback();
 };
 
 // 결제 수단 삭제

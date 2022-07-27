@@ -40,7 +40,7 @@ export default class PaymentInput {
 
     if ($li.dataset.name === '추가') {
       // 추가하기 버튼
-      const $paymentModal = document.querySelector('.payment-modal');
+      const $paymentModal = document.querySelector('.create-payment-modal');
       this.openModal($paymentModal);
       return;
     }
@@ -83,7 +83,7 @@ export default class PaymentInput {
     const $deletePaymentModal = document.querySelector('.delete-payment-modal');
     this.openModal($deletePaymentModal);
 
-    const $input = $deletePaymentModal.querySelector('input[name="payment"]');
+    const $input = $deletePaymentModal.querySelector('input');
 
     $input.value = $li.dataset.name;
     $input.dataset.id = $li.dataset.id;
