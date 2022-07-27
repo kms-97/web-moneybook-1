@@ -19,6 +19,40 @@ export class CalendarBody {
 
   init() {}
 
+  makeDataTable() {
+    const { year, month } = getState({ key: storeKeys.CURRENT_DATE });
+    const { startDate, endDate } = getStartAndEndDate({ year, month });
+    const startDay = new Date(year, month - 1, startDate).getDay();
+    const trLength = Math.ceil((endDate + startDay) / WEEK_LENGTH);
+    const dataTable = new Array(trLength).fill(0).map(() =>
+      new Array(WEEK_LENGTH).fill(0).map(() => {
+        return {};
+      }),
+    );
+
+    for (let i = 0; i < trLength; i++) {
+      for (let j = 0; j < WEEK_LENGTH; j++) {
+        const date = i * WEEK_LENGTH + j - (startDay - 1);
+
+        if (date >= startDate && date <= endDate) {
+          const data = dataTable[i][j];
+          const { income, cost } = getIncomeAndCostSumOfDate(date);
+
+          data.date = date;
+          if (income || cost) {
+            if (income) data.income = income;
+            if (cost) data.cost = cost;
+            data.total = (income ?? 0) - (cost ?? 0);
+          }
+        }
+      }
+    }
+
+    return dataTable;
+  }
+
+  generateRow() {}
+
   render() {
     this.$body.innerHTML = `
         <tr>
