@@ -34,7 +34,6 @@ export class InputForm {
     const $category = document.querySelector('input[name="type"]');
     const $content = document.querySelector('input[name="title"]');
     const $payment = document.querySelector('input[name="payment"]');
-    const $isIncome = document.querySelector('input[name="isIncome"]');
     const $amount = document.querySelector('input[name="amount"]');
 
     const [year, month, date] = $date.value.split('-').map((d) => Number(d));
