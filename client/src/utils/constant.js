@@ -7,6 +7,7 @@ export const storeKeys = {
   CATEGORY: 'category',
   PAYMENT: 'payment',
   SELECTED_HISTORY: 'selectedHistory',
+  ISCHECKED_FILTER: 'isCheckedFilter',
 };
 
 export const WEEK_LENGTH = 7;

@@ -3,6 +3,7 @@ import {
   getState,
   getIncomeSum,
   getCostSum,
+  getFilteredHistories,
 } from '../../../controller';
 import { subscribeState } from '../../../controller';
 import { storeKeys } from '../../../utils/constant';
@@ -16,6 +17,12 @@ export class List {
 
     this.unsubscribeHistory = subscribeState({
       key: storeKeys.CURRENT_HISTORY,
+      callback: () => {
+        this.render();
+      },
+    });
+    this.unsubscribeHistory = subscribeState({
+      key: storeKeys.ISCHECKED_FILTER,
       callback: () => {
         this.render();
       },
@@ -41,9 +48,9 @@ export class List {
 
   render() {
     const { year, month } = getState({ key: storeKeys.CURRENT_DATE });
-    const history = getState({ key: storeKeys.CURRENT_HISTORY });
     const category = getState({ key: storeKeys.CATEGORY });
     const payment = getState({ key: storeKeys.PAYMENT });
+    const history = getFilteredHistories();
 
     this.$list.innerHTML = `
     ${history

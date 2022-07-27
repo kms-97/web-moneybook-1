@@ -22,6 +22,10 @@ const initStore = () => {
   addState({ key: storeKeys.LAST_SIX_HISTORY, initState: [] });
   addState({ key: storeKeys.CATEGORY, initState: [] });
   addState({ key: storeKeys.PAYMENT, initState: [] });
+  addState({
+    key: storeKeys.ISCHECKED_FILTER,
+    initState: { income: true, cost: true },
+  });
 
   updateCategory();
   updateHistories();
