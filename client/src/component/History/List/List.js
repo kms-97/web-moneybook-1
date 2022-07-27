@@ -69,43 +69,49 @@ export class List {
 
     this.$list.innerHTML = `
     ${history
-      .map(
-        ({ date, data }) => `
-    <li>
-      <div class='subtitle'>
-        <div class='date'>${date}일 <span class='week'>${getDay(
+      .map(({ date, data }) => {
+        const incomeSum = getIncomeSum(data);
+        const costSum = getCostSum(data);
+        return `
+        <li>
+          <div class='subtitle'>
+            <div class='date'>${date}일 <span class='week'>${getDay(
           year,
           month,
           date,
         )}</span></div>
-        <div class='sum'>
-            <div class='income'>수입 ${getIncomeSum(data)}</div>
-            <div class='cost'>지출 ${getCostSum(data)}</div>
-        </div>
-      </div>
-      <table class='item'>
-      ${data
-        .map(
-          (value) => `<tr data-id=${value.id}>
-          <td class='category'><span class=${
-            categoryClassName[value.categoryId]
-          }>${
-            category.filter((c) => c.id === value.categoryId)[0]?.content ?? ''
-          }</span></td>
-          <td class='content'>${value.content}</td>
-          <td class='payment'>${
-            payment.filter(({ id }) => id === value.paymentId)[0]?.content ?? ''
-          }</td>
-          <td class='amount ${value.isIncome ? 'income' : 'cost'}'>${
-            value.amount
-          }</td>
-          </tr>`,
-        )
-        .join('')}
-      </table>
-    </li>
-  `,
-      )
+            <div class='sum'>
+                ${
+                  incomeSum ? `<div class='income'>수입 ${incomeSum}</div>` : ''
+                }
+                ${costSum ? `<div class='cost'>지출 ${costSum}</div>` : ''}
+            </div>
+          </div>
+          <table class='item'>
+          ${data
+            .map(
+              (value) => `<tr data-id=${value.id}>
+              <td class='category'><span class=${
+                categoryClassName[value.categoryId]
+              }>${
+                category.filter((c) => c.id === value.categoryId)[0]?.content ??
+                ''
+              }</span></td>
+              <td class='content'>${value.content}</td>
+              <td class='payment'>${
+                payment.filter(({ id }) => id === value.paymentId)[0]
+                  ?.content ?? ''
+              }</td>
+              <td class='amount ${value.isIncome ? 'income' : 'cost'}'>${
+                value.amount
+              }</td>
+              </tr>`,
+            )
+            .join('')}
+          </table>
+        </li>
+      `;
+      })
       .join('')}
       `;
   }

@@ -76,18 +76,21 @@ export const getFilteredHistories = () => {
   const history = getState({ key: storeKeys.CURRENT_HISTORY });
   const isCheckedFilter = getState({ key: storeKeys.ISCHECKED_FILTER });
 
-  if (history.length === 0) return [{ date: 0, data: [] }];
+  if (history.length === 0) return [];
 
-  const filteredHistory = history.map(({ date, data }) => ({
-    date,
-    data: [
-      ...data.filter(({ isIncome }) => {
-        if (isCheckedFilter.income && isIncome === 1) return true;
-        if (isCheckedFilter.cost && isIncome === 0) return true;
-        return false;
-      }),
-    ],
-  }));
+  const filteredHistory = history
+    .map(({ date, data }) => ({
+      date,
+      data: [
+        ...data.filter(({ isIncome }) => {
+          if (isCheckedFilter.income && isIncome === 1) return true;
+          if (isCheckedFilter.cost && isIncome === 0) return true;
+          return false;
+        }),
+      ],
+    }))
+    .filter(({ data }) => data.length);
+
   return filteredHistory;
 };
 
