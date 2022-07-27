@@ -33,9 +33,8 @@ export class AmountInput {
 
     const $dropdown = document.querySelector('.dropdown');
 
-    $dropdown.innerHTML = categoryStore
-      .get()
-      .filter(({ isIncome }) => isIncome === $isIncome.checked)
+    $dropdown.innerHTML = getState({ key: storeKeys.CATEGORY })
+      .filter(({ isIncome }) => Boolean(isIncome) === $isIncome.checked)
       .map(
         ({ id, content }) => `
             <li data-id=${id}>${content}</li>
