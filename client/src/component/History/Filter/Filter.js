@@ -37,7 +37,7 @@ export class Filter {
 
     const newState = {
       income: $filterIncome.checked,
-      checked: $filterCost.checked,
+      cost: $filterCost.checked,
     };
     setState({ key: storeKeys.ISCHECKED_FILTER, newState });
   }
