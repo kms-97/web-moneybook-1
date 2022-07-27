@@ -33,9 +33,8 @@ export class AmountInput {
 
     const $dropdown = document.querySelector('.dropdown');
 
-    $dropdown.innerHTML = categoryStore
-      .get()
-      .filter(({ isIncome }) => isIncome === $isIncome.checked)
+    $dropdown.innerHTML = getState({ key: storeKeys.CATEGORY })
+      .filter(({ isIncome }) => Boolean(isIncome) === $isIncome.checked)
       .map(
         ({ id, content }) => `
             <li data-id=${id}>${content}</li>
@@ -45,6 +44,7 @@ export class AmountInput {
   }
 
   onClickIsIncome(event) {
+    event.stopPropagation();
     const $isIncome = event.target.closest('#isIncome');
     if (!$isIncome) return;
     this.onChangeIsIncome();
@@ -56,9 +56,9 @@ export class AmountInput {
     <label for="type">금액</label>
     <div class="field">
         <input type="checkbox" name="isIncome" id='isIncome' ${
-          history.isIncome !== false ? 'checked' : ''
-        }></input>
-        <label for='isIncome'></label>
+          history.isIncome === 1 ? 'checked' : ''
+        }>
+        <label for='isIncome' id='isIncomeLabel'></label>
         <input type="text" name="amount" placeholder="입력하세요" autocomplete="off" value="${
           history.amount ?? ''
         }"/>원

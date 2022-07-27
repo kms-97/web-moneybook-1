@@ -10,4 +10,17 @@ export const storeKeys = {
   ISCHECKED_FILTER: 'isCheckedFilter',
 };
 
+export const categoryClassName = {
+  1: 'salary',
+  2: 'allowance',
+  3: 'etc-income',
+  4: 'food',
+  5: 'life',
+  6: 'shopping',
+  7: 'traffic',
+  8: 'medical',
+  9: 'culture',
+  10: 'etc-cost',
+};
+
 export const WEEK_LENGTH = 7;

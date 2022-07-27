@@ -74,7 +74,7 @@ export default class CategoryInput {
         <input type="text" name="type" placeholder="선택하세요" value="${
           category.filter(({ id }) => id === history.categoryId)[0]?.content ??
           ''
-        }" date-id="${history.categoryId ?? ''}" readonly/>
+        }" data-id="${history.categoryId ?? ''}" readonly/>
         <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M4 6.5L8 10.5L12 6.5" stroke="#8D9393" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -86,7 +86,7 @@ export default class CategoryInput {
         ({ isIncome }) =>
           history.isIncome !== undefined
             ? history.isIncome === isIncome
-            : isIncome === 1, // category 초기값은 수입(+)에 대한 것
+          : isIncome === 0,
       )
       .map(
         ({ id, content }) => `

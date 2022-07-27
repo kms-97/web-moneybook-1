@@ -6,7 +6,7 @@ import {
   getFilteredHistories,
 } from '../../../controller';
 import { subscribeState } from '../../../controller';
-import { storeKeys } from '../../../utils/constant';
+import { categoryClassName, storeKeys } from '../../../utils/constant';
 import { getDay } from '../../../utils/date';
 
 export class List {
@@ -28,22 +28,37 @@ export class List {
       },
     });
 
+    this.unsubscribePayment = subscribeState({
+      key: storeKeys.PAYMENT,
+      callback: () => {
+        this.render();
+      },
+    });
+
     this.$target.appendChild(this.$list);
     this.init();
     this.render();
   }
 
   init() {
-    this.$list.addEventListener('click', (e) => {
-      const $tr = e.target.closest('tr');
-      if (!$tr) return;
+    this.$list.addEventListener('click', this.selectHistoryItem);
+  }
 
-      // .active 클래스 붙이기
+  selectHistoryItem(e) {
+    const $tr = e.target.closest('tr');
+    if (!$tr) return;
 
-      // set selected history
+    if ($tr.classList.contains('active')) {
+      changeSelectedHistory({});
+      $tr.classList.remove('active');
+    } else {
       const trId = Number($tr.dataset.id);
       changeSelectedHistory({ id: trId });
-    });
+      document
+        .querySelectorAll('tr')
+        .forEach((e) => e.classList.remove('active'));
+      $tr.classList.add('active');
+    }
   }
 
   render() {
@@ -72,9 +87,9 @@ export class List {
       ${data
         .map(
           (value) => `<tr data-id=${value.id}>
-          <td class='category'><span style='background-color: ${
-            category.filter((c) => c.id === value.categoryId)[0]?.color
-          }'>${
+          <td class='category'><span class=${
+            categoryClassName[value.categoryId]
+          }>${
             category.filter((c) => c.id === value.categoryId)[0]?.content ?? ''
           }</span></td>
           <td class='content'>${value.content}</td>

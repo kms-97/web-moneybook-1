@@ -18,7 +18,9 @@ export class DateInput {
     this.render();
   }
 
-  init() {}
+  init() {
+    this.$dateInput.addEventListener('click', (e) => e.stopPropagation());
+  }
 
   render() {
     const { year, month, date } = getState({ key: storeKeys.SELECTED_HISTORY });
