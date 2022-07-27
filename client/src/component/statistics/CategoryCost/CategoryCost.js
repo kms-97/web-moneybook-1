@@ -16,7 +16,7 @@ export class CategoryCost {
     return this.data.reduce((total, { sum }) => total + sum, 0);
   }
 
-  makeTableRow(totalCost) {
+  getTableRow(totalCost) {
     return this.data
       .map(({ id, content, sum }) => {
         const className = categoryClassName[id];
@@ -48,7 +48,7 @@ export class CategoryCost {
             이번 달 지출 금액 ${getFormattedAmount(totalCost)}
         </div>
         <table>
-            ${this.makeTableRow(totalCost)}
+            ${this.getTableRow(totalCost)}
         </table>
     `;
   }
