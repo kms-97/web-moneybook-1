@@ -78,18 +78,17 @@ export const getFilteredHistories = () => {
 
   if (history.length === 0) return [{ date: 0, data: [] }];
 
-  const filteredHistory = history[0].data.filter(({ isIncome }) => {
-    if (isCheckedFilter.income && isIncome === 1) return true;
-    if (isCheckedFilter.cost && isIncome === 0) return true;
-    return false;
-  });
-
-  return [
-    {
-      date: history[0].date,
-      data: filteredHistory,
-    },
-  ];
+  const filteredHistory = history.map(({ date, data }) => ({
+    date,
+    data: [
+      ...data.filter(({ isIncome }) => {
+        if (isCheckedFilter.income && isIncome === 1) return true;
+        if (isCheckedFilter.cost && isIncome === 0) return true;
+        return false;
+      }),
+    ],
+  }));
+  return filteredHistory;
 };
 
 export const postHistory = async (history) => {
