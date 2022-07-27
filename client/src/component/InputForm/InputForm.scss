@@ -120,26 +120,23 @@
   }
 
   .check-button {
-    stroke: white;
-    fill: $color-primary;
+    outline: 1px solid $color-primary;
+    border-radius: 5px;
 
     &.default {
+      background-color: white;
       path {
-        fill: white;
         stroke: $color-primary;
         stroke-width: 3;
       }
     }
-  }
 
-  //   input[type='checkbox'] {
-  //     width: 30px;
-  //     height: 30px;
-  //     accent-color: $color-primary;
-  //   }
-}
-
-div {
-  input[type='checked']:checked {
+    &.active {
+      background-color: $color-primary;
+      path {
+        stroke: $color-off-white;
+        stroke-width: 3;
+      }
+    }
   }
 }
