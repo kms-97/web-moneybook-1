@@ -133,6 +133,25 @@ export const getPaymentLength = () => {
   return history.reduce((p, { datas }) => p + datas.length, 0);
 };
 
+export const getIncomeAndCostSumOfDate = (date) => {
+  const history = getState({ key: storeKeys.CURRENT_HISTORY });
+
+  let income = 0;
+  let cost = 0;
+
+  const data = history.filter(({ date: d }) => d === date)[0]?.data ?? [];
+
+  data.forEach(({ isIncome, amount }) => {
+    if (isIncome) income += amount;
+    else cost += amount;
+  });
+
+  return {
+    income: income ? income : null,
+    cost: cost ? cost : null,
+  };
+};
+
 /* 결제 방법 관련 */
 export const updatePayment = async () => {
   const payment = await getMockPayment();
