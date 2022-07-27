@@ -4,8 +4,15 @@ import CategoryInput from './CategoryInput/CategoryInput';
 import { ContentInput } from './ContentInput/ContentInput';
 import { DateInput } from './DateInput/DateInput';
 import PaymentInput from './PaymentInput/PaymentInput';
-import { getState, postHistory, putHistory } from '../../controller';
+import {
+  changeSelectedHistory,
+  getState,
+  postHistory,
+  putHistory,
+} from '../../controller';
 import { storeKeys } from '../../utils/constant';
+import { setState } from '../../store';
+import { getTodayString, makeDateString } from '../../utils/date';
 
 export class InputForm {
   constructor($target) {
@@ -54,10 +61,8 @@ export class InputForm {
       if ($amount.value === '' || isNaN(amount))
         throw new Error('amount를 입력하세요.');
 
-      $checkButton.classList.remove('default');
       $checkButton.classList.add('active');
     } catch (error) {
-      $checkButton.classList.add('default');
       $checkButton.classList.remove('active');
       $checkButton.disabled = true;
     }
@@ -96,10 +101,33 @@ export class InputForm {
     const selectedHistory = getState({ key: storeKeys.SELECTED_HISTORY });
 
     if (selectedHistory.id) {
-      putHistory({ ...history, id: selectedHistory.id });
+      putHistory({ ...history, id: selectedHistory.id }, () => {
+        changeSelectedHistory({ id: null });
+        const $checkButton = this.$inpufForm.querySelector('.check-button');
+        $checkButton.classList.remove('active');
+      });
     } else {
-      postHistory(history);
+      postHistory(history, this.initInputs.bind(this));
     }
+  }
+
+  initInputs() {
+    const $date = document.querySelector('input[name="일자"]');
+    const $category = document.querySelector('input[name="type"]');
+    const $content = document.querySelector('input[name="title"]');
+    const $payment = document.querySelector('input[name="payment"]');
+    const $amount = document.querySelector('input[name="amount"]');
+
+    $date.value = getTodayString();
+    $category.dataset.id = '';
+    $category.value = '';
+    $content.value = '';
+    $payment.value = '';
+    $payment.dataset.id = '';
+    $amount.value = '';
+
+    const $checkButton = this.$inpufForm.querySelector('.check-button');
+    $checkButton.classList.remove('active');
   }
 
   render() {

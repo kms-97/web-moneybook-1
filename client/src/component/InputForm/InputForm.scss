@@ -123,13 +123,10 @@
   .check-button {
     outline: 1px solid $color-primary;
     border-radius: 5px;
-
-    &.default {
-      background-color: white;
-      path {
-        stroke: $color-primary;
-        stroke-width: 3;
-      }
+    background-color: white;
+    path {
+      stroke: $color-primary;
+      stroke-width: 3;
     }
 
     &.active {

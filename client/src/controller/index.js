@@ -94,16 +94,29 @@ export const getFilteredHistories = () => {
   return filteredHistory;
 };
 
-export const postHistory = async (history) => {
+export const postHistory = async (history, callback) => {
   const response = await postHistoryAPI(history);
+
+  if (response instanceof Error) {
+    console.log(error);
+    return;
+  }
   const histories = response;
   setState({ key: storeKeys.CURRENT_HISTORY, newState: [...histories] });
+  callback();
 };
 
-export const putHistory = async (history) => {
+export const putHistory = async (history, callback) => {
   const response = await putHistoryAPI(history);
+
+  if (response instanceof Error) {
+    console.log(error);
+    return;
+  }
+
   const histories = response;
   setState({ key: storeKeys.CURRENT_HISTORY, newState: [...histories] });
+  callback();
 };
 
 export const changeSelectedHistory = ({ id = null }) => {
