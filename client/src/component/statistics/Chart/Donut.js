@@ -12,11 +12,8 @@ export class DonutChart {
     this.ctx = this.$chart.getContext('2d');
 
     this.$target.appendChild(this.$chart);
-    this.init();
     this.render();
   }
-
-  init() {}
 
   getCenter() {
     return { x: this.$chart.width / 2, y: this.$chart.height / 2 };
