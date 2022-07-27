@@ -139,9 +139,10 @@ export const getIncomeAndCostSumOfDate = (date) => {
   let income = 0;
   let cost = 0;
 
-  const data = history.filter(({ date: d }) => d === date)[0]?.data ?? [];
+  const historyOfDate =
+    history.filter(({ date: d }) => d === date)[0]?.data ?? [];
 
-  data.forEach(({ isIncome, amount }) => {
+  historyOfDate.forEach(({ isIncome, amount }) => {
     if (isIncome) income += amount;
     else cost += amount;
   });
