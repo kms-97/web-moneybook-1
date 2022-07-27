@@ -44,6 +44,9 @@ export class Filter {
   }
 
   render() {
+    const { income: incomeCheck, cost: costCheck } = getState({
+      key: storeKeys.ISCHECKED_FILTER,
+    });
     this.$filter.innerHTML = `
     <li>
       <input id='filter-income' type='checkbox' checked>
