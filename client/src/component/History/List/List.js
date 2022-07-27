@@ -62,10 +62,16 @@ export class List {
     }
   }
 
+  isSelectedRow(id, target) {
+    if (!target) return false;
+    return target.id === id;
+  }
+
   render() {
     const { year, month } = getState({ key: storeKeys.CURRENT_DATE });
     const category = getState({ key: storeKeys.CATEGORY });
     const payment = getState({ key: storeKeys.PAYMENT });
+    const selectedHistory = getState({ key: storeKeys.SELECTED_HISTORY });
     const history = getFilteredHistories();
 
     this.$list.innerHTML = `
@@ -101,22 +107,26 @@ export class List {
           <table class='item'>
           ${data
             .map(
-              (value) => `<tr data-id=${value.id}>
-              <td class='category'><span class=${
-                categoryClassName[value.categoryId]
-              }>${
+              (value) => `
+                <tr data-id=${value.id} class=${
+                this.isSelectedRow(value.id) ? 'active' : ''
+              }>
+                <td class='category'><span class=${
+                  categoryClassName[value.categoryId]
+                }>${
                 category.filter((c) => c.id === value.categoryId)[0]?.content ??
                 ''
               }</span></td>
-              <td class='content'>${value.content}</td>
-              <td class='payment'>${
-                payment.filter(({ id }) => id === value.paymentId)[0]
-                  ?.content ?? ''
-              }</td>
-              <td class='amount ${
-                value.isIncome ? 'income' : 'cost'
-              }'>${getFormattedAmount(value.amount)}</td>
-              </tr>`,
+                <td class='content'>${value.content}</td>
+                <td class='payment'>${
+                  payment.filter(({ id }) => id === value.paymentId)[0]
+                    ?.content ?? ''
+                }</td>
+                <td class='amount ${
+                  value.isIncome ? 'income' : 'cost'
+                }'>${getFormattedAmount(value.amount)}</td>
+                </tr>
+              `,
             )
             .join('')}
           </table>
