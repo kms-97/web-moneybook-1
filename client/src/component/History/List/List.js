@@ -5,7 +5,7 @@ import {
   getCostSum,
 } from '../../../controller';
 import { subscribeState } from '../../../controller';
-import { CategoryColor, storeKeys } from '../../../utils/constant';
+import { categoryClassName, storeKeys } from '../../../utils/constant';
 import { getDay } from '../../../utils/date';
 
 export class List {
@@ -80,9 +80,9 @@ export class List {
       ${data
         .map(
           (value) => `<tr data-id=${value.id}>
-          <td class='category'><span style='background-color: ${
-            CategoryColor[value.categoryId]
-          }'>${
+          <td class='category'><span class=${
+            categoryClassName[value.categoryId]
+          }>${
             category.filter((c) => c.id === value.categoryId)[0]?.content ?? ''
           }</span></td>
           <td class='content'>${value.content}</td>

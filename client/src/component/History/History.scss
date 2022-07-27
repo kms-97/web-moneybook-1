@@ -76,6 +76,37 @@
           vertical-align: middle;
           text-align: center;
           padding: 0 5px;
+
+          .salary {
+            background-color: #b9d58c;
+          }
+          .allowance {
+            background-color: #e6d267;
+          }
+          .etc-income {
+            background-color: #e2b765;
+          }
+          .food {
+            background-color: #4a6cc3;
+          }
+          .life {
+            background-color: #4ca1de;
+          }
+          .shopping {
+            background-color: #94d3cc;
+          }
+          .traffic {
+            background-color: #4cb8b8;
+          }
+          .medical {
+            background-color: #6ed5eb;
+          }
+          .culture {
+            background-color: #d092e2;
+          }
+          .etc-cost {
+            background-color: #817dce;
+          }
         }
 
         .category {
