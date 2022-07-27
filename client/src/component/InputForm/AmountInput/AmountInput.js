@@ -56,9 +56,9 @@ export class AmountInput {
     <label for="type">금액</label>
     <div class="field">
         <input type="checkbox" name="isIncome" id='isIncome' ${
-          history.isIncome !== false ? 'checked' : ''
-        }></input>
-        <label for='isIncome'></label>
+          history.isIncome === 1 ? 'checked' : ''
+        }>
+        <label for='isIncome' id='isIncomeLabel'></label>
         <input type="text" name="amount" placeholder="입력하세요" autocomplete="off" value="${
           history.amount ?? ''
         }"/>원
