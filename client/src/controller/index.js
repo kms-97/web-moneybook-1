@@ -93,7 +93,7 @@ export const changeSelectedHistory = ({ id = null }) => {
       key: storeKeys.SELECTED_HISTORY,
       newState: {
         ...currentHistory
-          .reduce((p, { datas }) => [...p, ...datas], [])
+          .reduce((p, { data }) => [...p, ...data], [])
           .filter((h) => h.id === id)[0],
         year,
         month,
@@ -109,9 +109,9 @@ export const getCostSumCurrentMonth = () => {
   const history = getState({ key: storeKeys.CURRENT_HISTORY });
 
   return history.reduce(
-    (p, { datas }) =>
+    (p, { data }) =>
       p +
-      datas.reduce(
+      data.reduce(
         (p, { isIncome, amount }) => (!isIncome ? p + parseInt(amount) : p),
         0,
       ),
@@ -123,9 +123,9 @@ export const getIncomeSumCurrentMonth = () => {
   const history = getState({ key: storeKeys.CURRENT_HISTORY });
 
   return history.reduce(
-    (p, { datas }) =>
+    (p, { data }) =>
       p +
-      datas.reduce(
+      data.reduce(
         (p, { isIncome, amount }) => (isIncome ? p + parseInt(amount) : p),
         0,
       ),
@@ -133,15 +133,15 @@ export const getIncomeSumCurrentMonth = () => {
   );
 };
 
-export const getIncomeSum = (datas) => {
-  return datas.reduce(
+export const getIncomeSum = (data) => {
+  return data.reduce(
     (p, { amount, isIncome }) => (isIncome ? p + parseInt(amount) : p),
     0,
   );
 };
 
-export const getCostSum = (datas) => {
-  return datas.reduce(
+export const getCostSum = (data) => {
+  return data.reduce(
     (p, { amount, isIncome }) => (!isIncome ? p + parseInt(amount) : p),
     0,
   );
@@ -149,7 +149,7 @@ export const getCostSum = (datas) => {
 
 export const getPaymentLength = () => {
   const history = getState({ key: storeKeys.CURRENT_HISTORY });
-  return history.reduce((p, { datas }) => p + datas.length, 0);
+  return history.reduce((p, { data }) => p + data.length, 0);
 };
 
 /* 결제 방법 관련 */
