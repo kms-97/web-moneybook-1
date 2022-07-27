@@ -21,6 +21,13 @@ export class List {
       },
     });
 
+    this.unsubscribePayment = subscribeState({
+      key: storeKeys.PAYMENT,
+      callback: () => {
+        this.render();
+      },
+    });
+
     this.$target.appendChild(this.$list);
     this.init();
     this.render();
