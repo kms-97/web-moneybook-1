@@ -23,12 +23,51 @@ export class InputForm {
       'click',
       this.onClickCheckButton.bind(this),
     );
+
+    this.$inpufForm.addEventListener(
+      'input',
+      this.isAllFieldCorrect.bind(this),
+    );
+    this.$inpufForm.addEventListener(
+      'click',
+      this.isAllFieldCorrect.bind(this),
+    );
+  }
+
+  isAllFieldCorrect() {
+    const $category = document.querySelector('input[name="type"]');
+    const $content = document.querySelector('input[name="title"]');
+    const $payment = document.querySelector('input[name="payment"]');
+    const $amount = document.querySelector('input[name="amount"]');
+    const $checkButton = this.$inpufForm.querySelector('.check-button');
+
+    try {
+      const categoryId = Number($category.dataset.id);
+      const paymentId = Number($payment.dataset.id);
+      if (categoryId === 0 || paymentId === 0)
+        throw new Error('categoryId, paymentId를 입력하세요.');
+
+      const content = $content.value;
+      if (!content) throw new Error('content를 입력하세요.');
+
+      const amount = Number($amount.value);
+      if ($amount.value === '' || isNaN(amount))
+        throw new Error('amount를 입력하세요.');
+
+      $checkButton.classList.remove('default');
+      $checkButton.classList.add('active');
+    } catch (error) {
+      $checkButton.classList.add('default');
+      $checkButton.classList.remove('active');
+      $checkButton.disabled = true;
+    }
   }
 
   onClickCheckButton(event) {
     event.preventDefault();
     const $button = event.target.closest('button');
     if (!$button) return;
+    if (!$button.classList.contains('active')) return;
 
     const $date = document.querySelector('input[name="일자"]');
     const $category = document.querySelector('input[name="type"]');
@@ -72,7 +111,7 @@ export class InputForm {
         <div class="input-wrapper payment-input-wrapper"></div>
         <div class="input-wrapper amount-input-wrapper"></div>
     </div>
-    <button class="check-button active">
+    <button class="check-button default" >
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M29 14L16.625 26L11 20.5455" stroke="#FCFCFC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
