@@ -34,16 +34,24 @@ export class List {
   }
 
   init() {
-    this.$list.addEventListener('click', (e) => {
-      const $tr = e.target.closest('tr');
-      if (!$tr) return;
+    this.$list.addEventListener('click', this.selectHistoryItem);
+  }
 
-      // .active 클래스 붙이기
+  selectHistoryItem(e) {
+    const $tr = e.target.closest('tr');
+    if (!$tr) return;
 
-      // set selected history
+    if ($tr.classList.contains('active')) {
+      changeSelectedHistory({});
+      $tr.classList.remove('active');
+    } else {
       const trId = Number($tr.dataset.id);
       changeSelectedHistory({ id: trId });
-    });
+      document
+        .querySelectorAll('tr')
+        .forEach((e) => e.classList.remove('active'));
+      $tr.classList.add('active');
+    }
   }
 
   render() {
