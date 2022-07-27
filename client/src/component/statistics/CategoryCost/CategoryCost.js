@@ -9,11 +9,8 @@ export class CategoryCost {
 
     this.data = data;
     this.$target.appendChild(this.$categoryCost);
-    this.init();
     this.render();
   }
-
-  init() {}
 
   getTotalCost() {
     return this.data.reduce((total, { sum }) => total + sum, 0);
