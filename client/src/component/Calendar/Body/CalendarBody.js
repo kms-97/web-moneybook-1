@@ -45,8 +45,8 @@ export class CalendarBody {
 
           data.date = date;
           if (income || cost) {
-            if (income) data.income = income;
-            if (cost) data.cost = cost;
+          if (income) data.income = income;
+          if (cost) data.cost = cost;
             data.total = (income ?? 0) - (cost ?? 0);
           }
         }
