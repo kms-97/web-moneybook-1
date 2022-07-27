@@ -21,6 +21,16 @@ export function getTodayString() {
   return `${year}-${month}-${day}`;
 }
 
+export function getStartAndEndDate({ year, month }) {
+  const startDate = new Date(year, month - 1, 1).getDate();
+  const endDate = new Date(year, month, 0).getDate();
+
+  return {
+    startDate,
+    endDate,
+  };
+}
+
 export function getDay(year, month, date) {
   const day = {
     1: '월',
