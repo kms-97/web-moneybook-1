@@ -1,17 +1,30 @@
 import './Header.scss';
 import DaySelector from './DaySelector/DaySelector';
+import { Router } from '../../router/Router';
 
 export class Header {
   constructor($target) {
     this.$target = $target;
     this.$header = document.createElement('header');
+    this.router = Router.getInstance();
 
     this.$target.appendChild(this.$header);
     this.init();
     this.render();
   }
 
-  init() {}
+  init() {
+    this.$header.addEventListener('click', this.routing.bind(this));
+  }
+
+  routing(e) {
+    const $button = e.target.closest('button');
+    if (!$button) return;
+    debugger;
+    if ($button.classList.contains('history-button')) this.router.push('/');
+    if ($button.classList.contains('calendar-button'))
+      this.router.push('/calendar');
+  }
 
   render() {
     this.$header.innerHTML = `
