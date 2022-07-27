@@ -52,23 +52,27 @@ export class DonutChart {
   }
 
   drawOuterCircle(center, radius, startAngle, endAngle, color) {
-    this.ctx.beginPath();
-    this.ctx.moveTo(center.x, center.y);
-    this.ctx.arc(center.x, center.y, radius, startAngle, endAngle);
-    this.ctx.fillStyle = hexToRGB(color);
-    this.ctx.fill();
-    this.ctx.closePath();
+    const ctx = this.ctx;
+
+    ctx.beginPath();
+    ctx.moveTo(center.x, center.y);
+    ctx.arc(center.x, center.y, radius, startAngle, endAngle);
+    ctx.fillStyle = hexToRGB(color);
+    ctx.fill();
+    ctx.closePath();
   }
 
   removeInnerCircle(center, radius) {
-    this.ctx.save();
-    this.ctx.beginPath();
-    this.ctx.moveTo(center.x, center.y);
-    this.ctx.arc(center.x, center.y, radius - this.chartWidth, 0, Math.PI * 2);
-    this.ctx.closePath();
-    this.ctx.clip();
-    this.clearCanvas();
-    this.ctx.restore();
+    const ctx = this.ctx;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(center.x, center.y);
+    ctx.arc(center.x, center.y, radius - this.chartWidth, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    clearCanvas();
+    ctx.restore();
   }
 
   render() {
