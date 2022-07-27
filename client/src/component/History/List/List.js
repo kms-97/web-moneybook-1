@@ -48,7 +48,7 @@ export class List {
     this.$list.innerHTML = `
     ${history
       .map(
-        ({ date, datas }) => `
+        ({ date, data }) => `
     <li>
       <div class='subtitle'>
         <div class='date'>${date}일 <span class='week'>${getDay(
@@ -57,12 +57,12 @@ export class List {
           date,
         )}</span></div>
         <div class='sum'>
-            <div class='income'>수입 ${getIncomeSum(datas)}</div>
-            <div class='cost'>지출 ${getCostSum(datas)}</div>
+            <div class='income'>수입 ${getIncomeSum(data)}</div>
+            <div class='cost'>지출 ${getCostSum(data)}</div>
         </div>
       </div>
       <table class='item'>
-      ${datas
+      ${data
         .map(
           (value) => `<tr data-id=${value.id}>
           <td class='category'><span style='background-color: ${

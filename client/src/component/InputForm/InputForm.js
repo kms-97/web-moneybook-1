@@ -4,6 +4,8 @@ import CategoryInput from './CategoryInput/CategoryInput';
 import { ContentInput } from './ContentInput/ContentInput';
 import { DateInput } from './DateInput/DateInput';
 import PaymentInput from './PaymentInput/PaymentInput';
+import { getState, postHistory, putHistory } from '../../controller';
+import { storeKeys } from '../../utils/constant';
 
 export class InputForm {
   constructor($target) {
@@ -16,7 +18,52 @@ export class InputForm {
     this.init();
   }
 
-  init() {}
+  init() {
+    this.$inpufForm.addEventListener(
+      'click',
+      this.onClickCheckButton.bind(this),
+    );
+  }
+
+  onClickCheckButton(event) {
+    event.preventDefault();
+    const $button = event.target.closest('button');
+    if (!$button) return;
+
+    const $date = document.querySelector('input[name="일자"]');
+    const $category = document.querySelector('input[name="type"]');
+    const $content = document.querySelector('input[name="title"]');
+    const $payment = document.querySelector('input[name="payment"]');
+    const $isIncome = document.querySelector('input[name="isIncome"]');
+    const $amount = document.querySelector('input[name="amount"]');
+
+    const [year, month, date] = $date.value.split('-').map((d) => Number(d));
+    const categoryId = Number($category.dataset.id);
+    const content = $content.value;
+    const paymentId = Number($payment.dataset.id);
+    const amount = Number($amount.value);
+
+    // const currentYear = getState({ key: storeKeys.CURRENT_YEAR });
+    // const currentMonth = getState({ key: storeKeys.CURRENT_MONTH });
+    const history = {
+      currentYear: 2022,
+      currentMonth: 5,
+      year,
+      month,
+      date,
+      categoryId: 1,
+      content,
+      paymentId,
+      amount,
+    };
+    const selectedHistory = getState({ key: storeKeys.SELECTED_HISTORY });
+
+    if (selectedHistory.id) {
+      putHistory({ ...history, id: selectedHistory.id });
+    } else {
+      postHistory(history);
+    }
+  }
 
   render() {
     this.$inpufForm.innerHTML = `

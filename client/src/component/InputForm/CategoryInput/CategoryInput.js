@@ -86,7 +86,7 @@ export default class CategoryInput {
         ({ isIncome }) =>
           history.isIncome !== undefined
             ? history.isIncome === isIncome
-            : isIncome === true, // category 초기값은 수입(+)에 대한 것
+            : isIncome === 1, // category 초기값은 수입(+)에 대한 것
       )
       .map(
         ({ id, content }) => `
