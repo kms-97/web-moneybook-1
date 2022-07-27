@@ -5,6 +5,7 @@ import {
   setState,
   subscribeState,
 } from '../../../controller';
+import { getFormattedAmount } from '../../../utils/amount';
 import { storeKeys } from '../../../utils/constant';
 
 export class Filter {
@@ -46,11 +47,15 @@ export class Filter {
     this.$filter.innerHTML = `
     <li>
       <input id='filter-income' type='checkbox' checked>
-      <label for='filter-income'>수입 ${getIncomeSumCurrentMonth()}</label>
+      <label for='filter-income'>수입 ${getFormattedAmount(
+        getIncomeSumCurrentMonth(),
+      )}</label>
     </li>
     <li>
       <input id='filter-cost' type='checkbox' checked>
-      <label for='filter-cost'>지출 ${getCostSumCurrentMonth()}</label>
+      <label for='filter-cost'>지출 ${getFormattedAmount(
+        getCostSumCurrentMonth(),
+      )}</label>
     </li>`;
   }
 }

@@ -8,6 +8,7 @@ import {
 import { subscribeState } from '../../../controller';
 import { categoryClassName, storeKeys } from '../../../utils/constant';
 import { getDay } from '../../../utils/date';
+import { getFormattedAmount } from '../../../utils/amount';
 
 export class List {
   constructor($target) {
@@ -82,9 +83,19 @@ export class List {
         )}</span></div>
             <div class='sum'>
                 ${
-                  incomeSum ? `<div class='income'>수입 ${incomeSum}</div>` : ''
+                  incomeSum
+                    ? `<div class='income'>수입 ${getFormattedAmount(
+                        incomeSum,
+                      )}</div>`
+                    : ''
                 }
-                ${costSum ? `<div class='cost'>지출 ${costSum}</div>` : ''}
+                ${
+                  costSum
+                    ? `<div class='cost'>지출 ${getFormattedAmount(
+                        costSum,
+                      )}</div>`
+                    : ''
+                }
             </div>
           </div>
           <table class='item'>
@@ -102,9 +113,9 @@ export class List {
                 payment.filter(({ id }) => id === value.paymentId)[0]
                   ?.content ?? ''
               }</td>
-              <td class='amount ${value.isIncome ? 'income' : 'cost'}'>${
-                value.amount
-              }</td>
+              <td class='amount ${
+                value.isIncome ? 'income' : 'cost'
+              }'>${getFormattedAmount(value.amount)}</td>
               </tr>`,
             )
             .join('')}
