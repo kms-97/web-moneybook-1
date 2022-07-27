@@ -45,6 +45,7 @@ export class AmountInput {
   }
 
   onClickIsIncome(event) {
+    event.stopPropagation();
     const $isIncome = event.target.closest('#isIncome');
     if (!$isIncome) return;
     this.onChangeIsIncome();
