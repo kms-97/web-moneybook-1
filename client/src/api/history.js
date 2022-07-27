@@ -12,8 +12,6 @@ export const getAllHistory = async (year, month) => {
     console.log(response.message);
   }
 
-  console.log(response);
-
   return response;
 };
 
@@ -42,8 +40,6 @@ export const postHistory = async (history) => {
     requestURL: URL_PRIFIX,
     body: history,
   });
-
-  console.log('왜안와');
 
   if (response instanceof Error) {
     console.log(response.message);
