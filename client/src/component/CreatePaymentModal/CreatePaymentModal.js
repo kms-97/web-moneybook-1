@@ -45,6 +45,7 @@ export class CreatePaymentModal {
     this.$paymentModal.style.display = 'none';
     const $payment = this.$paymentModal.querySelector('input[name=payment]');
     $payment.value = '';
+    document.body.style.overflow = 'auto';
   }
 
   render() {
