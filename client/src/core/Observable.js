@@ -18,11 +18,15 @@ export default function (initState) {
 
   // 단순 주소 비교는 의미가 없고, 깊은 비교를 통해 값이 같은지 확인해야 함.
   function setState(newState) {
-    if (state === newState || JSON.stringify(state) === JSON.stringify(newState)) return;
+    if (
+      state === newState ||
+      JSON.stringify(state) === JSON.stringify(newState)
+    )
+      return;
     state = newState;
     notify();
   }
-  
+
   function getState() {
     return state;
   }
