@@ -2,6 +2,7 @@ import {
   getCostSumCurrentMonth,
   getIncomeSumCurrentMonth,
   getState,
+  setState,
   subscribeState,
 } from '../../../controller';
 import { storeKeys } from '../../../utils/constant';
@@ -21,6 +22,24 @@ export class Filter {
 
     this.$target.appendChild(this.$filter);
     this.render();
+    this.init();
+  }
+
+  init() {
+    this.$filter.addEventListener('click', (event) => {
+      this.onClickFilter();
+    });
+  }
+
+  onClickFilter() {
+    const $filterIncome = this.$filter.querySelector('#filter-income');
+    const $filterCost = this.$filter.querySelector('#filter-cost');
+
+    const newState = {
+      income: $filterIncome.checked,
+      checked: $filterCost.checked,
+    };
+    setState({ key: storeKeys.ISCHECKED_FILTER, newState });
   }
 
   render() {

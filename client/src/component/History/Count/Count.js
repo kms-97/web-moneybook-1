@@ -14,6 +14,13 @@ export class Count {
       },
     });
 
+    this.unsubscribeIsCheckedFilter = subscribeState({
+      key: storeKeys.ISCHECKED_FILTER,
+      callback: () => {
+        this.render();
+      },
+    });
+
     this.$target.appendChild(this.$count);
     this.render();
   }
