@@ -1,5 +1,10 @@
-import { subscribeState } from '../../../controller';
-import { storeKeys } from '../../../utils/constant';
+import {
+  getIncomeAndCostSumOfDate,
+  getState,
+  subscribeState,
+} from '../../../controller';
+import { storeKeys, WEEK_LENGTH } from '../../../utils/constant';
+import { getStartAndEndDate } from '../../../utils/date';
 
 export class CalendarBody {
   constructor($target) {
@@ -54,41 +59,45 @@ export class CalendarBody {
   generateRow() {}
 
   render() {
+    const dataTable = this.makeDataTable();
+
     this.$body.innerHTML = `
-        <tr>
-            <td class='today'>
-            <div class='calendar-amount'>
-                <div class='calendar-amount-income'>130,000</div>
-                <div class='calendar-amount-cost'>20,000</div>
-                <div class='calendar-amount-total'>110,000</div>
-            </div>
-            <div class='calendar-date'>1</div>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
+        ${dataTable
+          .map(
+            (row) =>
+              `<tr>
+              ${row
+                .map(
+                  (column) =>
+                    `<td>
+                    <div class='calendar-amount'>
+                      ${
+                        column.income
+                          ? `<div class='calendar-amount-income'>${column.income}</div>`
+                          : ''
+                      }
+                      ${
+                        column.cost
+                          ? `<div class='calendar-amount-cost'>-${column.cost}</div>`
+                          : ''
+                      }
+                      ${
+                        column.total
+                          ? `<div class='calendar-amount-total'>${column.total}</div>`
+                          : ''
+                      }
+                    </div>
+                    ${
+                      column.date
+                        ? `<div class='calendar-date'>${column.date}</div>`
+                        : ''
+                    }
+                  </td>`,
+                )
+                .join('')}
+            </tr>`,
+          )
+          .join('')}
       `;
   }
 }
