@@ -7,6 +7,7 @@ import { updateCategory, updateHistories, updatePayment } from './controller';
 import { storeKeys } from './utils/constant';
 import { CalendarView } from './view/CalendarView';
 import { Router } from './router/Router';
+import { NotFoundView } from './view/NotFoundView';
 
 const initStore = () => {
   addState({
