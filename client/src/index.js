@@ -5,10 +5,11 @@ import { HistoryView } from './view/HistoryView';
 import { addState } from './store';
 import { updateCategory, updateHistories, updatePayment } from './controller';
 import { storeKeys } from './utils/constant';
+import { CalendarView } from './view/CalendarView';
+import { Router } from './router/Router';
+import { NotFoundView } from './view/NotFoundView';
 
-// initStore
 const initStore = () => {
-  // state 선언
   addState({
     key: storeKeys.CURRENT_DATE,
     initState: {
@@ -27,5 +28,14 @@ const initStore = () => {
   updatePayment();
 };
 
+const initRouter = () => {
+  Router.init(document.getElementById('root'), {
+    '/': HistoryView,
+    '/history': HistoryView,
+    '/calendar': CalendarView,
+    '/404': NotFoundView,
+  });
+};
+
 initStore();
-new HistoryView(document.getElementById('root'));
+initRouter();

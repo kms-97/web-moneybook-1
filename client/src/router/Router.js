@@ -26,13 +26,13 @@ export const Router = (function () {
       new Component(target);
     }
 
-    route();
-    return { push };
+    return { push, route };
   }
 
   return {
     init: ($target, mapper) => {
       if (!instance) instance = setInstance($target, mapper);
+      instance.route();
     },
 
     getInstance: () => {

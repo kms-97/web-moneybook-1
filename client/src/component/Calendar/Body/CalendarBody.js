@@ -44,11 +44,9 @@ export class CalendarBody {
           const { income, cost } = getIncomeAndCostSumOfDate(date);
 
           data.date = date;
-          if (income || cost) {
           if (income) data.income = income;
           if (cost) data.cost = cost;
-            data.total = (income ?? 0) - (cost ?? 0);
-          }
+          if (income || cost) data.total = (income ?? 0) - (cost ?? 0);
         }
       }
     }
