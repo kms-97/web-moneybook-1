@@ -31,6 +31,9 @@ export default class DaySelector {
   }
 
   onClickLeftArrow(e) {
+    const $leftArrow = e.target.closest('.left-arrow');
+    if (!$leftArrow) return;
+
     decreaseMonth();
   }
 
