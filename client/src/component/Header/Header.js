@@ -20,7 +20,6 @@ export class Header {
   routing(e) {
     const $button = e.target.closest('button');
     if (!$button) return;
-    debugger;
     if ($button.classList.contains('history-button')) this.router.push('/');
     if ($button.classList.contains('calendar-button'))
       this.router.push('/calendar');
