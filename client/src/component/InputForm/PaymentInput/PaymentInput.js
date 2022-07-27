@@ -21,11 +21,14 @@ export default class PaymentInput {
   }
 
   init() {
-    this.$paymentInput.addEventListener('click', this.onClickPaymentItem);
+    this.$paymentInput.addEventListener(
+      'click',
+      this.onClickPaymentItem.bind(this),
+    );
     this.$paymentInput.addEventListener('click', this.onClickDropdownField);
     this.$paymentInput.addEventListener(
       'click',
-      this.onClickPaymentItemDeleteButton,
+      this.onClickPaymentItemDeleteButton.bind(this),
     );
   }
 
@@ -38,7 +41,7 @@ export default class PaymentInput {
     if ($li.dataset.name === '추가') {
       // 추가하기 버튼
       const $paymentModal = document.querySelector('.payment-modal');
-      $paymentModal.style.display = 'flex';
+      this.openModal($paymentModal);
       return;
     }
     $inputType.value = $li.dataset.name;
@@ -78,12 +81,17 @@ export default class PaymentInput {
     if (!$li) return;
 
     const $deletePaymentModal = document.querySelector('.delete-payment-modal');
-    $deletePaymentModal.style.display = 'flex';
+    this.openModal($deletePaymentModal);
 
     const $input = $deletePaymentModal.querySelector('input[name="payment"]');
 
     $input.value = $li.dataset.name;
     $input.dataset.id = $li.dataset.id;
+  }
+
+  openModal(modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
   }
 
   render() {
