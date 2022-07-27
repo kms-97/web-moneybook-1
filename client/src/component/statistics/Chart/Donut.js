@@ -68,7 +68,7 @@ export class DonutChart {
     ctx.arc(center.x, center.y, radius - this.chartWidth, 0, Math.PI * 2);
     ctx.closePath();
     ctx.clip();
-    clearCanvas();
+    this.clearCanvas();
     ctx.restore();
   }
 
