@@ -36,6 +36,7 @@ export class InputForm {
     const $payment = document.querySelector('input[name="payment"]');
     const $amount = document.querySelector('input[name="amount"]');
 
+    const currentDate = getState({ key: storeKeys.CURRENT_DATE });
     const [year, month, date] = $date.value.split('-').map((d) => Number(d));
     const categoryId = Number($category.dataset.id);
     const content = $content.value;
@@ -43,12 +44,12 @@ export class InputForm {
     const amount = Number($amount.value);
 
     const history = {
-      currentYear: 2022,
-      currentMonth: 5,
+      currentYear: currentDate.year,
+      currentMonth: currentDate.month,
       year,
       month,
       date,
-      categoryId: 1,
+      categoryId,
       content,
       paymentId,
       amount,
