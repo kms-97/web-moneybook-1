@@ -7,8 +7,8 @@ export class CalendarBody {
     this.$body = document.createElement('table');
     this.$body.className = 'calendar-body';
 
-    this.unsubscribeDate = subscribeState({
-      key: storeKeys.CURRENT_DATE,
+    this.unsubscribeHistory = subscribeState({
+      key: storeKeys.CURRENT_HISTORY,
       callback: () => this.render(),
     });
 
