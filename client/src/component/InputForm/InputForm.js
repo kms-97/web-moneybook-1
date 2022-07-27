@@ -4,8 +4,15 @@ import CategoryInput from './CategoryInput/CategoryInput';
 import { ContentInput } from './ContentInput/ContentInput';
 import { DateInput } from './DateInput/DateInput';
 import PaymentInput from './PaymentInput/PaymentInput';
-import { getState, postHistory, putHistory } from '../../controller';
+import {
+  changeSelectedHistory,
+  getState,
+  postHistory,
+  putHistory,
+} from '../../controller';
 import { storeKeys } from '../../utils/constant';
+import { setState } from '../../store';
+import { getTodayString, makeDateString } from '../../utils/date';
 
 export class InputForm {
   constructor($target) {
@@ -23,12 +30,49 @@ export class InputForm {
       'click',
       this.onClickCheckButton.bind(this),
     );
+
+    this.$inpufForm.addEventListener(
+      'input',
+      this.isAllFieldCorrect.bind(this),
+    );
+    this.$inpufForm.addEventListener(
+      'click',
+      this.isAllFieldCorrect.bind(this),
+    );
+  }
+
+  isAllFieldCorrect() {
+    const $category = document.querySelector('input[name="type"]');
+    const $content = document.querySelector('input[name="title"]');
+    const $payment = document.querySelector('input[name="payment"]');
+    const $amount = document.querySelector('input[name="amount"]');
+    const $checkButton = this.$inpufForm.querySelector('.check-button');
+
+    try {
+      const categoryId = Number($category.dataset.id);
+      const paymentId = Number($payment.dataset.id);
+      if (categoryId === 0 || paymentId === 0)
+        throw new Error('categoryId, paymentId를 입력하세요.');
+
+      const content = $content.value;
+      if (!content) throw new Error('content를 입력하세요.');
+
+      const amount = Number($amount.value);
+      if ($amount.value === '' || isNaN(amount))
+        throw new Error('amount를 입력하세요.');
+
+      $checkButton.classList.add('active');
+    } catch (error) {
+      $checkButton.classList.remove('active');
+      $checkButton.disabled = true;
+    }
   }
 
   onClickCheckButton(event) {
     event.preventDefault();
     const $button = event.target.closest('button');
     if (!$button) return;
+    if (!$button.classList.contains('active')) return;
 
     const $date = document.querySelector('input[name="일자"]');
     const $category = document.querySelector('input[name="type"]');
@@ -57,10 +101,33 @@ export class InputForm {
     const selectedHistory = getState({ key: storeKeys.SELECTED_HISTORY });
 
     if (selectedHistory.id) {
-      putHistory({ ...history, id: selectedHistory.id });
+      putHistory({ ...history, id: selectedHistory.id }, () => {
+        changeSelectedHistory({ id: null });
+        const $checkButton = this.$inpufForm.querySelector('.check-button');
+        $checkButton.classList.remove('active');
+      });
     } else {
-      postHistory(history);
+      postHistory(history, this.initInputs.bind(this));
     }
+  }
+
+  initInputs() {
+    const $date = document.querySelector('input[name="일자"]');
+    const $category = document.querySelector('input[name="type"]');
+    const $content = document.querySelector('input[name="title"]');
+    const $payment = document.querySelector('input[name="payment"]');
+    const $amount = document.querySelector('input[name="amount"]');
+
+    $date.value = getTodayString();
+    $category.dataset.id = '';
+    $category.value = '';
+    $content.value = '';
+    $payment.value = '';
+    $payment.dataset.id = '';
+    $amount.value = '';
+
+    const $checkButton = this.$inpufForm.querySelector('.check-button');
+    $checkButton.classList.remove('active');
   }
 
   render() {
@@ -72,11 +139,10 @@ export class InputForm {
         <div class="input-wrapper payment-input-wrapper"></div>
         <div class="input-wrapper amount-input-wrapper"></div>
     </div>
-    <button>
-        <svg class="check-button default" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0 10C0 4.47715 4.47715 0 10 0H30C35.5228 0 40 4.47715 40 10V30C40 35.5228 35.5228 40 30 40H10C4.47715 40 0 35.5228 0 30V10Z" fill="#2AC1BC"/>
+    <button class="check-button default" >
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M29 14L16.625 26L11 20.5455" stroke="#FCFCFC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+      </svg>
     </button>    
     </div>
     `;

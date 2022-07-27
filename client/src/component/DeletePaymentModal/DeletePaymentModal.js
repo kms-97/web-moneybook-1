@@ -25,7 +25,7 @@ export class DeletePaymentModal {
   onClickCancelButton(event) {
     const $cancelButton = event.target.closest('.cancel-button');
     if (!$cancelButton) return;
-    this.$deletePaymentModal.style.display = 'none';
+    this.closeModal();
   }
 
   onClickDeleteButton(event) {
@@ -37,8 +37,17 @@ export class DeletePaymentModal {
     if (!$payment) return;
     const paymentId = Number($payment.dataset.id);
     deletePayment(paymentId, () => {
-      this.$deletePaymentModal.style.display = 'none';
+      this.closeModal();
     });
+  }
+
+  closeModal() {
+    this.$deletePaymentModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+    const $payment = this.$deletePaymentModal.querySelector(
+      'input[name=payment]',
+    );
+    $payment.value = '';
   }
 
   // 삭제 버튼 클릭 시 modal 열고, data-id와 value를 세팅
