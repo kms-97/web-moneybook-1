@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = process.env.BASE_URL;
 
 export async function request({ method, requestURL, body }) {
   const URL = `${BASE_URL}${requestURL}`;
