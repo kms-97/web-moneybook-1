@@ -16,6 +16,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
           script: |
             fuser -k 3000/tcp
             cd web-moneybook-1
