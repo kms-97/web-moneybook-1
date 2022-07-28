@@ -26,6 +26,7 @@
           top: 1px solid $color-label;
           bottom: 1px solid $color-label;
         }
+        cursor: pointer;
         &.active {
           border: {
             top: 2px solid $color-primary;
