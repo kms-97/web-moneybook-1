@@ -112,6 +112,7 @@ export default class PaymentInput {
     }
     new Modal({
       input: { readonly: true, value },
+      description: '선택하신 결제수단을 삭제할까요?',
       button: {
         name: '삭제',
         color: '#f45452',
