@@ -1,7 +1,14 @@
-import { getCostSumGroupByCategory, subscribeState } from '../../controller';
+import {
+  getAmountSumOfCategory,
+  getCostSumGroupByCategory,
+  getState,
+  subscribeState,
+} from '../../controller';
 import { CategoryColor, storeKeys } from '../../utils/constant';
+import { getPreviousMonths } from '../../utils/date';
 import { CategoryCost } from './CategoryCost/CategoryCost';
 import { DonutChart } from './Chart/Donut';
+import { LineChart } from './Chart/line';
 import './Statistics.scss';
 
 export class Statistics {
@@ -20,10 +27,32 @@ export class Statistics {
     this.render();
   }
 
-  init() {}
+  init() {
+    this.$statistics.addEventListener('click', this.showLineChart.bind(this));
+  }
 
-  removeAllChildNode() {
-    this.$statistics.innerHTML = '';
+  async showLineChart(e) {
+    const { year, month } = getState({ key: storeKeys.CURRENT_DATE });
+    const category = e.target.closest('tr');
+    if (!category) return;
+
+    const categoryId = category.dataset.categoryid;
+    const categoryName = category.dataset.categoryname;
+    const months = getPreviousMonths(year, month, 6);
+    const result = await getAmountSumOfCategory(months, categoryId);
+    const data = result.map(({ year, month, amount }) => {
+      return {
+        label: `${year}-${month}`,
+        value: amount,
+      };
+    });
+
+    const $lineChartContainer = this.$statistics.querySelector('.line');
+    $lineChartContainer.innerHTML = `
+      <div class='title'>${categoryName} 카테고리 소비 추이</div>
+    `;
+    $lineChartContainer.style.display = 'flex';
+    new LineChart($lineChartContainer, { data });
   }
 
   render() {
@@ -32,8 +61,17 @@ export class Statistics {
       return { content, value: sum, color: CategoryColor[id] };
     });
 
-    this.removeAllChildNode();
-    new DonutChart(this.$statistics, chartData);
-    new CategoryCost(this.$statistics, costSumGroupByCategory);
+    this.$statistics.innerHTML = `
+      <div class='donut'></div>
+      <div class='line'></div>
+    `;
+
+    new DonutChart(this.$statistics.querySelector('.donut'), {
+      data: chartData,
+    });
+    new CategoryCost(
+      this.$statistics.querySelector('.donut'),
+      costSumGroupByCategory,
+    );
   }
 }
