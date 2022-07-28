@@ -1,5 +1,6 @@
 import {
   getAllHistory as getAllHistoryAPI,
+  getAmountSumPerCategory,
   postHistory as postHistoryAPI,
   putHistory as putHistoryAPI,
 } from '../api/history';
@@ -241,6 +242,20 @@ export const getCostSumGroupByCategory = () => {
   });
 
   return costCategory.sort((a, b) => b.sum - a.sum);
+};
+
+export const getAmountSumOfCategory = async (months, categoryId) => {
+  const promises = months.map(({ year, month }) =>
+    getAmountSumPerCategory(year, month, categoryId),
+  );
+
+  try {
+    const data = await Promise.all(promises);
+    return data;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
 };
 
 /* 결제 방법 관련 */
