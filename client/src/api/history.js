@@ -25,7 +25,7 @@ export const getAmountSumPerCategory = async (year, month, categoryId) => {
     console.log(response.message);
   }
 
-  return { year, month, amount: response[0].amount };
+  return { year, month, amount: Number(response[0].amount) };
 };
 
 export const postHistory = async (history) => {
