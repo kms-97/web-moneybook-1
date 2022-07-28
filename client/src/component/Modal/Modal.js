@@ -22,6 +22,7 @@ export class Modal {
       const $customButton = event.target.closest('.custom-button');
       if (!$customButton) return;
 
+      if (!this.props.button.onClick) return;
       const $input = this.$modal.querySelector('input');
       this.props.button.onClick($input.value);
       this.closeModal();
