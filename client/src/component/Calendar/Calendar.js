@@ -1,22 +1,15 @@
 import './Calendar.scss';
 import { CalendarBody } from './Body/CalendarBody';
 import { CalendarHeader } from './Header/CalenderHeader';
+import Component from '../../core/Component';
 
-export class Calendar {
-  constructor($target) {
-    this.$target = $target;
-    this.$calendar = document.createElement('main');
-    this.$calendar.className = 'calendar';
-
-    this.$target.appendChild(this.$calendar);
-    this.init();
-    this.render();
+export class Calendar extends Component {
+  constructor($parent) {
+    super($parent, 'main', { class: 'calendar' });
   }
 
-  init() {}
-
   render() {
-    new CalendarHeader(this.$calendar);
-    new CalendarBody(this.$calendar);
+    new CalendarHeader(this.$self);
+    new CalendarBody(this.$self);
   }
 }

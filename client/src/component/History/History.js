@@ -2,19 +2,15 @@ import './History.scss';
 import { List } from './List/List';
 import { Filter } from './Filter/Filter';
 import { Count } from './Count/Count';
+import Component from '../../core/Component';
 
-export class History {
-  constructor($target) {
-    this.$target = $target;
-    this.$history = document.createElement('main');
-    this.$history.className = 'history-view';
-
-    this.$target.appendChild(this.$history);
-    this.render();
+export class History extends Component {
+  constructor($parent) {
+    super($parent, 'main', { class: 'history-view' });
   }
 
   render() {
-    this.$history.innerHTML = `
+    this.$self.innerHTML = `
       <div class="title">
         <div class="count-wrapper"></div>
         <div class="filter-wrapper"></div>

@@ -1,30 +1,22 @@
-import { getState, subscribeState } from '../../../controller';
+import { getState } from '../../../controller';
+import Component from '../../../core/Component';
 import { storeKeys } from '../../../utils/constant';
 
-export default class CategoryInput {
-  constructor($target) {
-    this.$target = $target;
-    this.$categoryInput = document.createElement('div');
+export default class CategoryInput extends Component {
+  constructor($parent) {
+    super($parent, 'div');
 
-    this.unsubscribeCategory = subscribeState({
-      key: storeKeys.CATEGORY,
-      callback: () => this.render(),
-    });
-
-    this.$target.appendChild(this.$categoryInput);
-    this.render();
-    this.init();
+    this.subscribeState([storeKeys.CATEGORY]);
   }
 
-  init() {
-    this.$categoryInput.addEventListener(
-      'click',
-      this.onClickCategoryItem.bind(this),
-    );
-    this.$categoryInput.addEventListener(
-      'click',
-      this.onClickDropdownField.bind(this),
-    );
+  attachEvents() {
+    this.$self.addEventListener('click', (e) => {
+      this.onClickCategoryItem(e);
+    });
+
+    this.$self.addEventListener('click', (e) => {
+      this.onClickDropdownField(e);
+    });
   }
 
   onClickCategoryItem(event) {
@@ -64,7 +56,7 @@ export default class CategoryInput {
     const history = getState({ key: storeKeys.SELECTED_HISTORY });
     const category = getState({ key: storeKeys.CATEGORY });
 
-    this.$categoryInput.innerHTML = `
+    this.$self.innerHTML = `
     <label for="type">분류</label>
     <div class="field">
         <input type="text" name="type" placeholder="선택하세요" value="${

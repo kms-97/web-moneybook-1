@@ -1,23 +1,20 @@
 import './Error.scss';
 import { Router } from '../../router/Router';
+import Component from '../../core/Component';
 
-export class Error {
-  constructor($target, code, message) {
-    this.$target = $target;
+export class Error extends Component {
+  constructor($parent, code, message) {
+    super($parent, 'div', { class: 'error' }, { code, message });
     this.code = code;
     this.message = message;
-    this.$error = document.createElement('div');
-    this.$error.className = 'error';
 
     this.router = Router.getInstance();
-
-    this.$target.appendChild(this.$error);
-    this.init();
-    this.render();
   }
 
-  init() {
-    this.$error.addEventListener('click', this.routing.bind(this));
+  attachEvents() {
+    this.$self.addEventListener('click', (e) => {
+      this.routing(e);
+    });
   }
 
   routing(e) {
@@ -27,10 +24,10 @@ export class Error {
     this.router.push('/');
   }
 
-  render() {
-    this.$error.innerHTML = `
-        <div class='code'>${this.code}</div>
-        <div class='message'>${this.message}</div>
+  render({ code, message }) {
+    this.$self.innerHTML = `
+        <div class='code'>${code}</div>
+        <div class='message'>${message}</div>
         <button class='escape'>메인 페이지로</button>
     `;
   }

@@ -9,41 +9,30 @@ import {
   getState,
   postHistory,
   putHistory,
-  subscribeState,
 } from '../../controller';
 import { storeKeys } from '../../utils/constant';
 import { getTodayString } from '../../utils/date';
+import Component from '../../core/Component';
 
-export class InputForm {
-  constructor($target) {
-    this.$target = $target;
-    this.$inpufForm = document.createElement('form');
-    this.$inpufForm.className = 'inputForm';
+export class InputForm extends Component {
+  constructor($parent) {
+    super($parent, 'form', { class: 'inputForm' });
 
-    this.unsubcribeState = subscribeState({
-      key: storeKeys.SELECTED_HISTORY,
-      callback: () => this.render(),
-    });
-
-    this.$target.appendChild(this.$inpufForm);
-    this.render();
-    this.init();
+    this.subscribeState([storeKeys.SELECTED_HISTORY]);
   }
 
-  init() {
-    this.$inpufForm.addEventListener(
-      'click',
-      this.onClickCheckButton.bind(this),
-    );
+  attachEvents() {
+    this.$self.addEventListener('click', (e) => {
+      this.onClickCheckButton(e);
+    });
 
-    this.$inpufForm.addEventListener(
-      'input',
-      this.isAllFieldCorrect.bind(this),
-    );
-    this.$inpufForm.addEventListener(
-      'click',
-      this.isAllFieldCorrect.bind(this),
-    );
+    this.$self.addEventListener('input', () => {
+      this.isAllFieldCorrect();
+    });
+
+    this.$self.addEventListener('click', () => {
+      this.isAllFieldCorrect();
+    });
   }
 
   isAllFieldCorrect() {
@@ -51,7 +40,7 @@ export class InputForm {
     const $content = document.querySelector('input[name="title"]');
     const $payment = document.querySelector('input[name="payment"]');
     const $amount = document.querySelector('input[name="amount"]');
-    const $checkButton = this.$inpufForm.querySelector('.check-button');
+    const $checkButton = this.$self.querySelector('.check-button');
 
     try {
       const categoryId = Number($category.dataset.id);
@@ -108,7 +97,7 @@ export class InputForm {
     if (selectedHistory.id) {
       putHistory({ ...history, id: selectedHistory.id }, () => {
         changeSelectedHistory({ id: null });
-        const $checkButton = this.$inpufForm.querySelector('.check-button');
+        const $checkButton = this.$self.querySelector('.check-button');
         $checkButton.classList.remove('active');
         document
           .querySelectorAll('ul[class=list] tr.active')
@@ -134,12 +123,12 @@ export class InputForm {
     $payment.dataset.id = '';
     $amount.value = '';
 
-    const $checkButton = this.$inpufForm.querySelector('.check-button');
+    const $checkButton = this.$self.querySelector('.check-button');
     $checkButton.classList.remove('active');
   }
 
   render() {
-    this.$inpufForm.innerHTML = `
+    this.$self.innerHTML = `
     <div class="inputs-wrapper">
         <div class="input-wrapper date-input-wrapper"></div>
         <div class="input-wrapper category-input-wrapper"></div>
