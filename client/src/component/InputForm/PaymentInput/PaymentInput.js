@@ -1,5 +1,11 @@
-import { getState, subscribeState } from '../../../controller';
+import {
+  createPayment,
+  deletePayment,
+  getState,
+  subscribeState,
+} from '../../../controller';
 import { storeKeys } from '../../../utils/constant';
+import { Modal } from '../../Modal/Modal';
 
 export default class PaymentInput {
   constructor($target) {
@@ -40,8 +46,7 @@ export default class PaymentInput {
 
     if ($li.dataset.name === '추가') {
       // 추가하기 버튼
-      const $paymentModal = document.querySelector('.create-payment-modal');
-      this.openModal($paymentModal);
+      this.openCreateModal();
       return;
     }
     $inputType.value = $li.dataset.name;
@@ -80,18 +85,39 @@ export default class PaymentInput {
     const $li = event.target.closest('li');
     if (!$li) return;
 
-    const $deletePaymentModal = document.querySelector('.delete-payment-modal');
-    this.openModal($deletePaymentModal);
-
-    const $input = $deletePaymentModal.querySelector('input');
-
-    $input.value = $li.dataset.name;
-    $input.dataset.id = $li.dataset.id;
+    const selectedPayment = $li.dataset.name;
+    this.openDeleteModal(selectedPayment);
   }
 
-  openModal(modal) {
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+  openCreateModal() {
+    function onClickCreateButton(value) {
+      const payment = value;
+      createPayment(payment);
+    }
+    new Modal({
+      input: { readonly: false, placeholder: '입력하세요.' },
+      description: '추가하실 결제수단을 선택하세요',
+      button: {
+        name: '등록',
+        color: '#2ac1bc',
+        onClick: onClickCreateButton,
+      },
+    });
+  }
+
+  openDeleteModal(value) {
+    function onClickDeleteButton(value) {
+      const payment = value;
+      deletePayment(payment);
+    }
+    new Modal({
+      input: { readonly: true, value },
+      button: {
+        name: '삭제',
+        color: '#f45452',
+        onClick: onClickDeleteButton,
+      },
+    });
   }
 
   render() {
