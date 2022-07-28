@@ -4,6 +4,7 @@ import { Filter } from './Filter/Filter';
 import { Count } from './Count/Count';
 import { storeKeys } from '../../utils/constant';
 import { LoadingIndicator } from '../LoadingIndicator/LoadingIndicator';
+import { getState } from '../../controller';
 import Component from '../../core/Component';
 
 export class History extends Component {
