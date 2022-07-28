@@ -28,13 +28,31 @@ export class Statistics {
   }
 
   init() {
-    this.$statistics.addEventListener('click', this.showLineChart.bind(this));
+    this.$statistics.addEventListener('click', (e) => {
+      this.toggleCategoryItem(e);
+    });
   }
 
-  async showLineChart(e) {
-    const { year, month } = getState({ key: storeKeys.CURRENT_DATE });
+  toggleCategoryItem(e) {
     const category = e.target.closest('tr');
     if (!category) return;
+
+    if (category.classList.contains('active')) {
+      category.classList.remove('active');
+      const $lineChartContainer = this.$statistics.querySelector('.line');
+      $lineChartContainer.style.display = 'none';
+      $lineChartContainer.innerHTML = '';
+    } else {
+      this.$statistics
+        .querySelectorAll('tr')
+        .forEach((e) => e.classList.remove('active'));
+      category.classList.add('active');
+      this.showLineChart(category);
+    }
+  }
+
+  async showLineChart(category) {
+    const { year, month } = getState({ key: storeKeys.CURRENT_DATE });
 
     const categoryId = category.dataset.categoryid;
     const categoryName = category.dataset.categoryname;
@@ -49,7 +67,7 @@ export class Statistics {
 
     const $lineChartContainer = this.$statistics.querySelector('.line');
     $lineChartContainer.innerHTML = `
-      <div class='title'>${categoryName} 카테고리 소비 추이</div>
+    <div class='title'>${categoryName} 카테고리 소비 추이</div>
     `;
     $lineChartContainer.style.display = 'flex';
     new LineChart($lineChartContainer, { data });
