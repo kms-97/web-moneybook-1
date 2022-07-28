@@ -3,13 +3,9 @@ import { storeKeys } from '../../../utils/constant';
 
 export default class CategoryInput {
   constructor($target) {
-    this.$target = $target; // $inputForm
+    this.$target = $target;
     this.$categoryInput = document.createElement('div');
 
-    this.unsubscribeSelectedHistory = subscribeState({
-      key: storeKeys.SELECTED_HISTORY,
-      callback: () => this.render(),
-    });
     this.unsubscribeCategory = subscribeState({
       key: storeKeys.CATEGORY,
       callback: () => this.render(),
@@ -82,10 +78,9 @@ export default class CategoryInput {
 
     <ul class="category dropdown">
     ${category
-      .filter(
-        ({ isIncome }) =>
-          history.isIncome !== undefined
-            ? history.isIncome === isIncome
+      .filter(({ isIncome }) =>
+        history.isIncome !== undefined
+          ? history.isIncome === isIncome
           : isIncome === 0,
       )
       .map(

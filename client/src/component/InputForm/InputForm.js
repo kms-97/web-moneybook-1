@@ -9,16 +9,21 @@ import {
   getState,
   postHistory,
   putHistory,
+  subscribeState,
 } from '../../controller';
 import { storeKeys } from '../../utils/constant';
-import { setState } from '../../store';
-import { getTodayString, makeDateString } from '../../utils/date';
+import { getTodayString } from '../../utils/date';
 
 export class InputForm {
   constructor($target) {
     this.$target = $target;
     this.$inpufForm = document.createElement('form');
     this.$inpufForm.className = 'inputForm';
+
+    this.unsubcribeState = subscribeState({
+      key: storeKeys.SELECTED_HISTORY,
+      callback: () => this.render(),
+    });
 
     this.$target.appendChild(this.$inpufForm);
     this.render();
@@ -105,6 +110,9 @@ export class InputForm {
         changeSelectedHistory({ id: null });
         const $checkButton = this.$inpufForm.querySelector('.check-button');
         $checkButton.classList.remove('active');
+        document
+          .querySelectorAll('ul[class=list] tr.active')
+          .forEach((item) => item.classList.remove('active'));
       });
     } else {
       postHistory(history, this.initInputs.bind(this));

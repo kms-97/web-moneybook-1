@@ -1,6 +1,4 @@
 import { getState } from '../../../controller';
-import { subscribeState } from '../../../store';
-import { getFormattedAmount } from '../../../utils/amount';
 import { storeKeys } from '../../../utils/constant';
 
 export class AmountInput {
@@ -8,11 +6,6 @@ export class AmountInput {
     this.$target = $target;
     this.$amountInput = document.createElement('div');
     this.$target.appendChild(this.$amountInput);
-
-    this.unsubcribeState = subscribeState({
-      key: storeKeys.SELECTED_HISTORY,
-      callback: () => this.render(),
-    });
 
     this.init();
     this.render();

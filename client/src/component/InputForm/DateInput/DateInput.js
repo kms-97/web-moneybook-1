@@ -1,4 +1,3 @@
-import { subscribeState } from '../../../controller';
 import { getState } from '../../../store';
 import { storeKeys } from '../../../utils/constant';
 import { makeDateString, getTodayString } from '../../../utils/date';
@@ -8,11 +7,6 @@ export class DateInput {
     this.$target = $target;
     this.$dateInput = document.createElement('div');
     this.$target.appendChild(this.$dateInput);
-
-    this.unsubscribeSelectedHistory = subscribeState({
-      key: storeKeys.SELECTED_HISTORY,
-      callback: () => this.render(),
-    });
 
     this.init();
     this.render();
