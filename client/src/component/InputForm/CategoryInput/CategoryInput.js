@@ -23,11 +23,11 @@ export default class CategoryInput extends Component {
     const $li = event.target.closest('.inputForm .category>li');
     if (!$li) return;
 
-    const $inputType = document.querySelector('input[name="type"]');
+    const $inputType = this.$self.querySelector('input[name="type"]');
     $inputType.value = $li.innerHTML;
     $inputType.dataset.id = $li.dataset.id;
 
-    const $category = document.querySelector('.inputForm .category');
+    const $category = this.$self.querySelector('.category');
     $category.style.display = 'none';
   }
 

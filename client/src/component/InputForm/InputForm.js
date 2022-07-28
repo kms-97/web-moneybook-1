@@ -36,10 +36,10 @@ export class InputForm extends Component {
   }
 
   isAllFieldCorrect() {
-    const $category = document.querySelector('input[name="type"]');
-    const $content = document.querySelector('input[name="title"]');
-    const $payment = document.querySelector('input[name="payment"]');
-    const $amount = document.querySelector('input[name="amount"]');
+    const $category = this.$self.querySelector('input[name="type"]');
+    const $content = this.$self.querySelector('input[name="title"]');
+    const $payment = this.$self.querySelector('input[name="payment"]');
+    const $amount = this.$self.querySelector('input[name="amount"]');
     const $checkButton = this.$self.querySelector('.check-button');
 
     try {
@@ -68,11 +68,11 @@ export class InputForm extends Component {
     if (!$button) return;
     if (!$button.classList.contains('active')) return;
 
-    const $date = document.querySelector('input[name="일자"]');
-    const $category = document.querySelector('input[name="type"]');
-    const $content = document.querySelector('input[name="title"]');
-    const $payment = document.querySelector('input[name="payment"]');
-    const $amount = document.querySelector('input[name="amount"]');
+    const $date = this.$self.querySelector('input[name="일자"]');
+    const $category = this.$self.querySelector('input[name="type"]');
+    const $content = this.$self.querySelector('input[name="title"]');
+    const $payment = this.$self.querySelector('input[name="payment"]');
+    const $amount = this.$self.querySelector('input[name="amount"]');
 
     const currentDate = getState({ key: storeKeys.CURRENT_DATE });
     const [year, month, date] = $date.value.split('-').map((d) => Number(d));
@@ -109,11 +109,11 @@ export class InputForm extends Component {
   }
 
   initInputs() {
-    const $date = document.querySelector('input[name="일자"]');
-    const $category = document.querySelector('input[name="type"]');
-    const $content = document.querySelector('input[name="title"]');
-    const $payment = document.querySelector('input[name="payment"]');
-    const $amount = document.querySelector('input[name="amount"]');
+    const $date = this.$self.querySelector('input[name="일자"]');
+    const $category = this.$self.querySelector('input[name="type"]');
+    const $content = this.$self.querySelector('input[name="title"]');
+    const $payment = this.$self.querySelector('input[name="payment"]');
+    const $amount = this.$self.querySelector('input[name="amount"]');
 
     $date.value = getTodayString();
     $category.dataset.id = '';
@@ -144,10 +144,10 @@ export class InputForm extends Component {
     </div>
     `;
 
-    new DateInput(document.querySelector('.date-input-wrapper'));
-    new CategoryInput(document.querySelector('.category-input-wrapper'));
-    new ContentInput(document.querySelector('.content-input-wrapper'));
-    new PaymentInput(document.querySelector('.payment-input-wrapper'));
-    new AmountInput(document.querySelector('.amount-input-wrapper'));
+    new DateInput(this.$self.querySelector('.date-input-wrapper'));
+    new CategoryInput(this.$self.querySelector('.category-input-wrapper'));
+    new ContentInput(this.$self.querySelector('.content-input-wrapper'));
+    new PaymentInput(this.$self.querySelector('.payment-input-wrapper'));
+    new AmountInput(this.$self.querySelector('.amount-input-wrapper'));
   }
 }

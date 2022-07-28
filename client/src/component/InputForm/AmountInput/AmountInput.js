@@ -14,13 +14,13 @@ export class AmountInput extends Component {
   }
 
   onChangeIsIncome() {
-    const $isIncome = document.querySelector('#isIncome');
+    const $isIncome = this.$self.querySelector('#isIncome');
 
-    const $inputType = document.querySelector('input[name="type"]');
+    const $inputType = this.$parent.querySelector('input[name="type"]');
     $inputType.value = '';
     $inputType.dataset.id = '';
 
-    const $dropdown = document.querySelector('.dropdown');
+    const $dropdown = this.$parent.querySelector('.dropdown');
     $dropdown.innerHTML = getState({ key: storeKeys.CATEGORY })
       .filter(({ isIncome }) => Boolean(isIncome) === $isIncome.checked)
       .map(

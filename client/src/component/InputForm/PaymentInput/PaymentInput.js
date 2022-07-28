@@ -28,7 +28,7 @@ export default class PaymentInput extends Component {
     const $li = event.target.closest('.inputForm .payment>li');
     if (!$li) return;
 
-    const $inputType = document.querySelector('input[name="payment"]');
+    const $inputType = this.$self.querySelector('input[name="payment"]');
 
     if ($li.dataset.name === '추가') {
       this.openCreateModal();
@@ -37,7 +37,7 @@ export default class PaymentInput extends Component {
     $inputType.value = $li.dataset.name;
     $inputType.dataset.id = $li.dataset.id;
 
-    const $payment = document.querySelector('.inputForm .payment');
+    const $payment = this.$self.querySelector('.payment');
     $payment.style.display = 'none';
   }
 
