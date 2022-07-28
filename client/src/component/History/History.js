@@ -2,14 +2,26 @@ import './History.scss';
 import { List } from './List/List';
 import { Filter } from './Filter/Filter';
 import { Count } from './Count/Count';
+import { storeKeys } from '../../utils/constant';
+import { LoadingIndicator } from '../LoadingIndicator/LoadingIndicator';
 import Component from '../../core/Component';
 
 export class History extends Component {
   constructor($parent) {
     super($parent, 'main', { class: 'history-view' });
+
+    this.subscribeState([storeKeys.ISLOADING]);
   }
 
   render() {
+    const isLoading = getState({ key: storeKeys.ISLOADING });
+
+    if (isLoading) {
+      this.clearComponent();
+      new LoadingIndicator(this.$self);
+      return;
+    }
+
     this.$self.innerHTML = `
       <div class="title">
         <div class="count-wrapper"></div>

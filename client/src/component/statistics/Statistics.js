@@ -1,3 +1,5 @@
+import { CategoryColor, storeKeys } from '../../utils/constant';
+import { LoadingIndicator } from '../LoadingIndicator/LoadingIndicator';
 import {
   getAmountSumOfCategory,
   getCostSumGroupByCategory,
@@ -15,7 +17,7 @@ export class Statistics extends Component {
   constructor($parent) {
     super($parent, 'main', { class: 'statistics' });
 
-    this.subscribeState([storeKeys.CURRENT_HISTORY]);
+    this.subscribeState([storeKeys.CURRENT_HISTORY, storeKeys.ISLOADING]);
   }
 
   attachEvents() {
@@ -65,6 +67,14 @@ export class Statistics extends Component {
   }
 
   render() {
+    const isLoading = getState({ key: storeKeys.ISLOADING });
+
+    if (isLoading) {
+      this.$statistics.innerHTML = '';
+      new LoadingIndicator(this.$statistics);
+      return;
+    }
+
     const costSumGroupByCategory = getCostSumGroupByCategory();
     const chartData = costSumGroupByCategory.map(({ id, content, sum }) => {
       return { content, value: sum, color: CategoryColor[id] };
