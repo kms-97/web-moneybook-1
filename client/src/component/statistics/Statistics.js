@@ -69,8 +69,8 @@ export class Statistics extends Component {
     const isLoading = getState({ key: storeKeys.ISLOADING });
 
     if (isLoading) {
-      this.$statistics.innerHTML = '';
-      new LoadingIndicator(this.$statistics);
+      this.$self.innerHTML = '';
+      new LoadingIndicator(this.$self);
       return;
     }
 
