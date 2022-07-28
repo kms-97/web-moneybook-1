@@ -22,7 +22,7 @@ export class CategoryCost {
         const className = categoryClassName[id];
 
         return `
-        <tr>
+        <tr data-categoryid='${id}' data-categoryname='${content}'>
           <td class='category'>
             <span class=${className}>
                 ${content}
