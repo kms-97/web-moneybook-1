@@ -11,13 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: SSH Remote connect
-        uses: appleboy/ssh-action@master
+        uses: fifsky/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
+          user: ${{ secrets.USERNAME }}
           key: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
-          script: |
+          command: |
             fuser -k 3000/tcp
             cd web-moneybook-1
             git pull
