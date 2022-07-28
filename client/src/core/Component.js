@@ -27,7 +27,7 @@ export default class Component {
   subscribeState(keys) {
     keys.forEach((key) => {
       this.unsubscribers.push(
-        subscribeState({ key, callback: () => this.render() }),
+        subscribeState({ key, callback: () => this.render(this.props) }),
       );
     });
   }
