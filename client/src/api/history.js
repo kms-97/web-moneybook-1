@@ -15,23 +15,17 @@ export const getAllHistory = async (year, month) => {
   return response;
 };
 
-export const getHistoryPerCategory = async (
-  year,
-  month,
-  endYear,
-  endMonth,
-  categoryId,
-) => {
+export const getAmountSumPerCategory = async (year, month, categoryId) => {
   const response = await request({
     method: 'get',
-    requestURL: `${URL_PRIFIX}?year=${year}&month=${month}&endYear=${endYear}&endMonth=${endMonth}&categoryId=${categoryId}`,
+    requestURL: `${URL_PRIFIX}/perCategory?year=${year}&month=${month}&categoryId=${categoryId}`,
   });
 
   if (response instanceof Error) {
     console.log(response.message);
   }
 
-  return response;
+  return { year, month, amount: response[0].amount };
 };
 
 export const postHistory = async (history) => {
