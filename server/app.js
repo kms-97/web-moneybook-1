@@ -1,6 +1,7 @@
 const express = require('express');
 const logger = require('morgan');
 const path = require('path');
+const cors = require('cors');
 require('dotenv').config();
 
 const { indexRouter } = require('./router/index');
@@ -14,6 +15,7 @@ const { sqlErrorHandler } = require('./middleware/sqlErrorHandler');
 const app = express();
 const port = 3000;
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use(express.json());

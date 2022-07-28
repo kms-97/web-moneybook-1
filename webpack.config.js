@@ -1,6 +1,8 @@
+const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+require('dotenv').config();
 
 const isProduction = process.env.NODE_ENV == 'production';
 
@@ -17,8 +19,10 @@ const config = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'client/index.html'),
     }),
-
     new MiniCssExtractPlugin({ filename: 'index.css' }),
+    new webpack.EnvironmentPlugin({
+      BASE_URL: process.env.BASE_URL,
+    }),
   ],
   module: {
     rules: [
