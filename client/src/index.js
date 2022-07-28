@@ -2,7 +2,7 @@ import './style/reset.scss';
 import './index.scss';
 
 import { HistoryView } from './view/HistoryView';
-import { addState } from './store';
+import { addState, setState } from './store';
 import { updateCategory, updateHistories, updatePayment } from './controller';
 import { storeKeys } from './utils/constant';
 import { CalendarView } from './view/CalendarView';
@@ -10,7 +10,7 @@ import { Router } from './router/Router';
 import { NotFoundView } from './view/NotFoundView';
 import { StatisticsView } from './view/StatisticsView';
 
-const initStore = () => {
+const initStore = async () => {
   addState({
     key: storeKeys.CURRENT_DATE,
     initState: {
@@ -27,10 +27,11 @@ const initStore = () => {
     key: storeKeys.ISCHECKED_FILTER,
     initState: { income: true, cost: true },
   });
+  addState({ key: storeKeys.ISLOADING, initState: false });
 
-  updateCategory();
-  updateHistories();
-  updatePayment();
+  setState({ key: storeKeys.ISLOADING, newState: true });
+  await Promise.all([updateCategory(), updateHistories(), updatePayment()]);
+  setState({ key: storeKeys.ISLOADING, newState: false });
 };
 
 const initRouter = () => {

@@ -2,6 +2,9 @@ import './History.scss';
 import { List } from './List/List';
 import { Filter } from './Filter/Filter';
 import { Count } from './Count/Count';
+import { getState, subscribeState } from '../../store';
+import { storeKeys } from '../../utils/constant';
+import { LoadingIndicator } from '../LoadingIndicator/LoadingIndicator';
 
 export class History {
   constructor($target) {
@@ -9,11 +12,24 @@ export class History {
     this.$history = document.createElement('main');
     this.$history.className = 'history-view';
 
+    this.unsubscribeIsLoading = subscribeState({
+      key: storeKeys.ISLOADING,
+      callback: () => this.render(),
+    });
+
     this.$target.appendChild(this.$history);
     this.render();
   }
 
   render() {
+    const isLoading = getState({ key: storeKeys.ISLOADING });
+
+    if (isLoading) {
+      this.$history.innerHTML = '';
+      new LoadingIndicator(this.$history);
+      return;
+    }
+
     this.$history.innerHTML = `
       <div class="title">
         <div class="count-wrapper"></div>

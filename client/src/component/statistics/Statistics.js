@@ -1,10 +1,11 @@
+import { CategoryColor, storeKeys } from '../../utils/constant';
+import { LoadingIndicator } from '../LoadingIndicator/LoadingIndicator';
 import {
   getAmountSumOfCategory,
   getCostSumGroupByCategory,
   getState,
   subscribeState,
 } from '../../controller';
-import { CategoryColor, storeKeys } from '../../utils/constant';
 import { getPreviousMonths } from '../../utils/date';
 import { CategoryCost } from './CategoryCost/CategoryCost';
 import { DonutChart } from './Chart/Donut';
@@ -16,6 +17,11 @@ export class Statistics {
     this.$target = $target;
     this.$statistics = document.createElement('main');
     this.$statistics.className = 'statistics';
+
+    this.unsubscribeIsLoading = subscribeState({
+      key: storeKeys.ISLOADING,
+      callback: () => this.render(),
+    });
 
     this.unsubscribeHistory = subscribeState({
       key: storeKeys.CURRENT_HISTORY,
@@ -74,6 +80,14 @@ export class Statistics {
   }
 
   render() {
+    const isLoading = getState({ key: storeKeys.ISLOADING });
+
+    if (isLoading) {
+      this.$statistics.innerHTML = '';
+      new LoadingIndicator(this.$statistics);
+      return;
+    }
+
     const costSumGroupByCategory = getCostSumGroupByCategory();
     const chartData = costSumGroupByCategory.map(({ id, content, sum }) => {
       return { content, value: sum, color: CategoryColor[id] };
