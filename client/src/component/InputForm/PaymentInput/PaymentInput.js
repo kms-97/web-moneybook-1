@@ -9,13 +9,9 @@ import { Modal } from '../../Modal/Modal';
 
 export default class PaymentInput {
   constructor($target) {
-    this.$target = $target; // $inputForm
+    this.$target = $target;
     this.$paymentInput = document.createElement('div');
 
-    this.unsubscribeSelectedHistory = subscribeState({
-      key: storeKeys.SELECTED_HISTORY,
-      callback: () => this.render(),
-    });
     this.unsubscribePayment = subscribeState({
       key: storeKeys.PAYMENT,
       callback: () => this.render(),
@@ -45,7 +41,6 @@ export default class PaymentInput {
     const $inputType = document.querySelector('input[name="payment"]');
 
     if ($li.dataset.name === '추가') {
-      // 추가하기 버튼
       this.openCreateModal();
       return;
     }
@@ -112,6 +107,7 @@ export default class PaymentInput {
     }
     new Modal({
       input: { readonly: true, value },
+      description: '선택하신 결제수단을 삭제할까요?',
       button: {
         name: '삭제',
         color: '#f45452',
