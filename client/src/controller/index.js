@@ -250,20 +250,20 @@ export const updatePayment = async () => {
 };
 
 // 결제 수단 추가
-export const createPayment = async (content, callback) => {
+export const createPayment = async (content) => {
   if (!content) return;
   const response = await postPaymentAPI(content);
   const newPayment = response;
   setState({ key: storeKeys.PAYMENT, newState: newPayment });
-  callback();
 };
 
 // 결제 수단 삭제
-export const deletePayment = async (paymentId, callback) => {
+export const deletePayment = async (payment) => {
+  const payments = getState({ key: storeKeys.PAYMENT });
+  const paymentId = payments.filter(({ content }) => content === payment)[0].id;
   const response = await deletePaymentAPI(paymentId);
   const newPayment = response;
   setState({ key: storeKeys.PAYMENT, newState: newPayment });
-  callback();
 };
 
 /* 카테고리 관련 */

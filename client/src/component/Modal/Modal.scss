@@ -1,8 +1,8 @@
 @import '../../style/common.scss';
 
-.delete-payment-modal {
-  // display: flex;
-  display: none;
+.modal {
+  display: flex;
+  // display: none;
   width: 100vw;
   height: 100vh;
   font-size: 15px;
@@ -10,14 +10,14 @@
   top: 0;
   left: 0;
 
-  z-index: 1;
+  z-index: 2;
   background-color: #00000000;
   backdrop-filter: blur(10px);
 
   justify-content: center;
   align-items: center;
 
-  .payment-input-wrapper {
+  .input-wrapper {
     padding: 50px 50px;
     display: flex;
     flex-direction: column;
@@ -31,7 +31,7 @@
     @include display-small-text();
   }
 
-  input[name='payment'] {
+  input {
     background-color: $color-background;
     width: 300px;
     padding: 5px;
@@ -58,8 +58,8 @@
     color: $color-label;
   }
 
-  .delete-button {
+  .custom-button {
     font-size: inherit;
-    color: $color-error;
+    color: $color-primary;
   }
 }
