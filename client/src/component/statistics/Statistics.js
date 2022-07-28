@@ -1,17 +1,16 @@
-import { CategoryColor, storeKeys } from '../../utils/constant';
-import { LoadingIndicator } from '../LoadingIndicator/LoadingIndicator';
+import './Statistics.scss';
 import {
   getAmountSumOfCategory,
   getCostSumGroupByCategory,
   getState,
 } from '../../controller';
-import Component from '../../core/Component';
 import { CategoryColor, storeKeys } from '../../utils/constant';
+import { LoadingIndicator } from '../LoadingIndicator/LoadingIndicator';
 import { getPreviousMonths } from '../../utils/date';
 import { CategoryCost } from './CategoryCost/CategoryCost';
 import { DonutChart } from './Chart/Donut';
 import { LineChart } from './Chart/line';
-import './Statistics.scss';
+import Component from '../../core/Component';
 
 export class Statistics extends Component {
   constructor($parent) {
