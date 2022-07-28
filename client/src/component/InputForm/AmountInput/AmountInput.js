@@ -1,5 +1,6 @@
 import { getState } from '../../../controller';
 import { subscribeState } from '../../../store';
+import { getFormattedAmount } from '../../../utils/amount';
 import { storeKeys } from '../../../utils/constant';
 
 export class AmountInput {

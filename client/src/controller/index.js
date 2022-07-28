@@ -94,16 +94,29 @@ export const getFilteredHistories = () => {
   return filteredHistory;
 };
 
-export const postHistory = async (history) => {
+export const postHistory = async (history, callback) => {
   const response = await postHistoryAPI(history);
+
+  if (response instanceof Error) {
+    console.log(error);
+    return;
+  }
   const histories = response;
   setState({ key: storeKeys.CURRENT_HISTORY, newState: [...histories] });
+  callback();
 };
 
-export const putHistory = async (history) => {
+export const putHistory = async (history, callback) => {
   const response = await putHistoryAPI(history);
+
+  if (response instanceof Error) {
+    console.log(error);
+    return;
+  }
+
   const histories = response;
   setState({ key: storeKeys.CURRENT_HISTORY, newState: [...histories] });
+  callback();
 };
 
 export const changeSelectedHistory = ({ id = null }) => {
@@ -202,6 +215,32 @@ export const getIncomeAndCostSumOfDate = (date) => {
     income: income ? income : null,
     cost: cost ? cost : null,
   };
+};
+
+export const getCostSumGroupByCategory = () => {
+  const AllHistory = getState({
+    key: storeKeys.CURRENT_HISTORY,
+  })
+    .map(({ data }) => data)
+    .flat();
+  const costCategory = getState({ key: storeKeys.CATEGORY })
+    .filter(({ isIncome }) => !isIncome)
+    .map(({ id, content }) => {
+      return { id, content, sum: 0 };
+    });
+
+  AllHistory.forEach(({ categoryId, isIncome, amount }) => {
+    if (!isIncome) {
+      for (let item of costCategory) {
+        if (item.id === categoryId) {
+          item.sum += amount;
+          break;
+        }
+      }
+    }
+  });
+
+  return costCategory.sort((a, b) => b.sum - a.sum);
 };
 
 /* 결제 방법 관련 */

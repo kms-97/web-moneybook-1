@@ -5,6 +5,7 @@ import {
 } from '../../../controller';
 import { storeKeys, WEEK_LENGTH } from '../../../utils/constant';
 import { getStartAndEndDate } from '../../../utils/date';
+import { getFormattedAmount } from '../../../utils/amount';
 
 export class CalendarBody {
   constructor($target) {
@@ -71,17 +72,23 @@ export class CalendarBody {
                     <div class='calendar-amount'>
                       ${
                         column.income
-                          ? `<div class='calendar-amount-income'>${column.income}</div>`
+                          ? `<div class='calendar-amount-income'>${getFormattedAmount(
+                              column.income,
+                            )}</div>`
                           : ''
                       }
                       ${
                         column.cost
-                          ? `<div class='calendar-amount-cost'>-${column.cost}</div>`
+                          ? `<div class='calendar-amount-cost'>-${getFormattedAmount(
+                              column.cost,
+                            )}</div>`
                           : ''
                       }
                       ${
                         column.total
-                          ? `<div class='calendar-amount-total'>${column.total}</div>`
+                          ? `<div class='calendar-amount-total'>${getFormattedAmount(
+                              column.total,
+                            )}</div>`
                           : ''
                       }
                     </div>

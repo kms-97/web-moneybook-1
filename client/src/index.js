@@ -8,6 +8,7 @@ import { storeKeys } from './utils/constant';
 import { CalendarView } from './view/CalendarView';
 import { Router } from './router/Router';
 import { NotFoundView } from './view/NotFoundView';
+import { StatisticsView } from './view/StatisticsView';
 
 const initStore = () => {
   addState({
@@ -37,6 +38,7 @@ const initRouter = () => {
     '/': HistoryView,
     '/history': HistoryView,
     '/calendar': CalendarView,
+    '/statistics': StatisticsView,
     '/404': NotFoundView,
   });
 };

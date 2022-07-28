@@ -1,0 +1,103 @@
+@import '../../style/common.scss';
+
+.statistics {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+  top: -30px;
+  padding: 30px 0px;
+  background-color: $color-off-white;
+
+  border: 1px solid $color-line;
+  border-radius: 10px;
+  box-shadow: 1px 4px 3px 1px gainsboro;
+
+  table {
+    @include body-regular-text;
+    width: 400px;
+    margin-top: 15px;
+
+    tr {
+      height: 60px;
+      border: {
+        top: 1px solid $color-label;
+        bottom: 1px solid $color-label;
+      }
+      &.active {
+        border: {
+          top: 2px solid $color-primary;
+          bottom: 2px solid $color-primary;
+        }
+      }
+
+      td {
+        vertical-align: middle;
+        text-align: center;
+        padding: 0 5px;
+
+        .salary {
+          background-color: #b9d58c;
+        }
+        .allowance {
+          background-color: #e6d267;
+        }
+        .etc-income {
+          background-color: #e2b765;
+        }
+        .food {
+          background-color: #4a6cc3;
+        }
+        .life {
+          background-color: #4ca1de;
+        }
+        .shopping {
+          background-color: #94d3cc;
+        }
+        .traffic {
+          background-color: #4cb8b8;
+        }
+        .medical {
+          background-color: #6ed5eb;
+        }
+        .culture {
+          background-color: #d092e2;
+        }
+        .etc-cost {
+          background-color: #817dce;
+        }
+      }
+
+      .category {
+        font-size: 14px;
+        color: $color-background;
+        width: 15%;
+
+        span {
+          display: inline-block;
+          width: 80px;
+          padding: 4px 0;
+          border-radius: 999px;
+        }
+      }
+
+      .percentage {
+        color: $color-title-active;
+        padding-left: 20px;
+        text-align: left;
+      }
+
+      .amount {
+        text-align: right;
+      }
+    }
+  }
+
+  .category-cost {
+    .header {
+      @include body-medium-text;
+      margin-bottom: 30px;
+    }
+  }
+}
