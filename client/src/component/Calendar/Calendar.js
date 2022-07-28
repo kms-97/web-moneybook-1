@@ -16,8 +16,8 @@ export class Calendar extends Component {
   render() {
     const isLoading = getState({ key: storeKeys.ISLOADING });
 
+    this.clearComponent();
     if (isLoading) {
-      this.clearComponent();
       new LoadingIndicator(this.$self);
       return;
     }
