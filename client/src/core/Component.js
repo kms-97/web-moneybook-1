@@ -38,5 +38,9 @@ export default class Component {
     this.unsubscribers.forEach((fn) => fn());
   }
 
+  clearComponent() {
+    this.$self.innerHTML = '';
+  }
+
   render() {}
 }
