@@ -110,6 +110,9 @@ export class InputForm {
         changeSelectedHistory({ id: null });
         const $checkButton = this.$inpufForm.querySelector('.check-button');
         $checkButton.classList.remove('active');
+        document
+          .querySelectorAll('ul[class=list] tr.active')
+          .forEach((item) => item.classList.remove('active'));
       });
     } else {
       postHistory(history, this.initInputs.bind(this));
