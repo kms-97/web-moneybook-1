@@ -27,6 +27,7 @@ const initStore = () => {
     key: storeKeys.ISCHECKED_FILTER,
     initState: { income: true, cost: true },
   });
+  addState({ key: storeKeys.ISLOADING, initState: true });
 
   updateCategory();
   updateHistories();
