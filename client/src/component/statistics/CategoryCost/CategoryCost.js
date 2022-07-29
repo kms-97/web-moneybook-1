@@ -1,23 +1,18 @@
+import Component from '../../../core/Component';
 import { getFormattedAmount } from '../../../utils/amount';
 import { categoryClassName } from '../../../utils/constant';
 
-export class CategoryCost {
-  constructor($target, data) {
-    this.$target = $target;
-    this.$categoryCost = document.createElement('section');
-    this.$categoryCost.className = 'category-cost';
-
-    this.data = data;
-    this.$target.appendChild(this.$categoryCost);
-    this.render();
+export class CategoryCost extends Component {
+  constructor($parent, props) {
+    super($parent, 'section', { class: 'category-cost' }, props);
   }
 
   getTotalCost() {
-    return this.data.reduce((total, { sum }) => total + sum, 0);
+    return this.props.reduce((total, { sum }) => total + sum, 0);
   }
 
   getTableRow(totalCost) {
-    return this.data
+    return this.props
       .map(({ id, content, sum }) => {
         const className = categoryClassName[id];
 
@@ -43,7 +38,7 @@ export class CategoryCost {
   render() {
     const totalCost = this.getTotalCost();
 
-    this.$categoryCost.innerHTML = `
+    this.$self.innerHTML = `
         <div class='header'>
             이번 달 지출 금액 ${getFormattedAmount(totalCost)}
         </div>

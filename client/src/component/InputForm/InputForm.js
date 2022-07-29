@@ -9,49 +9,38 @@ import {
   getState,
   postHistory,
   putHistory,
-  subscribeState,
 } from '../../controller';
 import { storeKeys } from '../../utils/constant';
 import { getTodayString } from '../../utils/date';
+import Component from '../../core/Component';
 
-export class InputForm {
-  constructor($target) {
-    this.$target = $target;
-    this.$inpufForm = document.createElement('form');
-    this.$inpufForm.className = 'inputForm';
+export class InputForm extends Component {
+  constructor($parent) {
+    super($parent, 'form', { class: 'inputForm' });
 
-    this.unsubcribeState = subscribeState({
-      key: storeKeys.SELECTED_HISTORY,
-      callback: () => this.render(),
-    });
-
-    this.$target.appendChild(this.$inpufForm);
-    this.render();
-    this.init();
+    this.subscribeState([storeKeys.SELECTED_HISTORY]);
   }
 
-  init() {
-    this.$inpufForm.addEventListener(
-      'click',
-      this.onClickCheckButton.bind(this),
-    );
+  attachEvents() {
+    this.$self.addEventListener('click', (e) => {
+      this.onClickCheckButton(e);
+    });
 
-    this.$inpufForm.addEventListener(
-      'input',
-      this.isAllFieldCorrect.bind(this),
-    );
-    this.$inpufForm.addEventListener(
-      'click',
-      this.isAllFieldCorrect.bind(this),
-    );
+    this.$self.addEventListener('input', () => {
+      this.isAllFieldCorrect();
+    });
+
+    this.$self.addEventListener('click', () => {
+      this.isAllFieldCorrect();
+    });
   }
 
   isAllFieldCorrect() {
-    const $category = document.querySelector('input[name="type"]');
-    const $content = document.querySelector('input[name="title"]');
-    const $payment = document.querySelector('input[name="payment"]');
-    const $amount = document.querySelector('input[name="amount"]');
-    const $checkButton = this.$inpufForm.querySelector('.check-button');
+    const $category = this.$self.querySelector('input[name="type"]');
+    const $content = this.$self.querySelector('input[name="title"]');
+    const $payment = this.$self.querySelector('input[name="payment"]');
+    const $amount = this.$self.querySelector('input[name="amount"]');
+    const $checkButton = this.$self.querySelector('.check-button');
 
     try {
       const categoryId = Number($category.dataset.id);
@@ -79,11 +68,11 @@ export class InputForm {
     if (!$button) return;
     if (!$button.classList.contains('active')) return;
 
-    const $date = document.querySelector('input[name="일자"]');
-    const $category = document.querySelector('input[name="type"]');
-    const $content = document.querySelector('input[name="title"]');
-    const $payment = document.querySelector('input[name="payment"]');
-    const $amount = document.querySelector('input[name="amount"]');
+    const $date = this.$self.querySelector('input[name="일자"]');
+    const $category = this.$self.querySelector('input[name="type"]');
+    const $content = this.$self.querySelector('input[name="title"]');
+    const $payment = this.$self.querySelector('input[name="payment"]');
+    const $amount = this.$self.querySelector('input[name="amount"]');
 
     const currentDate = getState({ key: storeKeys.CURRENT_DATE });
     const [year, month, date] = $date.value.split('-').map((d) => Number(d));
@@ -108,7 +97,7 @@ export class InputForm {
     if (selectedHistory.id) {
       putHistory({ ...history, id: selectedHistory.id }, () => {
         changeSelectedHistory({ id: null });
-        const $checkButton = this.$inpufForm.querySelector('.check-button');
+        const $checkButton = this.$self.querySelector('.check-button');
         $checkButton.classList.remove('active');
         document
           .querySelectorAll('ul[class=list] tr.active')
@@ -120,11 +109,11 @@ export class InputForm {
   }
 
   initInputs() {
-    const $date = document.querySelector('input[name="일자"]');
-    const $category = document.querySelector('input[name="type"]');
-    const $content = document.querySelector('input[name="title"]');
-    const $payment = document.querySelector('input[name="payment"]');
-    const $amount = document.querySelector('input[name="amount"]');
+    const $date = this.$self.querySelector('input[name="일자"]');
+    const $category = this.$self.querySelector('input[name="type"]');
+    const $content = this.$self.querySelector('input[name="title"]');
+    const $payment = this.$self.querySelector('input[name="payment"]');
+    const $amount = this.$self.querySelector('input[name="amount"]');
 
     $date.value = getTodayString();
     $category.dataset.id = '';
@@ -134,12 +123,12 @@ export class InputForm {
     $payment.dataset.id = '';
     $amount.value = '';
 
-    const $checkButton = this.$inpufForm.querySelector('.check-button');
+    const $checkButton = this.$self.querySelector('.check-button');
     $checkButton.classList.remove('active');
   }
 
   render() {
-    this.$inpufForm.innerHTML = `
+    this.$self.innerHTML = `
     <div class="inputs-wrapper">
         <div class="input-wrapper date-input-wrapper"></div>
         <div class="input-wrapper category-input-wrapper"></div>
@@ -155,10 +144,10 @@ export class InputForm {
     </div>
     `;
 
-    new DateInput(document.querySelector('.date-input-wrapper'));
-    new CategoryInput(document.querySelector('.category-input-wrapper'));
-    new ContentInput(document.querySelector('.content-input-wrapper'));
-    new PaymentInput(document.querySelector('.payment-input-wrapper'));
-    new AmountInput(document.querySelector('.amount-input-wrapper'));
+    new DateInput(this.$self.querySelector('.date-input-wrapper'));
+    new CategoryInput(this.$self.querySelector('.category-input-wrapper'));
+    new ContentInput(this.$self.querySelector('.content-input-wrapper'));
+    new PaymentInput(this.$self.querySelector('.payment-input-wrapper'));
+    new AmountInput(this.$self.querySelector('.amount-input-wrapper'));
   }
 }

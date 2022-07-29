@@ -1,20 +1,19 @@
 import './Header.scss';
 import DaySelector from './DaySelector/DaySelector';
 import { Router } from '../../router/Router';
+import Component from '../../core/Component';
 
-export class Header {
-  constructor($target) {
-    this.$target = $target;
-    this.$header = document.createElement('header');
+export class Header extends Component {
+  constructor($parent) {
+    super($parent, 'header');
+
     this.router = Router.getInstance();
-
-    this.$target.appendChild(this.$header);
-    this.init();
-    this.render();
   }
 
-  init() {
-    this.$header.addEventListener('click', this.routing.bind(this));
+  attachEvents() {
+    this.$self.addEventListener('click', (e) => {
+      this.routing(e);
+    });
   }
 
   routing(e) {
@@ -28,7 +27,7 @@ export class Header {
   }
 
   render() {
-    this.$header.innerHTML = `
+    this.$self.innerHTML = `
         <div class="logo"><h1>우아한 가계부</h1></div>
         <div class="day-selector-wrapper">
         </div>

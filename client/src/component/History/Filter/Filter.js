@@ -1,40 +1,28 @@
 import {
   getCostSumCurrentMonth,
   getIncomeSumCurrentMonth,
-  getState,
   setState,
-  subscribeState,
 } from '../../../controller';
+import Component from '../../../core/Component';
 import { getFormattedAmount } from '../../../utils/amount';
 import { storeKeys } from '../../../utils/constant';
 
-export class Filter {
-  constructor($target) {
-    this.$target = $target;
-    this.$filter = document.createElement('ul');
-    this.$filter.className = 'filter';
+export class Filter extends Component {
+  constructor($parent) {
+    super($parent, 'ul', { class: 'filter' });
 
-    this.unsubscribeHistory = subscribeState({
-      key: storeKeys.CURRENT_HISTORY,
-      callback: () => {
-        this.render();
-      },
-    });
-
-    this.$target.appendChild(this.$filter);
-    this.render();
-    this.init();
+    this.subscribeState([storeKeys.CURRENT_HISTORY]);
   }
 
-  init() {
-    this.$filter.addEventListener('click', (event) => {
+  attachEvents() {
+    this.$self.addEventListener('click', () => {
       this.onClickFilter();
     });
   }
 
   onClickFilter() {
-    const $filterIncome = this.$filter.querySelector('#filter-income');
-    const $filterCost = this.$filter.querySelector('#filter-cost');
+    const $filterIncome = this.$self.querySelector('#filter-income');
+    const $filterCost = this.$self.querySelector('#filter-cost');
 
     const newState = {
       income: $filterIncome.checked,
@@ -44,10 +32,7 @@ export class Filter {
   }
 
   render() {
-    const { income: incomeCheck, cost: costCheck } = getState({
-      key: storeKeys.ISCHECKED_FILTER,
-    });
-    this.$filter.innerHTML = `
+    this.$self.innerHTML = `
     <li>
       <input id='filter-income' type='checkbox' checked>
       <label for='filter-income'>수입 ${getFormattedAmount(

@@ -1,32 +1,26 @@
 import { getState } from '../../../controller';
+import Component from '../../../core/Component';
 import { storeKeys } from '../../../utils/constant';
 
-export class AmountInput {
-  constructor($target) {
-    this.$target = $target;
-    this.$amountInput = document.createElement('div');
-    this.$target.appendChild(this.$amountInput);
-
-    this.init();
-    this.render();
+export class AmountInput extends Component {
+  constructor($parent) {
+    super($parent, 'div');
   }
 
-  init() {
-    this.$amountInput.addEventListener(
-      'click',
-      this.onClickIsIncome.bind(this),
-    );
+  attachEvents() {
+    this.$self.addEventListener('click', (e) => {
+      this.onClickIsIncome(e);
+    });
   }
 
   onChangeIsIncome() {
-    const $isIncome = document.querySelector('#isIncome');
+    const $isIncome = this.$self.querySelector('#isIncome');
 
-    const $inputType = document.querySelector('input[name="type"]');
+    const $inputType = this.$parent.querySelector('input[name="type"]');
     $inputType.value = '';
     $inputType.dataset.id = '';
 
-    const $dropdown = document.querySelector('.dropdown');
-
+    const $dropdown = this.$parent.querySelector('.dropdown');
     $dropdown.innerHTML = getState({ key: storeKeys.CATEGORY })
       .filter(({ isIncome }) => Boolean(isIncome) === $isIncome.checked)
       .map(
@@ -46,7 +40,7 @@ export class AmountInput {
 
   render() {
     const history = getState({ key: storeKeys.SELECTED_HISTORY });
-    this.$amountInput.innerHTML = `
+    this.$self.innerHTML = `
     <label for="type">금액</label>
     <div class="field">
         <input type="checkbox" name="isIncome" id='isIncome' ${

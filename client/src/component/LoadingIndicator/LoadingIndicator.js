@@ -1,44 +1,42 @@
+import './LoadingIndicator.scss';
 import PresentImage from '../../../public/image/present.png';
 import PointImage from '../../../public/image/point.png';
-// import BaedalImage from '../../../public/image/hyeondoonge.jpeg';
 import SproudImage from '../../../public/image/sproud.png';
 import HeartImage from '../../../public/image/heart.png';
-import './LoadingIndicator.scss';
-import { getState, subscribeState } from '../../store';
 import { storeKeys } from '../../utils/constant';
+import { getState } from '../../controller';
+import Component from '../../core/Component';
 
-export class LoadingIndicator {
-  constructor($target) {
-    this.$target = $target;
-    this.images = [PresentImage, PointImage, SproudImage, HeartImage];
-    this.$loading = document.createElement('div');
-    this.$loading.className = 'loading';
-    this.$target.appendChild(this.$loading);
-    this.render();
-    this.setImageSrcPreiodically();
-    this.unsubscribeIsLoading = subscribeState({
-      key: storeKeys.ISLOADING,
-      callback: () => this.render(),
-    });
+export class LoadingIndicator extends Component {
+  constructor($parent) {
+    super(
+      $parent,
+      'div',
+      { class: 'loading' },
+      { images: [PresentImage, PointImage, SproudImage, HeartImage] },
+    );
+
+    this.subscribeState([storeKeys.ISLOADING]);
+    this.setImageSrcPreiodically(this.props);
   }
 
-  setImageSrcPreiodically() {
+  setImageSrcPreiodically({ images }) {
     let idx = 0;
     this.interval = setInterval(() => {
-      const $img = this.$loading.querySelector('img');
+      const $img = this.$self.querySelector('img');
       idx++;
       if (idx > 3) idx = 0;
-      $img.src = this.images[idx];
+      $img.src = images[idx];
     }, 500);
   }
 
-  render() {
+  render({ images }) {
     const isLoading = getState({ key: storeKeys.ISLOADING });
     if (!isLoading) clearInterval(this.interval);
 
-    this.$loading.innerHTML = `
+    this.$self.innerHTML = `
         <div class="background">
-        <img src=${this.images[0]} style="object-fit: scale-down">
+        <img src=${images[0]} style="object-fit: scale-down">
         </div>
         <div>
         <strong>

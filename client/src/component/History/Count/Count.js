@@ -1,31 +1,18 @@
-import { getPaymentLength, subscribeState } from '../../../controller';
+import { getPaymentLength } from '../../../controller';
+import Component from '../../../core/Component';
 import { storeKeys } from '../../../utils/constant';
 
-export class Count {
-  constructor($target) {
-    this.$target = $target;
-    this.$count = document.createElement('div');
-    this.$count.className = 'count';
+export class Count extends Component {
+  constructor($parent) {
+    super($parent, 'div', { class: 'count' });
 
-    this.unsubscribeHistory = subscribeState({
-      key: storeKeys.CURRENT_HISTORY,
-      callback: () => {
-        this.render();
-      },
-    });
-
-    this.unsubscribeIsCheckedFilter = subscribeState({
-      key: storeKeys.ISCHECKED_FILTER,
-      callback: () => {
-        this.render();
-      },
-    });
-
-    this.$target.appendChild(this.$count);
-    this.render();
+    this.subscribeState([
+      storeKeys.CURRENT_HISTORY,
+      storeKeys.ISCHECKED_FILTER,
+    ]);
   }
 
   render() {
-    this.$count.innerHTML = `전체 내역 ${getPaymentLength()}건`;
+    this.$self.innerHTML = `전체 내역 ${getPaymentLength()}건`;
   }
 }

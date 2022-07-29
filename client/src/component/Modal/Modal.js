@@ -1,40 +1,34 @@
+import Component from '../../core/Component';
 import './Modal.scss';
 
-export class Modal {
+export class Modal extends Component {
   constructor(props) {
-    this.$target = document.querySelector('#root');
-    this.props = props;
-    this.$modal = document.createElement('div');
-    this.$modal.className = 'modal';
-
-    this.$target.appendChild(this.$modal);
-    this.render();
-    this.init();
+    super(document.querySelector('#root'), 'div', { class: 'modal' }, props);
   }
 
-  init() {
-    // 색상 입히기
-    const $customButton = this.$modal.querySelector('.custom-button');
-    $customButton.style.color = this.props?.button?.color ?? 'default';
-
-    // 이벤트 등록하기
-    this.$modal.addEventListener('click', (event) => {
-      const $customButton = event.target.closest('.custom-button');
-      if (!$customButton) return;
-
-      if (!this.props.button.onClick) return;
-      const $input = this.$modal.querySelector('input');
-      this.props.button.onClick($input.value);
-      this.closeModal();
+  attachEvents() {
+    this.$self.addEventListener('click', (e) => {
+      this.dispatchOnClickProps(e);
     });
 
-    this.$modal.addEventListener('input', (event) => {
-      const $input = this.$modal.querySelector('input');
+    this.$self.addEventListener('input', (event) => {
+      const $input = this.$self.querySelector('input');
       $input.value = event.target.value;
     });
-    this.$modal.addEventListener('click', (event) =>
+
+    this.$self.addEventListener('click', (event) =>
       this.onClickCancelButton(event),
     );
+  }
+
+  dispatchOnClickProps(e) {
+    const $customButton = e.target.closest('.custom-button');
+    if (!$customButton) return;
+
+    if (!this.props.button.onClick) return;
+    const $input = this.$self.querySelector('input');
+    this.props.button.onClick($input.value);
+    this.closeModal();
   }
 
   onClickCancelButton(event) {
@@ -44,21 +38,21 @@ export class Modal {
   }
 
   closeModal() {
-    this.$modal.remove();
+    this.$self.remove();
   }
 
-  render() {
-    this.$modal.innerHTML = `
+  render({ input, description, button }) {
+    this.$self.innerHTML = `
       <div class="input-wrapper">
-        <span class="description">${this.props.description ?? ''}</span>
-        <input type="text" placeholder=${this.props.input?.placeholder ?? ''}
-        ${this.props.input?.readonly ? 'readonly' : ''}
-        autocomplete="off" value=${this.props.input?.value ?? ''}>
+        <span class="description">${description ?? ''}</span>
+        <input type="text" placeholder=${input?.placeholder ?? ''}
+        ${input?.readonly ? 'readonly' : ''}
+        autocomplete="off" value=${input?.value ?? ''}>
         <div class="button-wrapper">
           <button class="cancel-button">취소</button>
-          <button class="custom-button">${
-            this.props.button?.name ?? ''
-          }</button>
+          <button class="custom-button" style="color:${
+            button?.color ?? 'default'
+          }">${button?.name ?? ''}</button>
         </div>
       </div>`;
   }

@@ -2,35 +2,28 @@ import './History.scss';
 import { List } from './List/List';
 import { Filter } from './Filter/Filter';
 import { Count } from './Count/Count';
-import { getState, subscribeState } from '../../store';
 import { storeKeys } from '../../utils/constant';
 import { LoadingIndicator } from '../LoadingIndicator/LoadingIndicator';
+import { getState } from '../../controller';
+import Component from '../../core/Component';
 
-export class History {
-  constructor($target) {
-    this.$target = $target;
-    this.$history = document.createElement('main');
-    this.$history.className = 'history-view';
+export class History extends Component {
+  constructor($parent) {
+    super($parent, 'main', { class: 'history-view' });
 
-    this.unsubscribeIsLoading = subscribeState({
-      key: storeKeys.ISLOADING,
-      callback: () => this.render(),
-    });
-
-    this.$target.appendChild(this.$history);
-    this.render();
+    this.subscribeState([storeKeys.ISLOADING]);
   }
 
   render() {
     const isLoading = getState({ key: storeKeys.ISLOADING });
 
     if (isLoading) {
-      this.$history.innerHTML = '';
-      new LoadingIndicator(this.$history);
+      this.clearComponent();
+      new LoadingIndicator(this.$self);
       return;
     }
 
-    this.$history.innerHTML = `
+    this.$self.innerHTML = `
       <div class="title">
         <div class="count-wrapper"></div>
         <div class="filter-wrapper"></div>

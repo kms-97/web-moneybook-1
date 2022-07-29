@@ -1,12 +1,8 @@
-export class LineChart {
-  constructor($target, options) {
-    this.$target = $target;
-    this.$canvas = document.createElement('canvas');
-    this.ctx = this.$canvas.getContext('2d');
+import Chart from '../../../core/Chart';
 
-    this.$target.appendChild(this.$canvas);
-    this.setOptions(options);
-    this.render();
+export class LineChart extends Chart {
+  constructor($parent, options) {
+    super($parent, options);
   }
 
   setOptions(options) {

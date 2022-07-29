@@ -1,44 +1,34 @@
-import {
-  createPayment,
-  deletePayment,
-  getState,
-  subscribeState,
-} from '../../../controller';
+import { createPayment, deletePayment, getState } from '../../../controller';
+import Component from '../../../core/Component';
 import { storeKeys } from '../../../utils/constant';
 import { Modal } from '../../Modal/Modal';
 
-export default class PaymentInput {
-  constructor($target) {
-    this.$target = $target;
-    this.$paymentInput = document.createElement('div');
+export default class PaymentInput extends Component {
+  constructor($parent) {
+    super($parent, 'div');
 
-    this.unsubscribePayment = subscribeState({
-      key: storeKeys.PAYMENT,
-      callback: () => this.render(),
-    });
-
-    this.$target.appendChild(this.$paymentInput);
-    this.render();
-    this.init();
+    this.subscribeState([storeKeys.PAYMENT]);
   }
 
-  init() {
-    this.$paymentInput.addEventListener(
-      'click',
-      this.onClickPaymentItem.bind(this),
-    );
-    this.$paymentInput.addEventListener('click', this.onClickDropdownField);
-    this.$paymentInput.addEventListener(
-      'click',
-      this.onClickPaymentItemDeleteButton.bind(this),
-    );
+  attachEvents() {
+    this.$self.addEventListener('click', (e) => {
+      this.onClickPaymentItem(e);
+    });
+
+    this.$self.addEventListener('click', (e) => {
+      this.onClickDropdownField(e);
+    });
+
+    this.$self.addEventListener('click', (e) => {
+      this.onClickPaymentItemDeleteButton(e);
+    });
   }
 
   onClickPaymentItem(event) {
     const $li = event.target.closest('.inputForm .payment>li');
     if (!$li) return;
 
-    const $inputType = document.querySelector('input[name="payment"]');
+    const $inputType = this.$self.querySelector('input[name="payment"]');
 
     if ($li.dataset.name === '추가') {
       this.openCreateModal();
@@ -47,7 +37,7 @@ export default class PaymentInput {
     $inputType.value = $li.dataset.name;
     $inputType.dataset.id = $li.dataset.id;
 
-    const $payment = document.querySelector('.inputForm .payment');
+    const $payment = this.$self.querySelector('.payment');
     $payment.style.display = 'none';
   }
 
@@ -120,7 +110,7 @@ export default class PaymentInput {
     const history = getState({ key: storeKeys.SELECTED_HISTORY });
     const payment = getState({ key: storeKeys.PAYMENT });
 
-    this.$paymentInput.innerHTML = `
+    this.$self.innerHTML = `
       <label for="type">결제수단</label>
       <div class="field">
           <input type="text" name="payment" placeholder="선택하세요" value="${

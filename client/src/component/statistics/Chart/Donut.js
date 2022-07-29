@@ -1,15 +1,9 @@
+import Chart from '../../../core/Chart';
 import { hexToRGB } from '../../../utils/color';
 
-export class DonutChart {
-  constructor($target, options) {
-    this.$target = $target;
-    this.$canvas = document.createElement('canvas');
-
-    this.ctx = this.$canvas.getContext('2d');
-
-    this.$target.appendChild(this.$canvas);
-    this.setOptions(options);
-    this.render();
+export class DonutChart extends Chart {
+  constructor($parent, options) {
+    super($parent, options);
   }
 
   setOptions(options) {
