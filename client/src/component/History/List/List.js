@@ -49,73 +49,115 @@ export class List extends Component {
     return target.id === id;
   }
 
-  render() {
+  makeSubtitle(date, data) {
+    return `
+      <div class='subtitle'>
+        ${this.makeSubtitleDate(date)}
+        ${this.makeSubtitleSum(data)}
+      </div>
+    `;
+  }
+
+  makeSubtitleDate(date) {
     const { year, month } = getState({ key: storeKeys.CURRENT_DATE });
-    const category = getState({ key: storeKeys.CATEGORY });
-    const payment = getState({ key: storeKeys.PAYMENT });
+
+    return `
+    <div class='date'>
+      ${date}일
+      <span class='week'>
+        ${getDay(year, month, date)}
+      </span>
+    </div>
+    `;
+  }
+
+  makeSubtitleSum(data) {
+    const incomeSum = getIncomeSum(data);
+    const costSum = getCostSum(data);
+
+    return `
+    <div class='sum'>
+      ${
+        incomeSum
+          ? `<div class='income'>수입 ${getFormattedAmount(incomeSum)}</div>`
+          : ''
+      }
+      ${
+        costSum
+          ? `<div class='cost'>지출 ${getFormattedAmount(costSum)}</div>`
+          : ''
+      }
+    </div>
+    `;
+  }
+
+  makeTable(data) {
+    return `
+      <table class='item'>
+        ${data.map((dailyData) => this.makeTableRow(dailyData)).join('')}
+      </table>
+    `;
+  }
+
+  makeTableRow({ id, categoryId, content, paymentId, isIncome, amount }) {
     const selectedHistory = getState({ key: storeKeys.SELECTED_HISTORY });
+    const isSelcted = this.isSelectedRow(id, selectedHistory);
+
+    return `
+      <tr data-id=${id} class=${isSelcted ? 'active' : ''}>
+        ${this.makeCategoryCell(categoryId)}
+        ${this.makeContentCell(content)}
+        ${this.makePaymentCell(paymentId)}
+        ${this.makeAmountCell(isIncome, amount)}
+      </tr>`;
+  }
+
+  makeCategoryCell(categoryId) {
+    const category = getState({ key: storeKeys.CATEGORY });
+
+    return `
+    <td class='category'>
+      <span class=${categoryClassName[categoryId]}>
+        ${category.filter((c) => c.id === categoryId)[0]?.content ?? ''}
+      </span>
+    </td>`;
+  }
+
+  makeContentCell(content) {
+    return `<td class='content'>${content}</td>`;
+  }
+
+  makePaymentCell(paymentId) {
+    const payment = getState({ key: storeKeys.PAYMENT });
+
+    return `
+    <td class='payment'>
+      ${payment.filter(({ id }) => id === paymentId)[0]?.content ?? ''}
+    </td>`;
+  }
+
+  makeAmountCell(isIncome, amount) {
+    return `
+    <td class='amount ${isIncome ? 'income' : 'cost'}'>
+      ${getFormattedAmount(amount)}
+    </td>
+    `;
+  }
+
+  render() {
     const history = getFilteredHistories();
 
     this.$self.innerHTML = `
     ${history
       .map(({ date, data }) => {
-        const incomeSum = getIncomeSum(data);
-        const costSum = getCostSum(data);
         return `
         <li>
-          <div class='subtitle'>
-            <div class='date'>${date}일 <span class='week'>${getDay(
-          year,
-          month,
-          date,
-        )}</span></div>
-            <div class='sum'>
-                ${
-                  incomeSum
-                    ? `<div class='income'>수입 ${getFormattedAmount(
-                        incomeSum,
-                      )}</div>`
-                    : ''
-                }
-                ${
-                  costSum
-                    ? `<div class='cost'>지출 ${getFormattedAmount(
-                        costSum,
-                      )}</div>`
-                    : ''
-                }
-            </div>
-          </div>
-          <table class='item'>
-          ${data
-            .map(
-              (value) => `
-                <tr data-id=${value.id} class=${
-                this.isSelectedRow(value.id, selectedHistory) ? 'active' : ''
-              }>
-                <td class='category'><span class=${
-                  categoryClassName[value.categoryId]
-                }>${
-                category.filter((c) => c.id === value.categoryId)[0]?.content ??
-                ''
-              }</span></td>
-                <td class='content'>${value.content}</td>
-                <td class='payment'>${
-                  payment.filter(({ id }) => id === value.paymentId)[0]
-                    ?.content ?? ''
-                }</td>
-                <td class='amount ${
-                  value.isIncome ? 'income' : 'cost'
-                }'>${getFormattedAmount(value.amount)}</td>
-                </tr>
-              `,
-            )
-            .join('')}
-          </table>
+          ${this.makeSubtitle(date, data)}
+          ${this.makeTable(data)}
         </li>
       `;
       })
       .join('')}
-      `;
+    `;
   }
 }

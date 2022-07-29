@@ -7,11 +7,9 @@ import Component from '../../../core/Component';
 export class CalendarBody extends Component {
   constructor($parent) {
     super($parent, 'table', { class: 'calendar-body' });
-
-    this.subscribeState([storeKeys.CURRENT_HISTORY]);
   }
 
-  makeDataTable() {
+  getDataTable() {
     const { year, month } = getState({ key: storeKeys.CURRENT_DATE });
     const { startDate, endDate } = getStartAndEndDate({ year, month });
     const startDay = new Date(year, month - 1, startDate).getDay();
@@ -41,52 +39,62 @@ export class CalendarBody extends Component {
     return dataTable;
   }
 
-  render() {
-    const dataTable = this.makeDataTable();
+  makeTable() {
+    const dataTable = this.getDataTable();
+    return dataTable
+      .map((row) => `<tr>${this.makeTableCell(row)}</tr>`)
+      .join('');
+  }
 
-    this.$self.innerHTML = `
-        ${dataTable
-          .map(
-            (row) =>
-              `<tr>
-              ${row
-                .map(
-                  (column) =>
-                    `<td>
-                    <div class='calendar-amount'>
-                      ${
-                        column.income
-                          ? `<div class='calendar-amount-income'>${getFormattedAmount(
-                              column.income,
-                            )}</div>`
-                          : ''
-                      }
-                      ${
-                        column.cost
-                          ? `<div class='calendar-amount-cost'>-${getFormattedAmount(
-                              column.cost,
-                            )}</div>`
-                          : ''
-                      }
-                      ${
-                        column.total
-                          ? `<div class='calendar-amount-total'>${getFormattedAmount(
-                              column.total,
-                            )}</div>`
-                          : ''
-                      }
-                    </div>
-                    ${
-                      column.date
-                        ? `<div class='calendar-date'>${column.date}</div>`
-                        : ''
-                    }
-                  </td>`,
-                )
-                .join('')}
-            </tr>`,
-          )
-          .join('')}
-      `;
+  makeTableCell(row) {
+    return row
+      .map(
+        (cell) => `
+        <td>
+          <div class='calendar-amount'>
+            ${this.incomeCell(cell.income)}
+            ${this.costCell(cell.cost)}
+            ${this.totalCell(cell.total)}
+          </div>
+          ${this.dateCell(cell.date)}
+        </td>`,
+      )
+      .join('');
+  }
+
+  incomeCell(income) {
+    return income
+      ? `<div class='calendar-amount-income'>
+          ${getFormattedAmount(income)}
+        </div>`
+      : '';
+  }
+
+  costCell(cost) {
+    return cost
+      ? `<div class='calendar-amount-cost'>
+          ${getFormattedAmount(cost)}
+        </div>`
+      : '';
+  }
+
+  totalCell(total) {
+    return total
+      ? `<div class='calendar-amount-total'>
+          ${getFormattedAmount(total)}
+        </div>`
+      : '';
+  }
+
+  dateCell(date) {
+    return date
+      ? `<div class='calendar-date'>
+          ${date}
+        </div>`
+      : '';
+  }
+
+  render() {
+    this.$self.innerHTML = `${this.makeTable()}`;
   }
 }
