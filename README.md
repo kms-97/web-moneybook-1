@@ -1,11 +1,22 @@
-# web-moneybook-1
-
-2주간 진행된 가계부 서비스 프로젝트입니다.
-프레임워크 없이 vanilla js를 이용해 제작했습니다.
+<div align=center><h1>🦢 우아한 가계부 서비스</h1></div>
+<div align=center>
+<div>2주간 진행된 가계부 서비스 프로젝트입니다.</div>
+<div>프레임워크 없이 vanilla js를 이용해 제작했습니다.</div>
 
 💻 [데모](3.35.133.95) / 📖 [WIKI](https://github.com/woowa-techcamp-2022/web-moneybook-1/wiki)
 
+</div>
+
+---
+
 ## Tech Stack
+
+// javascript
+// express
+// scss
+// webpack
+// mysql
+// AWS EC2
 
 - (작성중)
 
