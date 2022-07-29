@@ -1,29 +1,15 @@
-import {
-  getIncomeAndCostSumOfDate,
-  getState,
-  subscribeState,
-} from '../../../controller';
+import { getIncomeAndCostSumOfDate, getState } from '../../../controller';
 import { storeKeys, WEEK_LENGTH } from '../../../utils/constant';
 import { getStartAndEndDate } from '../../../utils/date';
 import { getFormattedAmount } from '../../../utils/amount';
+import Component from '../../../core/Component';
 
-export class CalendarBody {
-  constructor($target) {
-    this.$target = $target;
-    this.$body = document.createElement('table');
-    this.$body.className = 'calendar-body';
+export class CalendarBody extends Component {
+  constructor($parent) {
+    super($parent, 'table', { class: 'calendar-body' });
 
-    this.unsubscribeHistory = subscribeState({
-      key: storeKeys.CURRENT_HISTORY,
-      callback: () => this.render(),
-    });
-
-    this.$target.appendChild(this.$body);
-    this.init();
-    this.render();
+    this.subscribeState([storeKeys.CURRENT_HISTORY]);
   }
-
-  init() {}
 
   makeDataTable() {
     const { year, month } = getState({ key: storeKeys.CURRENT_DATE });
@@ -55,12 +41,10 @@ export class CalendarBody {
     return dataTable;
   }
 
-  generateRow() {}
-
   render() {
     const dataTable = this.makeDataTable();
 
-    this.$body.innerHTML = `
+    this.$self.innerHTML = `
         ${dataTable
           .map(
             (row) =>

@@ -8,7 +8,10 @@ export function parseDateString(str) {
 
 export function makeDateString(year, month, date) {
   if (!year || !month || !date) return;
-  return `${year}-${(month + '').padStart(2, 0)}-${(date + '').padStart(2, 0)}`;
+  let dateString = `${year}-${(month + '').padStart(2, 0)}`;
+
+  if (date) dateString += `-${(date + '').padStart(2, 0)}`;
+  return dateString;
 }
 
 export function getTodayString() {
@@ -42,4 +45,19 @@ export function getDay(year, month, date) {
     0: '일',
   };
   return day[new Date(year, month - 1, date).getDay()];
+}
+
+export function getPreviousMonths(year, month, prev) {
+  const prevMonths = [];
+  for (let i = 0; i < prev; i++) {
+    prevMonths.push({ year, month });
+
+    month--;
+    if (month === 0) {
+      year--;
+      month = 12;
+    }
+  }
+
+  return prevMonths.reverse();
 }

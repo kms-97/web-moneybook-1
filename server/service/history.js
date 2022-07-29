@@ -18,22 +18,14 @@ async function getAllHistoryOfMonth({ year, month }) {
   }
 }
 
-async function getAmountGroupByCategory({
-  startYear,
-  startMonth,
-  endYear,
-  endMonth,
-  categoryId,
-}) {
+async function getAmountGroupByCategory({ year, month, categoryId }) {
   let connection;
 
   try {
     connection = await getConnection();
     const [rows] = await findAmontSumByCategory(connection, {
-      startYear,
-      startMonth,
-      endYear,
-      endMonth,
+      year,
+      month,
       categoryId,
     });
 
@@ -173,22 +165,14 @@ function update(
   ]);
 }
 
-function findAmontSumByCategory(
-  connection,
-  { startYear, startMonth, endYear, endMonth, categoryId },
-) {
-  const { startDate } = getStartAndEndDateString({
-    year: startYear,
-    month: startMonth,
+function findAmontSumByCategory(connection, { year, month, categoryId }) {
+  const { startDate, endDate } = getStartAndEndDateString({
+    year,
+    month,
   });
-  const { endDate } = getStartAndEndDateString({
-    year: endYear,
-    month: endMonth,
-  });
-  const query = `select \`year\`, \`month\`, sum(amount) as amount
-  from (select year(create_date) as \`year\`, month(create_date) as \`month\`, amount from hist where create_date between ? and ? and category_id = ?) as t
-  group by \`year\`, \`month\`
-  order by \`year\` asc, \`month\` asc;`;
+  const query = `select ifnull(sum(amount), 0) as amount
+  from hist
+  where create_date between ? and ? and category_id = ?;`;
   return connection.execute(query, [startDate, endDate, categoryId]);
 }
 

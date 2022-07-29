@@ -8,6 +8,7 @@ export const storeKeys = {
   PAYMENT: 'payment',
   SELECTED_HISTORY: 'selectedHistory',
   ISCHECKED_FILTER: 'isCheckedFilter',
+  ISLOADING: 'isLoading',
 };
 
 export const categoryClassName = {

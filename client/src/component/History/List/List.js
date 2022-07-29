@@ -5,44 +5,26 @@ import {
   getCostSum,
   getFilteredHistories,
 } from '../../../controller';
-import { subscribeState } from '../../../controller';
 import { categoryClassName, storeKeys } from '../../../utils/constant';
 import { getDay } from '../../../utils/date';
 import { getFormattedAmount } from '../../../utils/amount';
+import Component from '../../../core/Component';
 
-export class List {
-  constructor($target) {
-    this.$target = $target;
-    this.$list = document.createElement('ul');
-    this.$list.className = 'list';
+export class List extends Component {
+  constructor($parent) {
+    super($parent, 'ul', { class: 'list' });
 
-    this.unsubscribeHistory = subscribeState({
-      key: storeKeys.CURRENT_HISTORY,
-      callback: () => {
-        this.render();
-      },
-    });
-    this.unsubscribeHistory = subscribeState({
-      key: storeKeys.ISCHECKED_FILTER,
-      callback: () => {
-        this.render();
-      },
-    });
-
-    this.unsubscribePayment = subscribeState({
-      key: storeKeys.PAYMENT,
-      callback: () => {
-        this.render();
-      },
-    });
-
-    this.$target.appendChild(this.$list);
-    this.init();
-    this.render();
+    this.subscribeState([
+      storeKeys.CURRENT_HISTORY,
+      storeKeys.ISCHECKED_FILTER,
+      storeKeys.PAYMENT,
+    ]);
   }
 
-  init() {
-    this.$list.addEventListener('click', this.selectHistoryItem);
+  attachEvents() {
+    this.$self.addEventListener('click', (e) => {
+      this.selectHistoryItem(e);
+    });
   }
 
   selectHistoryItem(e) {
@@ -74,7 +56,7 @@ export class List {
     const selectedHistory = getState({ key: storeKeys.SELECTED_HISTORY });
     const history = getFilteredHistories();
 
-    this.$list.innerHTML = `
+    this.$self.innerHTML = `
     ${history
       .map(({ date, data }) => {
         const incomeSum = getIncomeSum(data);

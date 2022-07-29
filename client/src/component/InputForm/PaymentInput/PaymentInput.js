@@ -1,53 +1,43 @@
-import { getState, subscribeState } from '../../../controller';
+import { createPayment, deletePayment, getState } from '../../../controller';
+import Component from '../../../core/Component';
 import { storeKeys } from '../../../utils/constant';
+import { Modal } from '../../Modal/Modal';
 
-export default class PaymentInput {
-  constructor($target) {
-    this.$target = $target; // $inputForm
-    this.$paymentInput = document.createElement('div');
+export default class PaymentInput extends Component {
+  constructor($parent) {
+    super($parent, 'div');
 
-    this.unsubscribeSelectedHistory = subscribeState({
-      key: storeKeys.SELECTED_HISTORY,
-      callback: () => this.render(),
-    });
-    this.unsubscribePayment = subscribeState({
-      key: storeKeys.PAYMENT,
-      callback: () => this.render(),
-    });
-
-    this.$target.appendChild(this.$paymentInput);
-    this.render();
-    this.init();
+    this.subscribeState([storeKeys.PAYMENT]);
   }
 
-  init() {
-    this.$paymentInput.addEventListener(
-      'click',
-      this.onClickPaymentItem.bind(this),
-    );
-    this.$paymentInput.addEventListener('click', this.onClickDropdownField);
-    this.$paymentInput.addEventListener(
-      'click',
-      this.onClickPaymentItemDeleteButton.bind(this),
-    );
+  attachEvents() {
+    this.$self.addEventListener('click', (e) => {
+      this.onClickPaymentItem(e);
+    });
+
+    this.$self.addEventListener('click', (e) => {
+      this.onClickDropdownField(e);
+    });
+
+    this.$self.addEventListener('click', (e) => {
+      this.onClickPaymentItemDeleteButton(e);
+    });
   }
 
   onClickPaymentItem(event) {
     const $li = event.target.closest('.inputForm .payment>li');
     if (!$li) return;
 
-    const $inputType = document.querySelector('input[name="payment"]');
+    const $inputType = this.$self.querySelector('input[name="payment"]');
 
     if ($li.dataset.name === '추가') {
-      // 추가하기 버튼
-      const $paymentModal = document.querySelector('.payment-modal');
-      this.openModal($paymentModal);
+      this.openCreateModal();
       return;
     }
     $inputType.value = $li.dataset.name;
     $inputType.dataset.id = $li.dataset.id;
 
-    const $payment = document.querySelector('.inputForm .payment');
+    const $payment = this.$self.querySelector('.payment');
     $payment.style.display = 'none';
   }
 
@@ -80,25 +70,47 @@ export default class PaymentInput {
     const $li = event.target.closest('li');
     if (!$li) return;
 
-    const $deletePaymentModal = document.querySelector('.delete-payment-modal');
-    this.openModal($deletePaymentModal);
-
-    const $input = $deletePaymentModal.querySelector('input[name="payment"]');
-
-    $input.value = $li.dataset.name;
-    $input.dataset.id = $li.dataset.id;
+    const selectedPayment = $li.dataset.name;
+    this.openDeleteModal(selectedPayment);
   }
 
-  openModal(modal) {
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+  openCreateModal() {
+    function onClickCreateButton(value) {
+      const payment = value;
+      createPayment(payment);
+    }
+    new Modal({
+      input: { readonly: false, placeholder: '입력하세요.' },
+      description: '추가하실 결제수단을 선택하세요',
+      button: {
+        name: '등록',
+        color: '#2ac1bc',
+        onClick: onClickCreateButton,
+      },
+    });
+  }
+
+  openDeleteModal(value) {
+    function onClickDeleteButton(value) {
+      const payment = value;
+      deletePayment(payment);
+    }
+    new Modal({
+      input: { readonly: true, value },
+      description: '선택하신 결제수단을 삭제할까요?',
+      button: {
+        name: '삭제',
+        color: '#f45452',
+        onClick: onClickDeleteButton,
+      },
+    });
   }
 
   render() {
     const history = getState({ key: storeKeys.SELECTED_HISTORY });
     const payment = getState({ key: storeKeys.PAYMENT });
 
-    this.$paymentInput.innerHTML = `
+    this.$self.innerHTML = `
       <label for="type">결제수단</label>
       <div class="field">
           <input type="text" name="payment" placeholder="선택하세요" value="${

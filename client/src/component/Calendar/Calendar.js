@@ -1,22 +1,28 @@
 import './Calendar.scss';
 import { CalendarBody } from './Body/CalendarBody';
 import { CalendarHeader } from './Header/CalenderHeader';
+import { getState } from '../../controller';
+import { storeKeys } from '../../utils/constant';
+import { LoadingIndicator } from '../LoadingIndicator/LoadingIndicator';
+import Component from '../../core/Component';
 
-export class Calendar {
-  constructor($target) {
-    this.$target = $target;
-    this.$calendar = document.createElement('main');
-    this.$calendar.className = 'calendar';
+export class Calendar extends Component {
+  constructor($parent) {
+    super($parent, 'main', { class: 'calendar' });
 
-    this.$target.appendChild(this.$calendar);
-    this.init();
-    this.render();
+    this.subscribeState([storeKeys.ISLOADING]);
   }
 
-  init() {}
-
   render() {
-    new CalendarHeader(this.$calendar);
-    new CalendarBody(this.$calendar);
+    const isLoading = getState({ key: storeKeys.ISLOADING });
+
+    this.clearComponent();
+    if (isLoading) {
+      new LoadingIndicator(this.$self);
+      return;
+    }
+
+    new CalendarHeader(this.$self);
+    new CalendarBody(this.$self);
   }
 }

@@ -1,30 +1,28 @@
+import Chart from '../../../core/Chart';
 import { hexToRGB } from '../../../utils/color';
 
-export class DonutChart {
-  constructor($target, data = [], width = 300, height = 300, chartWidth = 50) {
-    this.$target = $target;
-    this.$chart = document.createElement('canvas');
+export class DonutChart extends Chart {
+  constructor($parent, options) {
+    super($parent, options);
+  }
 
-    this.data = data;
-    this.chartWidth = chartWidth;
-    this.$chart.width = width;
-    this.$chart.height = height;
-    this.ctx = this.$chart.getContext('2d');
-
-    this.$target.appendChild(this.$chart);
-    this.render();
+  setOptions(options) {
+    this.data = options.data ?? [];
+    this.chartWidth = options.chartWidth ?? 50;
+    this.$canvas.width = options.width ?? 300;
+    this.$canvas.height = options.height ?? 300;
   }
 
   getCenter() {
-    return { x: this.$chart.width / 2, y: this.$chart.height / 2 };
+    return { x: this.$canvas.width / 2, y: this.$canvas.height / 2 };
   }
 
   getRadius() {
-    return Math.min(this.$chart.width, this.$chart.height) / 2 - 10;
+    return Math.min(this.$canvas.width, this.$canvas.height) / 2 - 10;
   }
 
   clearCanvas() {
-    this.ctx.clearRect(0, 0, this.$chart.width, this.$chart.height);
+    this.ctx.clearRect(0, 0, this.$canvas.width, this.$canvas.height);
   }
 
   getTotalValue() {
