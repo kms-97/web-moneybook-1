@@ -9,7 +9,7 @@ import { LoadingIndicator } from '../LoadingIndicator/LoadingIndicator';
 import { getPreviousMonths } from '../../utils/date';
 import { CategoryCost } from './CategoryCost/CategoryCost';
 import { DonutChart } from './Chart/Donut';
-import { LineChart } from './Chart/line';
+import { LineChart } from './Chart/Line';
 import Component from '../../core/Component';
 
 export class Statistics extends Component {
