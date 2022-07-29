@@ -1,6 +1,8 @@
 @import '../../style/common.scss';
 
 .statistics {
+  margin-bottom: 20px;
+
   .donut {
     display: flex;
     flex-direction: row;
